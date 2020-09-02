@@ -1,6 +1,11 @@
 # Citrics A
 
-**---> SUBMIT [THIS FORM](https://forms.gle/QwCMXWpjAGMwDBWh6) (once per team) BY END OF WEEK 1 <---**
+### **Mission:**
+Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences.
+
+---
+
+## **---> SUBMIT [THIS FORM](https://forms.gle/QwCMXWpjAGMwDBWh6) (once per team) BY END OF WEEK 1 <---**
 
 ---
 
