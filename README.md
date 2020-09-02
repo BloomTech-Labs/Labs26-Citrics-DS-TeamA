@@ -29,6 +29,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 **DATA**
 - [Housing Data](https://www.huduser.gov/portal/datasets/50per.html#2020)
 - [Weather Data](https://openweathermap.org/api)
+- [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 
@@ -38,3 +39,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Plotly Docs](https://plotly.com/python/)
 - [AWS - Postgres Deployment Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html)
 - [Deploying to AWS](https://docs.labs.lambdaschool.com/data-science/#deploy-to-aws)
+- [How to Access BLS API](http://danstrong.tech/blog/BLS-API/)
