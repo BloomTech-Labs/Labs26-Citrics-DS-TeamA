@@ -15,6 +15,7 @@
 **DS STARTER**
 - [Labs DS Docs](https://docs.labs.lambdaschool.com/data-science/)
 - [Labs DS Notebook](https://colab.research.google.com/drive/1MbF-L6mKy_JA9L6wxBCb5_Vch3PX3RRL?usp=sharing) - Ryan Herr
+- [Ryan Herr Calendly](https://calendly.com/ryan-herr)
 
 **CITRICS**
 - [Citrics Product Overview](https://www.notion.so/Labs-26-Product-Overview-a81834be6b7d4fefb3c1291bb17e2c23)
@@ -30,3 +31,5 @@
 - [AWS Instructions](https://docs.labs.lambdaschool.com/guides/aws/elastic-beanstalk/elastic-beanstalk-dns)
 - [Amazon Web Services in Plain English](https://expeditedsecurity.com/aws-in-plain-english/)
 - [Plotly Docs](https://plotly.com/python/)
+- [AWS - Postgres Deployment Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html)
+- [Deploying to AWS](https://docs.labs.lambdaschool.com/data-science/#deploy-to-aws)
