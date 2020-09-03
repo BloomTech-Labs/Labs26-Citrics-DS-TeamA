@@ -12,6 +12,8 @@ requests = "*"
 ipykernel = "*"
 psycopg2-binary = "*"
 scikit-learn = "*"
+wwo-hist = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
