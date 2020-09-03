@@ -22,6 +22,9 @@ print(WEATHER_KEY)
 # "10007" : New York City (Manhattan)
 # "94102" : San Francisco
 # "90012" : Los Angeles
+# "30303" : Atlanta
+# "21401" : Annapolis, MD
+# "32301" : Tallahassee, FL
 
 locations = ["10007", "94102", "90012"]
 
