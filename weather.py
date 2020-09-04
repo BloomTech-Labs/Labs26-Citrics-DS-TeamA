@@ -52,8 +52,6 @@ for code in locations:
     input_ = input(f"{code} : location ")
     f.write(f"\n{code} : {input_}")
 
-breakpoint()
-
 hist_weather_data = retrieve_hist_data(WEATHER_KEY,
                                        location_list=locations,
                                        start_date=start_date,

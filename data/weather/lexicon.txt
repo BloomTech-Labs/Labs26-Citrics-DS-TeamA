@@ -12,3 +12,6 @@ Lexicon
 60602 : Chicago
 77002 : Houston
 19107 : Philidelphia
+60602 : Chicago
+77002 : Houston
+19107 : Philidelphia
