@@ -33,8 +33,6 @@ WEATHER_KEY = os.environ.get("WEATHER_KEY")
 
 locations = [str(code) for code in sys.argv[1:]]
 
-print(locations)
-
 if len(sys.argv[1:]) > 3:
     sure = input("You have entered more than three zip codes, are you certain you'd like to proceed? y/n: ")
     if sure.lower() == "n" or sure.lower() == "no":
@@ -45,11 +43,16 @@ for code in locations:
     if len(code) != 5:
         count += 1
 
-
 if count > 0:
-    raise ValueError(f"Not a valid zip code. Length of {code} < 5")
+    raise ValueError(f"Not a valid zip code; locations array contains value with len < 5")
     sys.exit(5)
 
+f = open("lexicon.txt", "a")
+for code in locations:
+    input_ = input(f"{code} : location ")
+    f.write(f"\n{code} : {input_}")
+
+breakpoint()
 
 hist_weather_data = retrieve_hist_data(WEATHER_KEY,
                                        location_list=locations,

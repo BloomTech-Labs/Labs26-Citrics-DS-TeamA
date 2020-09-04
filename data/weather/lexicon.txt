@@ -1,0 +1,14 @@
+Lexicon
+
+10007 : New York City (Manhattan)
+94102 : San Francisco
+90012 : Los Angeles
+30303 : Atlanta
+21401 : Annapolis, MD
+32301 : Tallahassee, FL
+98188 : Seattle
+97204 : Portland, Oregon
+95113 : San Jose
+60602 : Chicago
+77002 : Houston
+19107 : Philidelphia
