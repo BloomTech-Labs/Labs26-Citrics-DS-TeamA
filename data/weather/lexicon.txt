@@ -15,3 +15,6 @@ Lexicon
 60602 : Chicago
 77002 : Houston
 19107 : Philidelphia
+33133 : Miami, FL
+75201 : Dallas, TX
+21202 : Baltimore, MD
