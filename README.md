@@ -45,3 +45,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [How to Access BLS API](http://danstrong.tech/blog/BLS-API/)
 - [Elastic Beanstalk Environments](https://console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1#/environments)
 - [Docker Images Docs](https://docs.docker.com/engine/reference/commandline/images/)
+- [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)
