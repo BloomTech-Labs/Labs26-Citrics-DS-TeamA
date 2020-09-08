@@ -22,3 +22,4 @@ Lexicon
 70802 : Baton Rouge, LA
 70112 : New Orleans, LA
 39201 : Jackson, MS
+39533 : Biloxi, MS
