@@ -21,3 +21,6 @@ Lexicon
 20500 : Washington, DC
 70802 : Baton Rouge, LA
 70112 : New Orleans, LA
+39201 : Jackson, MS
+39533 : Biloxi, MS
+27601 : Raleigh, NC
