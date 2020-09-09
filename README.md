@@ -3,7 +3,7 @@
 ### **Mission:**
 Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences.
 
-[AWS Deployed API](http://c-ds-api.eba-i8gq3qn6.us-east-1.elasticbeanstalk.com/)
+[AWS Deployed API](https://ds.citrics.dev/)
 
 ---
 
