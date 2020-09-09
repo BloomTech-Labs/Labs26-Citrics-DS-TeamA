@@ -7,10 +7,6 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 
 ---
 
-## **---> SUBMIT [THIS FORM](https://forms.gle/QwCMXWpjAGMwDBWh6) (once per team) BY END OF WEEK 1 <---**
-
----
-
 ## **Resources**
 
 **LABS**
