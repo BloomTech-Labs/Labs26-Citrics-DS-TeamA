@@ -1,20 +1,17 @@
 Lexicon
 
-10007 : New York City (Manhattan)
-94102 : San Francisco
-90012 : Los Angeles
-30303 : Atlanta
+10007 : New York City (Manhattan), NY
+94102 : San Francisco, CA
+90012 : Los Angeles, CA
+30303 : Atlanta, GA
 21401 : Annapolis, MD
 32301 : Tallahassee, FL
-98188 : Seattle
-97204 : Portland, Oregon
-95113 : San Jose
-60602 : Chicago
-77002 : Houston
-19107 : Philidelphia
-60602 : Chicago
-77002 : Houston
-19107 : Philidelphia
+98188 : Seattle, WA
+97204 : Portland, OR
+95113 : San Jose, CA
+60602 : Chicago, IL
+77002 : Houston, TX
+19107 : Philidelphia, PA
 33133 : Miami, FL
 75201 : Dallas, TX
 21202 : Baltimore, MD
@@ -27,3 +24,6 @@ Lexicon
 27701 : Durham, NC
 29577 : Myrtle Beach, SC
 29201 : Columbia, SC
+23219 : Richmond, VA
+23510 : Norfolk, VA
+23456 : Virginia Beach, VA
