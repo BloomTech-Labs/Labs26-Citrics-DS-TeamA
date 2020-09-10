@@ -1,7 +1,4 @@
-const Dockerrun = require('./Dockerrun.aws.json')
 const fs = require('fs');
-
-var env = require('./env');
 
 // Function for Reading the .json file
 function jsonReader(filePath, cb) {
@@ -21,19 +18,24 @@ function jsonReader(filePath, cb) {
 const fileName = './Dockerrun.aws.json';
 const file = require(fileName);
 
-file.Image.Name = env.DOCKER_ID + "/" + env.DOCKER_IMAGE + ":" + env.DOCKER_IMAGE_TAG
+// Taking command line input
+var standard_input = process.stdin;
+standard_input.setEncoding('utf-8');
 
-// Function for overwriting data in the .json file
-fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
-  if (err) return console.log(err);
-  console.log(JSON.stringify(file));
-  console.log('writing to ' + fileName);
-});
+console.log("Docker ID")
+console.log("---------")
 
-jsonReader('./Dockerrun.aws.json', (err, data) => {
-    if (err) {
-        console.log(err);
+standard_input.on('data', function(data) {
+    if (data == 'exit\n') {
+        console.log("Exiting program...");
+        process.exit();
     } else {
-        console.log(data)
+        file.Image.Name = data.slice(0, data.length - 1) + "/labs26-citrics-ds-teama_web:latest"
+        fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+            if (err) return console.log(err);
+            console.log(JSON.stringify(file, null, 2));
+            console.log('writing to ' + fileName);
+            process.exit();
+        });
     }
 });
