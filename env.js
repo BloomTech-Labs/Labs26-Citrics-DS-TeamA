@@ -1,6 +1,6 @@
-const DOCKER_ID = 'shengjiyang'
-const DOCKER_IMAGE = 'labs26-citrics-ds-teama_web'
-const DOCKER_IMAGE_TAG = 'latest'
+const DOCKER_ID = 'DOCKER_ID'
+const DOCKER_IMAGE = 'DOCKER_IMAGE'
+const DOCKER_IMAGE_TAG = 'DOCKER_IMAGE_TAG'
 
 module.exports.DOCKER_ID = DOCKER_ID
 module.exports.DOCKER_IMAGE = DOCKER_IMAGE
