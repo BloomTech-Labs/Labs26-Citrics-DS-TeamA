@@ -3,11 +3,7 @@
 ### **Mission:**
 Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences.
 
-[AWS Deployed API](http://c-ds-api.eba-i8gq3qn6.us-east-1.elasticbeanstalk.com/)
-
----
-
-## **---> SUBMIT [THIS FORM](https://forms.gle/QwCMXWpjAGMwDBWh6) (once per team) BY END OF WEEK 1 <---**
+[AWS Deployed API](https://ds.citrics.dev/)
 
 ---
 
@@ -46,3 +42,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Elastic Beanstalk Environments](https://console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1#/environments)
 - [Docker Images Docs](https://docs.docker.com/engine/reference/commandline/images/)
 - [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)
+- [AWS RDS](https://console.aws.amazon.com/rds/home?region=us-east-1#)
