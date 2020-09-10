@@ -30,6 +30,7 @@ standard_input.on('data', function(data) {
         console.log("Exiting program...");
         process.exit();
     } else {
+        // Overwriting existing Image Name in Dockerrun.aws.json
         file.Image.Name = data.slice(0, data.length - 1) + "/labs26-citrics-ds-teama_web:latest"
         fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
             if (err) return console.log(err);
