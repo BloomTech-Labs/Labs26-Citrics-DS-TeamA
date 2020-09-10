@@ -79,4 +79,14 @@ data_fetched = [x for x in data_fetched if
 # Make into a pandas dataframe for easy export.
 dataset = pd.DataFrame(data=[x for x in fetched],
                        columns=data_fetched)
+# We need to convert temperature from Kelvin to Fahrenheit
+
+# Setting temperature columns for ease.
+temperature_cols = ['main_temp', 'main_feels_like', 'main_temp_min', 'main_temp_max']
+
+# First, let's convert Kelvins to Celsius (273.15 degrees less)
+dataset[temperature_cols] = dataset[temperature_cols] - 273.15
+# Now, Celsius into Fahrenheit (F = C * (9/5) + 32)
+dataset[temperature_cols] = round(dataset[temperature_cols] * (9/5) + 32, 2)
+                        
 dataset.to_csv('current_weather.csv', index=False, na_rep=np.NaN)
