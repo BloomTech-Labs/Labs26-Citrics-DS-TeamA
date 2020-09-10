@@ -30,3 +30,5 @@ Lexicon
 37201 : Nashville, TN
 37902 : Knoxville, TN
 36101 : Montgomery, AL
+36602 : Mobile, AL
+72201 : Little Rock, AR
