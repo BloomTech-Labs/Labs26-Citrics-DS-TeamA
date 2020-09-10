@@ -28,3 +28,4 @@ Lexicon
 23510 : Norfolk, VA
 23456 : Virginia Beach, VA
 37201 : Nashville, TN
+37902 : Knoxville, TN
