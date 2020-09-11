@@ -51,3 +51,58 @@ writing to ./Dockerrun.aws.json
 ```
 
 Double check that the Dockerrun.aws.json file is up to date, and you can proceed with pushing to docker and deploying to AWS.
+
+### Resetting Dockerrun.aws.json
+
+To reset the DOCKER_ID parameter to the default "DOCKER_ID", when the Docker ID input is called for type:
+
+```
+reset
+```
+
+Output:
+
+```
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "DOCKER_ID/labs26-citrics-ds-teama_web:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "8000"
+    }
+  ],
+  "Command": "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000"
+}
+writing to ./Dockerrun.aws.json
+```
+
+To reset the DOCKER_ID parameter to the team app's id *ekselan*, either type either:
+
+```
+ekselan
+
+or
+
+reset team
+```
+
+Output:
+
+```
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "ekselan/labs26-citrics-ds-teama_web:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "8000"
+    }
+  ],
+  "Command": "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000"
+}
+```

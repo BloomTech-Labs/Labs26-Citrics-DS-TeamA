@@ -15,21 +15,7 @@ os.chdir(DATA_PATH)
 
 WEATHER_KEY = os.environ.get("WEATHER_KEY")
 
-# Location Lexicon
-# ----------------
-# Based on zip code of given city's city hall
-# "10007" : New York City (Manhattan)
-# "94102" : San Francisco
-# "90012" : Los Angeles
-# "30303" : Atlanta
-# "21401" : Annapolis, MD
-# "32301" : Tallahassee, FL
-# "98188" : Seattle
-# "97204" : Portland, Oregon
-# "95113" : San Jose
-# "60602" : Chicago
-# "77002" : Houston
-# "19107" : Philidelphia
+# Consult lexicon in data/weather directory before proceeding.
 
 locations = [str(code) for code in sys.argv[1:]]
 
