@@ -35,3 +35,4 @@ Lexicon
 72901 : Fort Smith, AR
 30901 : Augusta, GA
 31401 : Savannah, GA
+40202 : Louisville, KY
