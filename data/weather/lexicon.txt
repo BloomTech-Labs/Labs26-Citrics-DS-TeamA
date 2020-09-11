@@ -32,3 +32,5 @@ Lexicon
 36101 : Montgomery, AL
 36602 : Mobile, AL
 72201 : Little Rock, AR
+72901 : Fort Smith, AR
+30901 : Augusta, GA
