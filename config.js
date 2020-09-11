@@ -1,3 +1,4 @@
+  
 const fs = require('fs');
 
 // Function for Reading the .json file
@@ -29,8 +30,27 @@ standard_input.on('data', function(data) {
     if (data == 'exit\n') {
         console.log("Exiting program...");
         process.exit();
+    } else if (data == 'reset\n') {
+        // Overwriting existing Image Name in Dockerrun.aws.json to default
+        file.Image.Name ="DOCKER_ID/labs26-citrics-ds-teama_web:latest"
+        fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+            if (err) return console.log(err);
+            console.log(JSON.stringify(file, null, 2));
+            console.log('writing to ' + fileName);
+            process.exit();
+        });
+    } else if (data == 'reset team\n') {
+        // Overwriting existing Image Name in Dockerrun.aws.json to team account
+        // i.e. ekselan
+        file.Image.Name = "ekselan/labs26-citrics-ds-teama_web:latest"
+        fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+            if (err) return console.log(err);
+            console.log(JSON.stringify(file, null, 2));
+            console.log('writing to ' + fileName);
+            process.exit();
+        });
     } else {
-        // Overwriting existing Image Name in Dockerrun.aws.json
+        // Overwriting existing Image Name in Dockerrun.aws.json to input
         file.Image.Name = data.slice(0, data.length - 1) + "/labs26-citrics-ds-teama_web:latest"
         fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
             if (err) return console.log(err);

@@ -26,9 +26,11 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 
 **DATA**
 - [Housing Data](https://www.huduser.gov/portal/datasets/50per.html#2020) (NOTE: Fair Market & Section 8)
+- [Apartment Rental Price Data](https://www.apartmentlist.com/research/category/data-rent-estimates) (NOTE: Does not include HI, WV or PR)
 - [Weather Data](https://openweathermap.org/api) (NOTE: Potentially pricy ...)
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
+- [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 
