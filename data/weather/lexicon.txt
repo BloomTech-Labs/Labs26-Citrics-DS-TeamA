@@ -38,3 +38,4 @@ Lexicon
 40202 : Louisville, KY
 38103 : Memphis, TN
 40507 : Lexington, KY
+25301 : Charleston, WV
