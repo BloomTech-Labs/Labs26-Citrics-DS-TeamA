@@ -36,3 +36,8 @@ Lexicon
 30901 : Augusta, GA
 31401 : Savannah, GA
 40202 : Louisville, KY
+38103 : Memphis, TN
+40507 : Lexington, KY
+25301 : Charleston, WV
+25701 : Huntington, WV
+19801 : Wilmington, DE
