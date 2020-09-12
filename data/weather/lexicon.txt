@@ -40,3 +40,4 @@ Lexicon
 40507 : Lexington, KY
 25301 : Charleston, WV
 25701 : Huntington, WV
+19801 : Wilmington, DE
