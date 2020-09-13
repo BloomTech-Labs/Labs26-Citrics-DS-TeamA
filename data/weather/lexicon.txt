@@ -42,3 +42,4 @@ Lexicon
 25701 : Huntington, WV
 19801 : Wilmington, DE
 19901 : Dover, DE
+67202 : Wichita, KS
