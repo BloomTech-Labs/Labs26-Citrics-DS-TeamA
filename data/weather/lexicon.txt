@@ -48,3 +48,4 @@
 60505 : Aurora, IL
 97301 : Salem, OR
 11550 : Hempstead, NY
+14202 : Buffalo, NY
