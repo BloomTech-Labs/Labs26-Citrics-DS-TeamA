@@ -47,3 +47,4 @@ Lexicon
 46204 : Indianapolis, IN
 46802 : Fort Wayne, IN
 99201 : Spokane, WA
+14202 : Buffalo, NY
