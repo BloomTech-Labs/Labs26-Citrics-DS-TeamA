@@ -49,3 +49,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)
 - [AWS RDS](https://console.aws.amazon.com/rds/home?region=us-east-1#)
 - [EB Environment Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-softwaresettings.html)
+- [EB Docker Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html)
