@@ -1,5 +1,3 @@
-Lexicon
-
 10007 : New York City (Manhattan), NY
 94102 : San Francisco, CA
 90012 : Los Angeles, CA
@@ -47,3 +45,6 @@ Lexicon
 46204 : Indianapolis, IN
 46802 : Fort Wayne, IN
 99201 : Spokane, WA
+60505 : Aurora, IL
+97301 : Salem, OR
+11550 : Hempstead, NY
