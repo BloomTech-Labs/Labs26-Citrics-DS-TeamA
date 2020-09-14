@@ -5,8 +5,8 @@ from wwo_hist import retrieve_hist_data
 import urllib.request
 
 frequency = 6
-start_date = "01-JAN-2009"
-end_date = '03-SEP-2020'
+start_date = "01-MAR-2009"
+end_date = '31-MAY-2020'
 
 load_dotenv()
 
