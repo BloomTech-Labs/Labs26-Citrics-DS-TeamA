@@ -18,7 +18,6 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 **DS STARTER**
 - [Labs DS Docs](https://docs.labs.lambdaschool.com/data-science/)
 - [Labs DS Notebook](https://colab.research.google.com/drive/1MbF-L6mKy_JA9L6wxBCb5_Vch3PX3RRL?usp=sharing) - Ryan Herr
-- [Labs 26 Citrics Example Notebook](https://github.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/blob/historic_weather/notebooks/Labs_26_Data_Science.ipynb)
 - [Ryan Herr Calendly](https://calendly.com/ryan-herr)
 
 **CITRICS**
