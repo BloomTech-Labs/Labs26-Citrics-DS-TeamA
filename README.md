@@ -31,6 +31,8 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
 - [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
+- [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
+- [Walkability Index](https://geodata.epa.gov/arcgis/rest/services/OA/WalkabilityIndex/MapServer) (NOTE: Suboptimal documentation)
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 
