@@ -44,3 +44,6 @@ Lexicon
 19901 : Dover, DE
 67202 : Wichita, KS
 66603 : Topeka, KS
+46204 : Indianapolis, IN
+46802 : Fort Wayne, IN
+99201 : Spokane, WA
