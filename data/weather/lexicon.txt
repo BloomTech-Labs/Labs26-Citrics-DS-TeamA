@@ -51,3 +51,4 @@
 14202 : Buffalo, NY
 15219 : Pittsburgh, PA
 99501 : Anchorage, AK
+07102 : Newark, NJ
