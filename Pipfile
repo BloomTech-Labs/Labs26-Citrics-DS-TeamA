@@ -17,6 +17,7 @@ python-dotenv = "*"
 awscli = "*"
 pipx = "*"
 awsebcli = "*"
+fastapi = "*"
 
 [requires]
 python_version = "3.8"
