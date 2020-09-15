@@ -53,3 +53,4 @@
 99501 : Anchorage, AK
 07102 : Newark, NJ
 07302 : Jersey City, NJ
+89101 : Las Vegas, NV
