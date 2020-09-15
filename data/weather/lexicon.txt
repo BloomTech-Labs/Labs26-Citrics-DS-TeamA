@@ -50,3 +50,4 @@
 11550 : Hempstead, NY
 14202 : Buffalo, NY
 15219 : Pittsburgh, PA
+99501 : Anchorage, AK
