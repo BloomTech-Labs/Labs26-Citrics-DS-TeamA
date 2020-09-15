@@ -10,3 +10,4 @@ __pycache__
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 placeholder.py
+lexicon_tracker.txt

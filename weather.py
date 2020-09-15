@@ -5,8 +5,8 @@ from wwo_hist import retrieve_hist_data
 import urllib.request
 
 frequency = 6
-start_date = "01-JAN-2009"
-end_date = '03-SEP-2020'
+start_date = "01-MAR-2009"
+end_date = '31-MAY-2020'
 
 load_dotenv()
 
@@ -15,21 +15,7 @@ os.chdir(DATA_PATH)
 
 WEATHER_KEY = os.environ.get("WEATHER_KEY")
 
-# Location Lexicon
-# ----------------
-# Based on zip code of given city's city hall
-# "10007" : New York City (Manhattan)
-# "94102" : San Francisco
-# "90012" : Los Angeles
-# "30303" : Atlanta
-# "21401" : Annapolis, MD
-# "32301" : Tallahassee, FL
-# "98188" : Seattle
-# "97204" : Portland, Oregon
-# "95113" : San Jose
-# "60602" : Chicago
-# "77002" : Houston
-# "19107" : Philidelphia
+# Consult lexicon in data/weather directory before proceeding.
 
 locations = [str(code) for code in sys.argv[1:]]
 

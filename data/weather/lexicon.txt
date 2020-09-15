@@ -1,5 +1,3 @@
-Lexicon
-
 10007 : New York City (Manhattan), NY
 94102 : San Francisco, CA
 90012 : Los Angeles, CA
@@ -27,3 +25,35 @@ Lexicon
 23219 : Richmond, VA
 23510 : Norfolk, VA
 23456 : Virginia Beach, VA
+37201 : Nashville, TN
+37902 : Knoxville, TN
+36101 : Montgomery, AL
+36602 : Mobile, AL
+72201 : Little Rock, AR
+72901 : Fort Smith, AR
+30901 : Augusta, GA
+31401 : Savannah, GA
+40202 : Louisville, KY
+38103 : Memphis, TN
+40507 : Lexington, KY
+25301 : Charleston, WV
+25701 : Huntington, WV
+19801 : Wilmington, DE
+19901 : Dover, DE
+67202 : Wichita, KS
+66603 : Topeka, KS
+46204 : Indianapolis, IN
+46802 : Fort Wayne, IN
+99201 : Spokane, WA
+60505 : Aurora, IL
+97301 : Salem, OR
+11550 : Hempstead, NY
+14202 : Buffalo, NY
+85003 : Phoenix, AZ
+85701 : Tuscon, AZ
+87102 : Albuquerque, NM
+15219 : Pittsburgh, PA
+99501 : Anchorage, AK
+07102 : Newark, NJ
+07302 : Jersey City, NJ
+89101 : Las Vegas, NV

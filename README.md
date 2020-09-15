@@ -3,11 +3,7 @@
 ### **Mission:**
 Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences.
 
-[AWS Deployed API](http://c-ds-api.eba-i8gq3qn6.us-east-1.elasticbeanstalk.com/)
-
----
-
-## **---> SUBMIT [THIS FORM](https://forms.gle/QwCMXWpjAGMwDBWh6) (once per team) BY END OF WEEK 1 <---**
+[AWS Deployed API](https://ds.citrics.dev/)
 
 ---
 
@@ -22,6 +18,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 **DS STARTER**
 - [Labs DS Docs](https://docs.labs.lambdaschool.com/data-science/)
 - [Labs DS Notebook](https://colab.research.google.com/drive/1MbF-L6mKy_JA9L6wxBCb5_Vch3PX3RRL?usp=sharing) - Ryan Herr
+- [Labs DS Notebook - Local](notebooks/Labs_26_Data_Science.ipynb) - Ryan Herr
 - [Ryan Herr Calendly](https://calendly.com/ryan-herr)
 
 **CITRICS**
@@ -30,9 +27,13 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 
 **DATA**
 - [Housing Data](https://www.huduser.gov/portal/datasets/50per.html#2020) (NOTE: Fair Market & Section 8)
+- [Apartment Rental Price Data](https://www.apartmentlist.com/research/category/data-rent-estimates) (NOTE: Does not include HI, WV or PR)
 - [Weather Data](https://openweathermap.org/api) (NOTE: Potentially pricy ...)
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
+- [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
+- [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
+- [Walkability Index](https://geodata.epa.gov/arcgis/rest/services/OA/WalkabilityIndex/MapServer) (NOTE: Suboptimal documentation)
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 
@@ -46,3 +47,6 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Elastic Beanstalk Environments](https://console.aws.amazon.com/elasticbeanstalk/home?region=us-east-1#/environments)
 - [Docker Images Docs](https://docs.docker.com/engine/reference/commandline/images/)
 - [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)
+- [AWS RDS](https://console.aws.amazon.com/rds/home?region=us-east-1#)
+- [EB Environment Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-softwaresettings.html)
+- [EB Docker Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html)
