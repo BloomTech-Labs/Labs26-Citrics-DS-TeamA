@@ -49,3 +49,6 @@
 97301 : Salem, OR
 11550 : Hempstead, NY
 14202 : Buffalo, NY
+85003 : Phoenix, AZ
+85701 : Tuscon, AZ
+87102 : Albuquerque, NM
