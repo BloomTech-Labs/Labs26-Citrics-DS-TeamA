@@ -13,18 +13,22 @@ def fetch_query(query, columns):
 
     Input: query: a SQL query (string)
     """
-    # Elephant SQL -- PostgreSQL Credentials
-    DB_USER = os.getenv('DB_USER')
-    DB_NAME = os.getenv('DB_NAME')
-    DB_PASSWORD = os.getenv('DB_PASSWORD')
-    DB_HOST = os.getenv('DB_HOST')
+    # DB_NAME = os.getenv("DB_NAME")
+    # DB_USER = os.getenv("DB_USER")
+    # DB_PASSWORD = os.getenv("DB_PASSWORD")
+    # DB_HOST = os.getenv("DB_HOST")
+
+    DB_USER="citrics"
+    DB_PASSWORD="BnDW2WupbFpgZSewsZm7"
+    DB_NAME="postgres"
+    DB_HOST="citricsads.cav8gkdxva9e.us-east-1.rds.amazonaws.com"
 
     # Creating Connection Object
-    conn = psycopg2.connect(dbname=DB_NAME,
-                            user=DB_USER,
-                            password=DB_PASSWORD,
-                            host=DB_HOST
-                            )
+    conn = psycopg2.connect(
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST)
     # Creating Cursor Object
     cursor = conn.cursor()
     # Fetch comments query
