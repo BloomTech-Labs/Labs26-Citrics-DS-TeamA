@@ -3,10 +3,11 @@ from app.sql_query_function import fetch_query
 
 router = APIRouter()
 
+
 @router.get("/rental/")
 async def rental():
     """
-    City-level historic rental prices for 1 bedroom apartments from 
+    City-level historic rental prices for 1 bedroom apartments from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
     ### Response
@@ -15,7 +16,7 @@ async def rental():
     """
 
     query = """
-    SELECT 
+    SELECT
         city,
         "state",
         bedroom_size,
