@@ -22,7 +22,7 @@ async def rental():
         bedroom_size,
         price_2020_08
     FROM rp_clean1
-    WHERE bedroom_size = '1br'
+    WHERE bedroom_size = '1br' OR bedroom_size = 'Studio'
     """
 
     columns = ["city", "state", "bedroom_size", "price_2020_08"]
