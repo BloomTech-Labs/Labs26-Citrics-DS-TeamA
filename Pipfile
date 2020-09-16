@@ -18,6 +18,9 @@ awscli = "*"
 pipx = "*"
 awsebcli = "*"
 fastapi = "*"
+plotly-express = "*"
+plotly = "*"
+nbformat = "*"
 
 [requires]
 python_version = "3.8"
