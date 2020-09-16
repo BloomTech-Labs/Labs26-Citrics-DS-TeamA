@@ -44,7 +44,7 @@ async def viz(cityname: str):
     cityname = smart_upper(cityname)
 
     # Make a set of citynames in the rental price data
-    citynames = set(x.city.to_list())
+    citynames = set(df.city.to_list())
 
     # Raise HTTPException for unknown inputs
     if cityname not in citynames:
@@ -54,10 +54,10 @@ async def viz(cityname: str):
         )
 
     # Otherwise, extract statecode (for use in title)
-    statecode = x[x.city == cityname]["state"].to_list()[0]
+    statecode = df[df.city == cityname]["state"].to_list()[0]
 
     # Get subset for cityname input
-    subset = x[x.city == cityname]
+    subset = df[df.city == cityname]
 
     # Create visualization
     fig = px.bar(

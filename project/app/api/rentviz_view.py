@@ -14,6 +14,7 @@ async def viz(cityname: str):
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
     ### Path Parameter
+    # ***NOTE: Still Under Development!***
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
     - **Special Examples:**
@@ -44,7 +45,7 @@ async def viz(cityname: str):
     cityname = smart_upper(cityname)
 
     # Make a set of citynames in the rental price data
-    citynames = set(x.city.to_list())
+    citynames = set(df.city.to_list())
 
     # Raise HTTPException for unknown inputs
     if cityname not in citynames:
@@ -54,10 +55,10 @@ async def viz(cityname: str):
         )
 
     # Otherwise, extract statecode (for use in title)
-    statecode = x[x.city == cityname]["state"].to_list()[0]
+    statecode = df[df.city == cityname]["state"].to_list()[0]
 
     # Get subset for cityname input
-    subset = x[x.city == cityname]
+    subset = df[df.city == cityname]
 
     # Create visualization
     fig = px.bar(
