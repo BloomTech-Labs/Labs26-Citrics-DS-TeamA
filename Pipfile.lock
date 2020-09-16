@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "49fa3fcc47bd61ddc47eb11849ea73b146ed8b0a67ef226d109ece873eabe69f"
+            "sha256": "8e017061cdf3ae36a95c9faf988b6c7c98c86071b390d26340fdd2a2384de9d4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -440,6 +440,7 @@
                 "sha256:752f0803588b8d895d604c58fa55119ad104f3fbdd5eb5f7d11a3079680c31c0",
                 "sha256:aa1602346ffa17895687fc48ae58611f014ed7a5da4b07e79c2ca99d6d4dca31"
             ],
+            "index": "pypi",
             "version": "==4.10.0"
         },
         "plotly-express": {
