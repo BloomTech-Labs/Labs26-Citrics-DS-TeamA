@@ -7,7 +7,7 @@ import plotly.express as px
 router = APIRouter()
 
 
-@router.get('/rent_viz/{cityname}')
+@router.get('/rent_viz_view/{cityname}')
 async def viz(cityname: str):
     """
     Visualize city-level rental price estimates from
@@ -22,7 +22,7 @@ async def viz(cityname: str):
         - **DC:** *Washington DC* should be entered as `Washington` or `washington`
 
     ### Response
-    JSON string to render with [react-plotly.js](https://plotly.com/javascript/react/)
+    Plotly Express bar chart of `cityname`s rental price estimates
     """
 
     # Get the city's rental price from database
@@ -67,4 +67,4 @@ async def viz(cityname: str):
         title=f"Rental Price Estimates for {cityname}, {statecode}"
     )
 
-    return fig.to_json()
+    return fig.show()
