@@ -16,6 +16,8 @@ os.chdir(DATA_PATH)
 WEATHER_KEY = os.environ.get("WEATHER_KEY")
 
 # Consult lexicon in data/weather directory before proceeding.
+# 88001 : Las Cruces, NM
+# 92101 : San Diego, CA
 
 locations = [str(code) for code in sys.argv[1:]]
 

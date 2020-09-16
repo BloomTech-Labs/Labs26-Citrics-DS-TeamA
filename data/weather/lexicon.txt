@@ -65,6 +65,9 @@
 01103 : Springfield, MA
 80202 : Denver, CO
 80903 : Colorado Springs, CO
+88001 : Las Cruces, NM
+92101 : San Diego, CA
+78701 : Austin, TX
 95814 : Sacramento, CA
 97411 : Bandon, OR
 32202 : Jacksonville, FL
