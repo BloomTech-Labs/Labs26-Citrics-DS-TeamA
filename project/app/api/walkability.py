@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
-import os
 import json
+import os
 import requests
 
 router = APIRouter()
@@ -58,17 +58,17 @@ async def walkability(city: str, statecode: str):
 
     if statecode not in codes:
         raise HTTPException(status_code=404,
-                            detail=f'State code {code} not found.')
+                            detail=f"State '{statecode}' not found.")
 
-    # Variety of string formats (only 5 results from Google autocomplete API).
+    # Variety of string formats (only 5 results each - Google autocomplete API).
     strs = [f"{city}, {statecode}",
             f"{city}, {codes.get(statecode)}",
             f"{city}, {statecode}, United States",
-            f"{city}, {codes.get(statecode)}, United States",
-            f"{city}, {statecode}, United States of America",
-            f"{city}, {codes.get(statecode)}, United States of America"]
+            f"{city}, {codes.get(statecode)}, United States"]
 
     place_ids = []  # Empty array to populate.
+
+    list_places, places_response = [], []
 
     # Iterate through the strings.
     for input_string in strs:
@@ -77,23 +77,24 @@ async def walkability(city: str, statecode: str):
              f'json?input={input_string}&key={GOOGLE_API_KEY}')
         # Fetch the places from our results.
         places = requests.get(q).json()['predictions']
-        places = [dict(p)['description'].split(',')[0] for p in places]
+        list_places.append([dict(p)['description'].split(',')[0] for p in places])
 
-        # Append place IDs to list if doesn't already exist.
-        for place in places:
-            q = ('https://maps.googleapis.com/maps/api/' +
-                 'place/findplacefromtext/' +
-                 f'json?input={place}&inputtype=textquery' +
-                 f'&key={GOOGLE_API_KEY}')
-            query = requests.get(q).json()['candidates']
+    # Append place IDs to list if doesn't already exist.
+    for place in list_places:
+        q = ('https://maps.googleapis.com/maps/api/' +
+             'place/findplacefromtext/' +
+             f'json?input={place}&inputtype=textquery' +
+             f'&key={GOOGLE_API_KEY}')
+        places_response.append(requests.get(q).json()['candidates'])
 
-            # Some results are returning as lists. Let's deal with that.
-            if isinstance(query, list):
-                place_ids.append([x.get('place_id') for x in
-                                  query if x.get('place_id') not in place_ids])
-            else:
-                if query.get('place_id') not in place_ids:
-                    place_ids.append(query.get('place_id'))
+    for response in places_response:
+        # Some results are returning as lists. Let's deal with that.
+        if isinstance(response, list):
+            place_ids.append([x.get('place_id') for x in
+                            response if x.get('place_id') not in place_ids])
+        else:
+            if response.get('place_id') not in place_ids:
+                place_ids.append(response.get('place_id'))
 
     # Fetch addresses from place IDs.
     addresses = []
@@ -111,12 +112,8 @@ async def walkability(city: str, statecode: str):
              f"&address={address['result']['formatted_address']}" +
              f"&lat={lat_lon['lat']}&lon={lat_lon['lng']}" +
              f"&wsapikey={WS_API_KEY}")
-        scores.append(requests.get(q).json())
-
-    # Get just the walkscores.
-    scores = [s.get('walkscore') for s in scores if s.get('walkscore')]
+        scores.append(requests.get(q).json().get('walkscore'))
 
     # Return average walkscore.
-    average_score = sum(scores) / len(scores)
-    walk = round(average_score, 2)
+    walk = round(sum(scores) / len(scores), 2)
     return json.dumps({'city': f'{city}, {statecode}', 'walkability': walk})
