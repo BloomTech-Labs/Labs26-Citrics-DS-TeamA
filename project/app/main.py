@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from app.api import predict, viz, rental1, rentviz1, rentviz_view
+from app.api import predict, viz, rental1, rentviz1, rentviz_view, rent_city_states
 
 # Description Text
 DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences."
@@ -16,6 +16,7 @@ app = FastAPI(
 
 app.include_router(predict.router)
 app.include_router(viz.router)
+app.include_router(rent_city_states.router)
 app.include_router(rental1.router)
 app.include_router(rentviz1.router)
 app.include_router(rentviz_view.router)
