@@ -57,10 +57,12 @@
 07102 : Newark, NJ
 07302 : Jersey City, NJ
 89101 : Las Vegas, NV
+98028 : Kenmore, WA
+78205 : San Antonio, TX
+18018 : Bethlehem, PA
+89501 : Reno, NV
+02201 : Boston, MA
+01103 : Springfield, MA
+80202 : Denver, CO
+80903 : Colorado Springs, CO
 
-98028 : 
-78205 : 
-18018 : 
-95814 : 
-97411 : 
-32202 : 
