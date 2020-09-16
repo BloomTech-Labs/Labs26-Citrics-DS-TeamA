@@ -13,7 +13,7 @@ async def viz(cityname: str):
     Visualize city-level rental price estimates from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
-    ### Path Parameter
+    ## Path Parameter
     # ***NOTE: Still Under Development!***
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
@@ -22,7 +22,7 @@ async def viz(cityname: str):
         - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
         - **DC:** *Washington DC* should be entered as `Washington` or `washington`
 
-    ### Response
+    ## Response
     Plotly Express bar chart of `cityname`s rental price estimates
     """
 

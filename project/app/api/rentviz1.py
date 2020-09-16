@@ -10,10 +10,10 @@ router = APIRouter()
 @router.get('/rent_viz/{cityname}')
 async def viz(cityname: str):
     """
-    Visualize city-level rental price estimates from
+    Visualize city-level **Studio** and **1-Bedroom** rental price estimates from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
-    ### Path Parameter
+    ## Path Parameter
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
     - **Special Examples:**
@@ -21,8 +21,10 @@ async def viz(cityname: str):
         - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
         - **DC:** *Washington DC* should be entered as `Washington` or `washington`
 
-    ### Response
-    JSON string to render with [react-plotly.js](https://plotly.com/javascript/react/)
+    ## Response
+    - JSON string to render with [react-plotly.js](https://plotly.com/javascript/react/)
+    
+    - Lambda-specific docs for JSON string viz rendering available [here](https://github.com/Lambda-School-Labs/labs-spa-starter/tree/main/src/components/pages/ExampleDataViz)
     """
 
     # Get the city's rental price from database

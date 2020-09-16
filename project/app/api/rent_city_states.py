@@ -10,7 +10,7 @@ async def rental():
     City-level historic rental prices for 1 bedroom apartments from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
-    ### Response
+    ## Response
     JSON string of city names and statecodes found in the rental price data.
     """
 
