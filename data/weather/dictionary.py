@@ -34,6 +34,9 @@ by_zip_json = json.dumps(by_zip, indent=2)
 by_city_json = json.dumps(by_city, indent=2)
 by_state_json = json.dumps(by_state, indent=2)
 
+print(f"No. of entries: {len(by_zip)}")
+print("")
+
 print("By Zipcode")
 print("----------")
 print(by_zip_json)
