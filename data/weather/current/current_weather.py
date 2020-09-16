@@ -47,6 +47,9 @@ for zip in zipcodes:
             # Let's update this with our appropriate values to use.
             resp_data = {k: v for k, v in response.get(item)[0].items()
                          if k not in ['id', 'icon']}
+
+            # For the key and value in resp_data, check status of key in
+            # data_fetched, then append it.
             for k, v in resp_data.items():
                 if f'{item}_{k}' not in data_fetched:
                     data_fetched.append(f'{item}_{k}')
@@ -55,6 +58,7 @@ for zip in zipcodes:
         # Check if item is 'zip' - if so, append respective zip.
         if item == 'zip':
             fetched_items.append(zip[0])
+
         # If the item isn't 'zip', let's append the respective data.
         elif item != 'zip' and not isinstance(response.get(item), dict):
             fetched_items.append(response.get(item))
@@ -79,14 +83,16 @@ data_fetched = [x for x in data_fetched if
 # Make into a pandas dataframe for easy export.
 dataset = pd.DataFrame(data=[x for x in fetched],
                        columns=data_fetched)
-# We need to convert temperature from Kelvin to Fahrenheit
+
+# We need to convert temperature from Kelvin to Fahrenheit (since only USA).
 
 # Setting temperature columns for ease.
-temperature_cols = ['main_temp', 'main_feels_like', 'main_temp_min', 'main_temp_max']
+temperature_cols = ['main_temp', 'main_feels_like',
+                    'main_temp_min', 'main_temp_max']
 
 # First, let's convert Kelvins to Celsius (273.15 degrees less)
 dataset[temperature_cols] = dataset[temperature_cols] - 273.15
 # Now, Celsius into Fahrenheit (F = C * (9/5) + 32)
 dataset[temperature_cols] = round(dataset[temperature_cols] * (9/5) + 32, 2)
-                        
+
 dataset.to_csv('current_weather.csv', index=False, na_rep=np.NaN)
