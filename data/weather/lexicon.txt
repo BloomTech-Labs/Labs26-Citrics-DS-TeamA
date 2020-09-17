@@ -71,3 +71,5 @@
 95814 : Sacramento, CA
 97411 : Bandon, OR
 32202 : Jacksonville, FL
+06103 : Hartford, CT
+06010 : Bristol, CT
