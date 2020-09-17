@@ -1,6 +1,8 @@
 import os
 import json
 
+# Converting lexicon to dictionary and displaying and json object
+
 lexicon = open(os.path.join("data", "weather", "lexicon.txt"), "r")
 
 list_ = []
@@ -34,19 +36,27 @@ by_zip_json = json.dumps(by_zip, indent=2)
 by_city_json = json.dumps(by_city, indent=2)
 by_state_json = json.dumps(by_state, indent=2)
 
-print(f"No. of entries: {len(by_zip)}")
-print("")
+# Measuring length of .csv data
 
-print("By Zipcode")
-print("----------")
-print(by_zip_json)
-print("")
+csv_files = [file for file in os.listdir(os.path.join("data", "weather")) if file[-3:]  == "csv"]
 
-print("By City")
-print("-------")
-print(by_city_json)
-print("")
+if __name__ == "__main__":
+    print(f"No. of entries: {len(by_zip)}")
+    print("")
 
-print("By State")
-print("--------")
-print(by_state_json)
+    print("By Zipcode")
+    print("----------")
+    print(by_zip_json)
+    print("")
+
+    print("By City")
+    print("-------")
+    print(by_city_json)
+    print("")
+
+    print("By State")
+    print("--------")
+    print(by_state_json)
+    print("")
+
+    print(csv_files)
