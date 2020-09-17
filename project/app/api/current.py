@@ -27,11 +27,21 @@ async def current(city: str, statecode: str):
 
     ### Response
     JSON output containtining the following:
-    `city`, `visibility` (in meters), `clouds_all` (percentage cloud cover), `main`, `description`,
+    `city`, `visibility`, `clouds_all`, `main`, `description`,
     `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max`, `main_pressure`,
-    `main_humidity`, `wind_speed`, `wind_deg`
+    `main_humidity`, `wind_speed`, `wind_deg`.
 
-    All temperature responses are in Fahrenheit.
+    ### Metrics
+    `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max` are in Fahrenheit.
+
+    `visibility` is in miles.
+
+    `clouds_all` represents cloud cover, as a percentage.
+
+    `wind_speed` is in miles per hour.
+
+    `pressure` is in Atmospheric pressure (hPa).
+
     """
 
     statecode = statecode.upper()  # Ensure state code is uppercase.
@@ -46,22 +56,32 @@ async def current(city: str, statecode: str):
     features = ['visibility', 'clouds', 'weather', 'main', 'wind']
 
     for feature in features:
+        # If visibility, convert meters into miles.
+        if feature == 'visibility':
+            # mi = m * 0.00062137
+            vis = response.get(feature) * 0.00062137
+            fetched[feature] = round(vis, 1)
+
         if isinstance(response.get(feature), list):
             list_data = {k: v for k, v in response.get(feature)[0].items()
                          if k not in ['id', 'icon']}
             for k, v in list_data.items():
                 fetched[k] = v
-        # Check if the returned data is a dictionary.
+        # Check if the returned data is a dictionary. (temp, wind, clouds)
         elif isinstance(response.get(feature), dict):
             for key, value in response.get(feature).items():
                 # Check if key related to temperature for conversion.
                 if key in ['temp', 'feels_like', 'temp_min', 'temp_max']:
                     # Convert Kelvin to Fahrenheit.
+                    # F = (((K - 273.15) * 9) / 5) + 32
                     temp = round((((value - 273.15) * 9)/5) + 32, 1)
                     fetched[f'{feature}_{key}'] = temp
+                elif key == 'speed':
+                    # Convert meters per second to miles per hour.
+                    # mi = m * 0.00062137, 3600 seconds per hour.
+                    speed = (value * 0.00062137) * 3600
+                    # Round to 1 decimal space.
+                    fetched[f'{feature}_{key}'] = round(speed, 1)
                 else:
                     fetched[f'{feature}_{key}'] = value
-        else:
-            # If returned data is not a list or dictionary, add to fetched.
-            fetched[feature] = response.get(feature)
     return json.dumps(fetched)

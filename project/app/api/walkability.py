@@ -112,7 +112,8 @@ async def walkability(city: str, statecode: str):
              f"&address={address['result']['formatted_address']}" +
              f"&lat={lat_lon['lat']}&lon={lat_lon['lng']}" +
              f"&wsapikey={WS_API_KEY}")
-        scores.append(requests.get(q).json().get('walkscore'))
+        if requests.get(q).json().get('walkscore'):
+            scores.append(requests.get(q).json().get('walkscore'))
 
     # Return average walkscore.
     walk = round(sum(scores) / len(scores), 2)
