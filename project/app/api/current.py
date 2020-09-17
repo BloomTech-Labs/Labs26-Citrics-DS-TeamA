@@ -31,7 +31,7 @@ async def current(city: str, statecode: str):
     `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max`, `main_pressure`,
     `main_humidity`, `wind_speed`, `wind_deg`.
 
-    ## Metrics
+    ### Metrics
     `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max` are in Fahrenheit.
 
     `visibility` is in miles.
