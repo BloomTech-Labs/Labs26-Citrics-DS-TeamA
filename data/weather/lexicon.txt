@@ -80,3 +80,6 @@
 02886 : Warwick, RI
 43215 : Columbus, OH
 44114 : Cleveland, OH
+53202 : Milwaukee, WI
+79901 : El Paso, TX
+96813 : Honolulu, HI
