@@ -13,7 +13,7 @@ async def viz(cityname: str, statecode: str):
     Visualize city-level **Studio** and **1-Bedroom** rental price estimates from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
-    ## Path Parameter
+    ## Path Parameters
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
     - **Special Examples:**
