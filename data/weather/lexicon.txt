@@ -73,3 +73,5 @@
 32202 : Jacksonville, FL
 06103 : Hartford, CT
 06010 : Bristol, CT
+02903 : Providence, RI
+02886 : Warwick, RI
