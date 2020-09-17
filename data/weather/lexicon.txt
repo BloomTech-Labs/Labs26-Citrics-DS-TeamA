@@ -75,3 +75,5 @@
 06010 : Bristol, CT
 02903 : Providence, RI
 02886 : Warwick, RI
+43215 : Columbus, OH
+44114 : Cleveland, OH
