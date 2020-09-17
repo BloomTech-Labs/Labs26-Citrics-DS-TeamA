@@ -71,3 +71,7 @@
 95814 : Sacramento, CA
 97411 : Bandon, OR
 32202 : Jacksonville, FL
+
+84770 : Saint George, UT
+84111 : Salt Lake City, UT
+84601 : Provo, UT
