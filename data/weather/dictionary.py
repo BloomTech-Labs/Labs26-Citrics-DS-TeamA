@@ -1,5 +1,6 @@
 import os
 import json
+from data_len import data_len
 
 # Converting lexicon to dictionary and displaying and json object
 
@@ -36,27 +37,14 @@ by_zip_json = json.dumps(by_zip, indent=2)
 by_city_json = json.dumps(by_city, indent=2)
 by_state_json = json.dumps(by_state, indent=2)
 
-# Measuring length of .csv data
-
-csv_files = [file for file in os.listdir(os.path.join("data", "weather")) if file[-3:]  == "csv"]
-
 if __name__ == "__main__":
-    print(f"No. of entries: {len(by_zip)}")
-    print("")
-
-    print("By Zipcode")
-    print("----------")
+    print("By Zip")
     print(by_zip_json)
     print("")
 
     print("By City")
-    print("-------")
     print(by_city_json)
     print("")
 
     print("By State")
-    print("--------")
     print(by_state_json)
-    print("")
-
-    print(csv_files)

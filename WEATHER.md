@@ -1,6 +1,6 @@
 # Using the weather.py file
 
-## PLEASE READ BEFORE TOUCHING THE weather.py FILE
+## Please read before using the weather.py file:)
 
 The weather.py file is setup to pull data from the [World Weather Online API](https://www.worldweatheronline.com/developer/). The data from the API itself are stored in the data\weather directory along with information on the zipcodes of which locations statistics have already been pulled from the API.
 
