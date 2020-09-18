@@ -88,3 +88,6 @@
 52402 : Cedar Rapids, IA
 83702 : Boise, ID
 83651 : Nampa, ID
+28202 : Charlotte, NC
+48226 : Detroit, MI
+73102 : Oklahoma City, OK
