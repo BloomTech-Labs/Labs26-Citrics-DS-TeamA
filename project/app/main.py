@@ -23,6 +23,7 @@ app.include_router(walkability.router)
 app.include_router(current.router)
 app.include_router(rentviz1.router)
 app.include_router(rentviz_view.router)
+app.include_router(get_stats.router)
 
 
 app.add_middleware(
