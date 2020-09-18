@@ -1,4 +1,6 @@
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
+import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -63,16 +65,43 @@ async def viz(statecode: str):
     # Title (Cleanliness / PEP8)
     title = f'{statename} Unemployment Rate vs. United States Average'
 
+    # Styling
+    style = dict()
+    st_5yrs = np.mean(df[(df['Date'].dt.year ==
+                         (datetime.now().year - 5))]['Percent'])
+    us_5yrs = np.mean(df_us[(df_us['Date'].dt.year ==
+                            (datetime.now().year - 5))]['Percent'])
+    # If the state unemployment rate (last 5 years) is less than US avg...
+    if st_5yrs < us_5yrs:
+        style['state'] = '#39ED11'
+        style['USA'] = 'crimson'
+        style['us_size'] = 2.85
+        style['state_size'] = 2.5
+    # If greater than...
+    elif st_5yrs > us_5yrs:
+        style['USA'] = '#39ED11'
+        style['state'] = 'crimson'
+        style['us_size'] = 3
+        style['state_size'] = 4.5
+    # If equal to...
+    elif st_5yrs == us_5yrs:
+        style['USA'] = '#39ED11'
+        style['state'] = '#39ED11'
+        style['us_size'] = 2.5
+        style['state_size'] = 2.5
+
     # Instantiate Plotly figure
     fig = go.Figure()
     # Add state to figure.
     fig.add_trace(go.Scatter(x=df['Date'], y=df['Percent'],
-                             name=statename, line=dict(width=4.5,
-                                                       dash='dot')))
+                             name=statename,
+                             line=dict(width=style.get('state_size'),
+                             dash='dot', color=style.get('state'))))
     # Add US to figure.
     fig.add_trace(go.Scatter(x=df_us['Date'], y=df_us['Percent'],
-                             name='United States', line=dict(width=1.6,
-                                                             color='crimson')))
+                             name='United States',
+                             line=dict(width=style.get('us_size'),
+                             color=style.get('USA'))))
     # Title and axes.
     fig.update_layout(title_text=title)
     fig.update_xaxes(title='Date')
