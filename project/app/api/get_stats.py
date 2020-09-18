@@ -10,6 +10,29 @@ router = APIRouter()
 
 @router.get("/historic_weather/get_stats/{city}_{statecode}")
 async def get_stats(city: str, statecode: str, stat: str, metric=True):
+    """
+    Extracts a Pandas DataFrame containing the
+    - minimum,
+    - mean,
+    - median, and 
+    - maximum
+
+    for the desired weather metric (stat) for the desired city.
+
+    stat takes one of the following metrics as a parameter:
+    - tempC
+    - FeelsLikeC
+    - humidity
+    - pressure
+    
+    Not included yet in release 1, but release 2 will incoroporate
+    a feature wherein if metric is set to false, the data will be
+    returned in imperial units.
+
+    Primarily for use by the DS team in building predictive models.
+    Will be used under-the-hood in sending predictions and visualizations
+    to the front end.
+    """
     # Loading in csv as Pandas DataFrame
     city = smart_downer(city)
     DataFrame = pd.read_csv(os.path.join("data", "weather", f"{city}_{statecode}.csv"))
