@@ -83,3 +83,8 @@
 53202 : Milwaukee, WI
 79901 : El Paso, TX
 96813 : Honolulu, HI
+53713 : Madison, WI
+50309 : Des Moines, IA
+52402 : Cedar Rapids, IA
+83702 : Boise, ID
+83651 : Nampa, ID
