@@ -62,34 +62,38 @@ async def viz(statecode: str):
 
     statename = statecodes[statecode]  # Fetch state name.
 
-    # Title (Cleanliness / PEP8)
-    title = f'{statename} Unemployment Rate vs. United States Average'
+    five_yrs = datetime.now().year - 5
 
     # Styling
     style = dict()
-    st_5yrs = np.mean(df[(df['Date'].dt.year ==
-                         (datetime.now().year - 5))]['Percent'])
-    us_5yrs = np.mean(df_us[(df_us['Date'].dt.year ==
-                            (datetime.now().year - 5))]['Percent'])
+    st_5yrs = np.mean(df[(df['Date'].dt.year == five_yrs)]['Percent'])
+    us_5yrs = np.mean(df_us[(df_us['Date'].dt.year == five_yrs)]['Percent'])
     # If the state unemployment rate (last 5 years) is less than US avg...
     if st_5yrs < us_5yrs:
         style['state'] = '#39ED11'
         style['USA'] = 'crimson'
         style['us_size'] = 2.85
         style['state_size'] = 2.5
+        title = (f'{statename} averaged lower unemployment than the US ' +
+                 f'since {five_yrs}.')
+        style['title'] = title
     # If greater than...
     elif st_5yrs > us_5yrs:
         style['USA'] = '#39ED11'
         style['state'] = 'crimson'
-        style['us_size'] = 3
+        style['us_size'] = 2.8
         style['state_size'] = 4.5
+        title = (f'{statename} averaged higher unemployment than the US ' +
+                 f'since {five_yrs}.')
+        style['title'] = title
     # If equal to...
     elif st_5yrs == us_5yrs:
         style['USA'] = '#39ED11'
         style['state'] = '#39ED11'
         style['us_size'] = 2.5
         style['state_size'] = 2.5
-
+        title = f'{statename} had the same unemployment as the US since {five_yrs}'
+        style['title'] = title
     # Instantiate Plotly figure
     fig = go.Figure()
     # Add state to figure.
@@ -103,7 +107,7 @@ async def viz(statecode: str):
                              line=dict(width=style.get('us_size'),
                              color=style.get('USA'))))
     # Title and axes.
-    fig.update_layout(title_text=title)
+    fig.update_layout(title_text=style.get('title'))
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
