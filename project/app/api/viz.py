@@ -72,8 +72,8 @@ async def viz(statecode: str):
     if st_5yrs < us_5yrs:
         style['state'] = '#39ED11'
         style['USA'] = 'crimson'
-        style['us_size'] = 2.85
-        style['state_size'] = 2.5
+        style['us_size'] = 2
+        style['state_size'] = 3.5
         title = (f'{statename} averaged lower unemployment than the US ' +
                  f'since {five_yrs}.')
         style['title'] = title
