@@ -48,3 +48,6 @@ if __name__ == "__main__":
 
     print("By State")
     print(by_state_json)
+    print("")
+
+    print(f"No. of entries: {len(by_zip)}")
