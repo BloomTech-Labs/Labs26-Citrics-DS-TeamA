@@ -91,3 +91,6 @@
 28202 : Charlotte, NC
 48226 : Detroit, MI
 73102 : Oklahoma City, OK
+98402 : Tacoma, WA
+93721 : Fresno, CA
+97034 : Lake Oswego, OR
