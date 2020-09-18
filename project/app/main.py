@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from app.api import predict, viz, rental1, walkability, current, rentviz1, rentviz_view, rent_city_states
+from app.api import predict, viz, rental1, walkability, current, rentviz1, rentviz_view, rent_city_states, get_stats
 
 
 # Description Text
