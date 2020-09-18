@@ -87,3 +87,4 @@
 50309 : Des Moines, IA
 52402 : Cedar Rapids, IA
 83702 : Boise, ID
+83651 : Nampa, ID
