@@ -61,17 +61,23 @@ async def viz(statecode: str):
 
     statename = statecodes[statecode]  # Fetch state name.
 
-    # Easy PEP8
-    title = f'{statename} vs. United States Unemployment Rate'
+    # Title (Cleanliness / PEP8)
+    title = f'{statename} Unemployment Rate vs. United States Average'
 
-    # Make Plotly figure
+    # Instantiate Plotly figure
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df['Date'], y=df['Percent'], name=statename))
+    # Add state to figure.
+    fig.add_trace(go.Scatter(x=df['Date'], y=df['Percent'],
+                             name=statename, line=dict(width=4.5,
+                                                       dash='dot')))
+    # Add US to figure.
     fig.add_trace(go.Scatter(x=df_us['Date'], y=df_us['Percent'],
-                             name='United States'))
-    fig.update_xaxes(title='Date')
-    fig.update_yaxes(title='Percentage Unemployed')
+                             name='United States', line=dict(width=1.6,
+                                                             color='crimson')))
+    # Title and axes.
     fig.update_layout(title_text=title)
+    fig.update_xaxes(title='Date')
+    fig.update_yaxes(title='Percent Unemployed')
 
-    # Return Plotly figure as JSON string
+    # Return Plotly figure as JSON string.
     return fig.to_json()
