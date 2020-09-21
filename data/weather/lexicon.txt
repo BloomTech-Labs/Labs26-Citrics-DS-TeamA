@@ -104,3 +104,6 @@
 64106 : Kansas City, MO
 63103 : St. Louis, MO
 55415 : Minneapolis, MN
+94612 : Oakland, CA
+92805 : Anaheim, CA
+92648 : Huntington Beach, CA
