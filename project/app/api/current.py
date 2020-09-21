@@ -26,13 +26,12 @@ async def current(city: str, statecode: str):
     The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
     (case insensitive) for any of the 50 states or the District of Columbia.
 
-    Usage: `current/city_statecode?unit=imperial`
-
     ### Response
     JSON output containtining the following:
     `city`, `visibility`, `clouds_all`, `main`, `description`,
-    `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max`, `main_pressure`,
-    `main_humidity`, `wind_speed`, `wind_deg`.
+    `imperial_main_temp`, `imperial_main_feels_like`, `imperial_main_temp_min`, `imperial_main_temp_max`, 
+    `metric_main_temp`, `metric_main_feels_like`, `metric_main_temp_min`, `metric_main_temp_max`,
+    `main_pressure`,`main_humidity`, `imperial_wind_speed`, `metric_wind_speed`, `wind_deg`.
 
     ### Metrics
     `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max` are in Fahrenheit if imperial, or Celsius if metric.
