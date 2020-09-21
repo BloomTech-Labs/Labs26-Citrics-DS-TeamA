@@ -2,9 +2,8 @@ import sys
 from fastapi import APIRouter
 import pandas as pd
 import os
-from app.smart_downer_function import smart_downer
+from app.string_formatter import string_formatter
 from datetime import datetime
-from app.get_funcs import get_min, get_mean, get_med, get_max
 
 router = APIRouter()
 
@@ -31,7 +30,7 @@ async def get_stats(city: str, statecode: str, metric: str, stat: str):
     to the front end.
     """
     # Loading in csv as Pandas DataFrame
-    city = smart_downer(city)
+    city = string_formatter(city)
     DataFrame = pd.read_csv(os.path.join("data", "weather", f"{city}_{statecode}.csv"))
 
     # Fixing datetime format
@@ -42,13 +41,13 @@ async def get_stats(city: str, statecode: str, metric: str, stat: str):
     series.index = DataFrame.date_time
 
     if stat == "min":
-        return get_min(series, rule="MS").to_json()
+        return  series.resample(rule="MS").min().to_json()
         
     elif stat == "mean":
-        return get_mean(series, rule="MS").to_json()
+        return  series.resample(rule="MS").mean().to_json()
         
     elif stat == "med":
-        return get_med(series, rule="MS").to_json()
+        return  series.resample(rule="MS").med().to_json()
         
     elif stat == "max":
-        return get_max(series, rule="MS").to_json()
+        return  series.resample(rule="MS").max().to_json()
