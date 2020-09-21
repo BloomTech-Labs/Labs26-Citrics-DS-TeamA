@@ -36,6 +36,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Walkability Index](https://geodata.epa.gov/arcgis/rest/services/OA/WalkabilityIndex/MapServer) (NOTE: Suboptimal documentation)
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
+- [Population](https://public.opendatasoft.com/explore/dataset/worldcitiespop/api/?disjunctive.country)
 
 **AWS / DOCS**
 - [AWS Instructions](https://docs.labs.lambdaschool.com/guides/aws/elastic-beanstalk/elastic-beanstalk-dns)
@@ -50,3 +51,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [AWS RDS](https://console.aws.amazon.com/rds/home?region=us-east-1#)
 - [EB Environment Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-softwaresettings.html)
 - [EB Docker Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html)
+- [Route Referencing Example](https://github.com/BW-Post-Here-2/DataScience/blob/master/web_app/reddit_app.py)
