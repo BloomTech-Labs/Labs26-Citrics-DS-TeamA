@@ -83,3 +83,21 @@
 53202 : Milwaukee, WI
 79901 : El Paso, TX
 96813 : Honolulu, HI
+53713 : Madison, WI
+50309 : Des Moines, IA
+52402 : Cedar Rapids, IA
+83702 : Boise, ID
+83651 : Nampa, ID
+28202 : Charlotte, NC
+48226 : Detroit, MI
+73102 : Oklahoma City, OK
+98402 : Tacoma, WA
+93721 : Fresno, CA
+97034 : Lake Oswego, OR
+74103 : Tulsa, OK
+49503 : Grand Rapids, MI
+03101 : Manchester, NH
+03301 : Concord, NH
+58102 : Fargo, ND
+58506 : Bismarck, ND
+05401 : Burlington, VT

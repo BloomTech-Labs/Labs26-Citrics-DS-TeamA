@@ -15,7 +15,6 @@ async def viz(cityname: str, statecode: str):
 
     ## Path Parameters
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
-    - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
     - **Special Examples:**
         - **FORT:** *Ft. Lauderdale* should be entered as `Fort Lauderdale` or `fort lauderdale`
         - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
