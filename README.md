@@ -52,3 +52,4 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [EB Environment Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-softwaresettings.html)
 - [EB Docker Management](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html)
 - [Route Referencing Example](https://github.com/BW-Post-Here-2/DataScience/blob/master/web_app/reddit_app.py)
+- [Whimsical Page](https://whimsical.com/LwTzXGSfiS3YegDRoEVgXY)
