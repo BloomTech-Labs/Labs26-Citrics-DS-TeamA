@@ -101,3 +101,6 @@
 58102 : Fargo, ND
 58506 : Bismarck, ND
 05401 : Burlington, VT
+64106 : Kansas City, MO
+63103 : St. Louis, MO
+55415 : Minneapolis, MN
