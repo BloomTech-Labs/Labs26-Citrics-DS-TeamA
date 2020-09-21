@@ -14,7 +14,7 @@ OW_API_KEY = os.environ.get('OW_API_KEY')
 
 
 @router.get("/current/{city}_{statecode}")
-async def current(city: str, statecode: str, unit: Optional[str]=None):
+async def current(city: str, statecode: str):
     """Fetches current weather from:
     [OpenWeatherMap API](https://openweathermap.org/current),
     using any combination of city and state in the United States.
@@ -26,17 +26,12 @@ async def current(city: str, statecode: str, unit: Optional[str]=None):
     The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
     (case insensitive) for any of the 50 states or the District of Columbia.
 
-    ### Query Parameter (Optional)
-    `unit`:
-    Choice in metric of weather (options: `imperial` for US standard, `metric` for the metric system). Defaults to imperial system.
-
-    Usage: `current/city_statecode?unit=imperial`
-
     ### Response
     JSON output containtining the following:
     `city`, `visibility`, `clouds_all`, `main`, `description`,
-    `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max`, `main_pressure`,
-    `main_humidity`, `wind_speed`, `wind_deg`.
+    `imperial_main_temp`, `imperial_main_feels_like`, `imperial_main_temp_min`, `imperial_main_temp_max`, 
+    `metric_main_temp`, `metric_main_feels_like`, `metric_main_temp_min`, `metric_main_temp_max`,
+    `main_pressure`,`main_humidity`, `imperial_wind_speed`, `metric_wind_speed`, `wind_deg`.
 
     ### Metrics
     `main_temp`, `main_feels_like`, `main_temp_min`, `main_temp_max` are in Fahrenheit if imperial, or Celsius if metric.
@@ -50,12 +45,6 @@ async def current(city: str, statecode: str, unit: Optional[str]=None):
     `pressure` is in Atmospheric pressure (hPa).
 
     """
-    # Check if we have a unit. If not, we're gonna go ahead and use the imperial system as our metric.
-    if unit is None:
-        unit = 'imperial'
-    else:
-        # Make lowercase if the unit does exist.
-        unit = unit.lower()
 
     statecode = statecode.upper()  # Ensure state code is uppercase.
     city = city.title()  # Capitalize first letter of city.
@@ -70,13 +59,12 @@ async def current(city: str, statecode: str, unit: Optional[str]=None):
 
     for feature in features:
         # If visibility and unit is imperial, make conversion.
-        if (feature == 'visibility') & (unit == 'imperial'):
+        if feature == 'visibility':
             # mi = m * 0.00062137
             vis = response.get(feature) * 0.00062137
-            fetched[feature] = round(vis, 1)
-        # Otherise, if visibility / unit is metric, just store.
-        elif (feature == 'visibility') & (unit == 'metric'):
-            fetched[feature] = response.get(feature)
+            fetched[f'imperial_{feature}'] = round(vis, 1)
+            # Metric
+            fetched[f'metric_{feature}'] = response.get(feature)
 
         # If the response is a list, filter and store data.
         if isinstance(response.get(feature), list):
@@ -90,25 +78,24 @@ async def current(city: str, statecode: str, unit: Optional[str]=None):
             for key, value in response.get(feature).items():
                 # Check if key related to temperature for conversion.
                 if key in ['temp', 'feels_like', 'temp_min', 'temp_max']:
-                    if unit == 'imperial':
                         # Convert Kelvin to Fahrenheit.
                         # F = (((K - 273.15) * 9) / 5) + 32
                         f = round((((value - 273.15) * 9)/5) + 32, 1)
-                        fetched[f'{feature}_{key}'] = str(f)
-                    elif unit == 'metric':
-                        # Convert Kelvin to Celsius if metric.
+                        fetched[f'imperial_{feature}_{key}'] = str(f)
+                        # Convert Kelvin to Celsius.
+                        # C = K - 273.15
                         c = round(value - 273.15, 1)
-                        fetched[f'{feature}_{key}'] = c
+                        fetched[f'metric_{feature}_{key}'] = c
+
                 elif key == 'speed':
-                    if unit == 'imperial':
-                        # Convert meters per second to miles per hour.
-                        # mi = m * 0.00062137, 3600 seconds per hour.
-                        speed = (value * 0.00062137) * 3600
-                        # Round to 1 decimal space.
-                        fetched[f'{feature}_{key}'] = round(speed, 1)
-                    elif unit == 'metric':
-                        # Simply append the value if metric.
-                        fetched[f'{feature}_{key}'] = value
+                    # Convert meters per second to miles per hour.
+                    # mi = m * 0.00062137, 3600 seconds per hour.
+                    speed = (value * 0.00062137) * 3600
+                    # Round to 1 decimal space.
+                    fetched[f'imperial_{feature}_{key}'] = round(speed, 1)
+
+                    # Metric
+                    fetched[f'metric_{feature}_{key}'] = value
                 else:
                     fetched[f'{feature}_{key}'] = value
     return json.dumps(fetched)
