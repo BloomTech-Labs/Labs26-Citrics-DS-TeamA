@@ -7,14 +7,14 @@ import plotly.express as px
 router = APIRouter()
 
 
-@router.get('/rent_viz/{cityname}_{statecode}')
-async def viz(cityname: str, statecode: str):
+@router.get('/rent_viz/{city}_{statecode}')
+async def viz(city: str, statecode: str):
     """
     Visualize city-level **Studio** and **1-Bedroom** rental price estimates from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
     ## Path Parameters
-    `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
+    `city`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - **Special Examples:**
         - **FORT:** *Ft. Lauderdale* should be entered as `Fort Lauderdale` or `fort lauderdale`
         - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
@@ -44,18 +44,18 @@ async def viz(cityname: str, statecode: str):
     df = pd.read_json(fetch_query(query, columns))
 
     # Input sanitization
-    cityname = smart_upper(cityname)
+    city = smart_upper(city)
     statecode = statecode.lower().upper()
 
-    # Make a set of citynames in the rental price data
+    # Make a set of citys in the rental price data
     citynames = set(df.city.to_list())
     statecodes = set(df.state.to_list())
 
     # Raise HTTPException for unknown inputs
-    if cityname not in citynames:
+    if city not in citynames:
         raise HTTPException(
             status_code=404,
-            detail=f'City name "{cityname}" not found!'
+            detail=f'City name "{city}" not found!'
         )
 
     if statecode not in statecodes:
@@ -64,15 +64,15 @@ async def viz(cityname: str, statecode: str):
             detail=f'State code "{statecode}" not found!'
         )
 
-    # Get subset for cityname input
-    subset = df[df.city == cityname]
+    # Get subset for city input
+    subset = df[df.city == city]
 
     # Create visualization
     fig = px.bar(
         subset,
         x="price_2020_08",
         y="bedroom_size",
-        title=f"Rental Price Estimates for {cityname}, {statecode}",
+        title=f"Rental Price Estimates for {city}, {statecode}",
         orientation="h",
         template="ggplot2+xgridoff+ygridoff",
         color="price_2020_08",
