@@ -98,3 +98,6 @@
 49503 : Grand Rapids, MI
 03101 : Manchester, NH
 03301 : Concord, NH
+58102 : Fargo, ND
+58506 : Bismarck, ND
+05401 : Burlington, VT
