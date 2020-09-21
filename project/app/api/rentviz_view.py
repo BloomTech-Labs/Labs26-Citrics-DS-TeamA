@@ -92,7 +92,10 @@ async def viz(cityname: str, statecode: str):
             family="trebuchet ms",
             color="darkslateblue",
             size=18
-        )
+        ),
+        autosize=False,
+        width=500,
+        height=500
     )
 
     img = fig.to_image(format="png")

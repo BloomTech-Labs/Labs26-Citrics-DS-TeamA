@@ -89,7 +89,9 @@ async def viz(city: str, statecode: str):
             family="trebuchet ms",
             color="darkslateblue",
             size=18
-        )
+        ),
+        width=500,
+        height=500
     )
 
     return fig.to_json()
