@@ -110,3 +110,6 @@
 55102 : St. Paul, MN
 48104 : Ann Arbor, MI
 59802 : Missoula, MT
+98004 : Bellevue, WA
+98660 : Vancouver, WA
+98032 : Kent, WA
