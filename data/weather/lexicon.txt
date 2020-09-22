@@ -107,3 +107,5 @@
 94612 : Oakland, CA
 92805 : Anaheim, CA
 92648 : Huntington Beach, CA
+55102 : St. Paul, MN
+48104 : Ann Arbor, MI
