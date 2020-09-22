@@ -16,8 +16,6 @@ async def viz(city: str, statecode: str):
     ## Path Parameters
     `city`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
     - **Special Examples:**
-        - **FORT:** *Ft. Lauderdale* should be entered as `Fort Lauderdale` or `fort lauderdale`
-        - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
         - **DC:** *Washington DC* should be entered as `Washington` or `washington`
 
     `statecode`: The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
@@ -50,6 +48,21 @@ async def viz(city: str, statecode: str):
     # Make a set of citys in the rental price data
     citynames = set(df.city.to_list())
     statecodes = set(df.state.to_list())
+
+    # Handle Edge Cases:
+    ### saint
+    if city[0:5] == "Saint":
+        city = city.replace("Saint","St.")
+
+    elif city[0:3] == "St ":
+        city = city.replace("St","St.")
+
+    ### fort
+    elif city[0:3] == "Ft ":
+        city = city.replace("Ft","Fort")
+
+    elif city[0:3] == "Ft.":
+        city = city.replace("Ft.","Fort")
 
     # Raise HTTPException for unknown inputs
     if city not in citynames:
