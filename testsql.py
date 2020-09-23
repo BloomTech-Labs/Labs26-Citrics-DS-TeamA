@@ -1,8 +1,9 @@
 import psycopg2
-from psycopg2.extensions import register_adapter, AsIs
-from psycopg2.extras import execute_values
 import os
 from dotenv import load_dotenv
+import warnings
+import pandas as pd
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
 load_dotenv()
 
@@ -20,14 +21,29 @@ connection = psycopg2.connect(
 
 cur = connection.cursor()
 
-query = """
-SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
-FROM rental
-WHERE "city"='King of Prussia' and "state"='PA';
-"""
+def rental_predictions(city, state):
+    warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
+    query = """
+    SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
+    FROM rental
+    WHERE "city"='{city}' and "state"='{state}';
+    """.format(city=city, state=state)
 
-cur.execute(query)
-records = cur.fetchall()
+    cur.execute(query)
 
-for row in records:
-    print(row)
+    df =  pd.DataFrame.from_records(cur.fetchall(), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
+    df.set_index("month", inplace=True)
+    df.index = pd.to_datetime(df.index)
+    df.index.freq = "MS"
+    
+    series = []
+
+    for col in df.columns:
+        s = ExponentialSmoothing(df["2014-06-01":]["Studio"], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
+        s.name = col
+        series.append(s)
+
+    return pd.concat(series, axis=1).to_json(indent=2)
+
+
+print(rental_predictions("New York", "NY"))
