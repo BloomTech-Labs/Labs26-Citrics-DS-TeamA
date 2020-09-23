@@ -47,6 +47,8 @@ Pygments = "==2.6.1"
 kaleido = "*"
 matplotlib = "*"
 seaborn = "*"
+pipx = "*"
+awscli = "*"
 
 [requires]
 python_version = "3.8"
