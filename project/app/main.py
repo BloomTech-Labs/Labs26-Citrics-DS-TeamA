@@ -24,6 +24,7 @@ app.include_router(rentviz_view.router)
 app.include_router(get_stats.rental_pred)
 app.include_router(rentviz2.router)
 app.include_router(rentviz2_view.router)
+app.include_router(rental_pred)
 
 
 app.add_middleware(
