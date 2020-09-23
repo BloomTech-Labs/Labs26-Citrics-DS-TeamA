@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from app.api import predict, viz, rental1, walkability, current, rentviz1, rentviz2, rentviz_view, rent_city_states, get_stats
+from app.api import predict, viz, rental1, walkability, current, rentviz1, rentviz2, rentviz_view, rentviz2_view, rent_city_states, get_stats
 
 
 # Description Text
@@ -24,6 +24,7 @@ app.include_router(current.router)
 app.include_router(rentviz1.router)
 app.include_router(rentviz_view.router)
 app.include_router(rentviz2.router)
+app.include_router(rentviz2_view.router)
 app.include_router(get_stats.router)
 
 
