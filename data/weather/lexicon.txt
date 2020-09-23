@@ -119,3 +119,4 @@
 59101 : Billings, MT
 57104 : Sioux Falls, SD
 57701 : Rapid City, SD
+82001 : Cheyenne, WY
