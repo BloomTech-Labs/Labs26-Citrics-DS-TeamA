@@ -71,6 +71,9 @@ async def current(city: str, statecode: str):
             list_data = {k: v for k, v in response.get(feature)[0].items()
                          if k not in ['id', 'icon']}
             for k, v in list_data.items():
+                # Capitalize first letter of each word in forecast.
+                if k == 'description' or k == 'main':
+                    v = v.title()
                 fetched[k] = v
 
         # Check if the returned data is a dictionary. (temp, wind, clouds)
