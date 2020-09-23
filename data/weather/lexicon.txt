@@ -116,3 +116,6 @@
 92606 : Irvine, CA
 90247 : Gardena, CA
 32801 : Orlando, FL
+59101 : Billings, MT
+57104 : Sioux Falls, SD
+57701 : Rapid City, SD
