@@ -49,6 +49,7 @@ matplotlib = "*"
 seaborn = "*"
 pipx = "*"
 awscli = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
