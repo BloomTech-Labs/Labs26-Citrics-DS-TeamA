@@ -1,16 +1,18 @@
+from fastapi import APIRouter
 import psycopg2
 import os
-from dotenv import load_dotenv
 import warnings
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
-load_dotenv()
+router = APIRouter()
 
-DB_NAME = os.getenv("DB_NAME", "Invalid DB_NAME value")
-DB_USER = os.getenv("DB_USER", "Invalid DB_USER value")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PW value")
-DB_HOST = os.getenv("DB_HOST", "Invalid DB_HOST value")
+@router.get("/rental/predict/{city}_{state}")
+
+DB_USER = "citrics"
+DB_PASSWORD = "BnDW2WupbFpgZSewsZm7"
+DB_NAME = "postgres"
+DB_HOST = "citricsads.cav8gkdxva9e.us-east-1.rds.amazonaws.com"
 
 connection = psycopg2.connect(
     dbname=DB_NAME,
@@ -44,6 +46,3 @@ def rental_predictions(city, state):
         series.append(s)
 
     return pd.concat(series, axis=1).to_json(indent=2)
-
-
-print(rental_predictions("New York", "NY"))
