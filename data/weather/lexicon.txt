@@ -107,3 +107,17 @@
 94612 : Oakland, CA
 92805 : Anaheim, CA
 92648 : Huntington Beach, CA
+55102 : St. Paul, MN
+48104 : Ann Arbor, MI
+59802 : Missoula, MT
+98004 : Bellevue, WA
+98660 : Vancouver, WA
+98032 : Kent, WA
+92606 : Irvine, CA
+90247 : Gardena, CA
+32801 : Orlando, FL
+59101 : Billings, MT
+57104 : Sioux Falls, SD
+57701 : Rapid City, SD
+82001 : Cheyenne, WY
+82601 : Casper, WY

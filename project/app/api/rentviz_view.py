@@ -17,12 +17,8 @@ async def viz(cityname: str, statecode: str):
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
     ## Path Parameter
-    # ***NOTE: Still Under Development!***
     `cityname`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
-    - Does not currently include functionality for including statecode; e.g. `Atlanta, GA`
     - **Special Examples:**
-        - **FORT:** *Ft. Lauderdale* should be entered as `Fort Lauderdale` or `fort lauderdale`
-        - **SAINT:** *St. Louis* should be entered as `St. Louis` or `st. louis`
         - **DC:** *Washington DC* should be entered as `Washington` or `washington`
 
     `statecode`: The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
@@ -49,6 +45,21 @@ async def viz(cityname: str, statecode: str):
     # Input sanitization
     cityname = smart_upper(cityname)
     statecode = statecode.lower().upper()
+
+    # Handle Edge Cases:
+    ### saint
+    if cityname[0:5] == "Saint":
+        cityname = cityname.replace("Saint","St.")
+
+    elif cityname[0:3] == "St ":
+        cityname = cityname.replace("St","St.")
+
+    ### fort
+    elif cityname[0:3] == "Ft ":
+        cityname = cityname.replace("Ft","Fort")
+
+    elif cityname[0:3] == "Ft.":
+        cityname = cityname.replace("Ft.","Fort")
 
     # Make a set of citynames in the rental price data
     citynames = set(df.city.to_list())
