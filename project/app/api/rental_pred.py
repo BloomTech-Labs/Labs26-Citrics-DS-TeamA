@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from dotenv import load_dotenv
 import psycopg2
 import os
 import warnings
@@ -9,12 +8,11 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 router = APIRouter()
 
 @router.get("/rental/predict/{city}_{state}")
-load_dotenv()
 
-DB_NAME = os.getenv("DB_NAME", "Invalid DB_NAME")
-DB_USER = os.getenv("DB_USER", "Invalid DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST", "Invalid DB_HOST")
+DB_USER = "citrics"
+DB_PASSWORD = "BnDW2WupbFpgZSewsZm7"
+DB_NAME = "postgres"
+DB_HOST = "citricsads.cav8gkdxva9e.us-east-1.rds.amazonaws.com"
 
 connection = psycopg2.connect(
     dbname=DB_NAME,
