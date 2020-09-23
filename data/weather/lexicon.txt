@@ -113,3 +113,6 @@
 98004 : Bellevue, WA
 98660 : Vancouver, WA
 98032 : Kent, WA
+92606 : Irvine, CA
+90247 : Gardena, CA
+32801 : Orlando, FL
