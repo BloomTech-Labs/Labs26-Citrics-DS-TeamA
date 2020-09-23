@@ -120,3 +120,4 @@
 57104 : Sioux Falls, SD
 57701 : Rapid City, SD
 82001 : Cheyenne, WY
+82601 : Casper, WY
