@@ -6,3 +6,4 @@ psycopg2-binary==2.8.5
 python-dotenv==0.14.0
 requests==2.24.0
 kaleido==0.0.3.post1
+statsmodels==0.12.0
