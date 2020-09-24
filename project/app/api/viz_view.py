@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 router = APIRouter()
 
 
-@router.get('/viz/{statecode}')
+@router.get('/viz_view/{statecode}')
 async def viz(statecode: str,
               statecode2: Optional[str]=None,
               statecode3: Optional[str]=None):
@@ -49,15 +49,16 @@ async def viz(statecode: str,
         'WI': 'Wisconsin', 'WY': 'Wyoming'
     }
     statecode = statecode.upper()
+    
     if statecode not in statecodes:
         raise HTTPException(status_code=404,
                             detail=f'State code {statecode} not found')
-    if statecode2 not in statecodes and statecode2:
-        raise HTTPException(status_code=404,
-                            detail=f'State code {statecode2} not found')
-    if statecode3 not in statecodes and statecode3:
-        raise HTTPException(status_code=404,
-                            detail=f'State code {statecode3} not found')
+    # if statecode2 not in statecodes and statecode2:
+    #     raise HTTPException(status_code=404,
+    #                         detail=f'State code {statecode2} not found')
+    # if statecode3 not in statecodes and statecode3:
+    #     raise HTTPException(status_code=404,
+    #                         detail=f'State code {statecode3} not found')
 
     # Get the state's unemployment rate data from FRED
     url = f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={statecode}UR'
@@ -65,12 +66,22 @@ async def viz(statecode: str,
 
     # If there's a second statecode, make a df for it.
     if statecode2:
+        statecode2 = statecode2.upper()
+        # Check input
+        if statecode2 not in statecodes:
+            raise HTTPException(status_code=404,
+                                detail=f'State code {statecode2} not found')
         url_2 = f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={statecode2}UR'
         df_2 = pd.read_csv(url_2, parse_dates=['DATE'])
         df_2.columns = ['Date', 'Percent']
 
     # If there's a third statecode, make a df for it.
     if statecode3:
+        statecode3 = statecode3.upper()
+        # Check input
+        if statecode3 not in statecodes:
+            raise HTTPException(status_code=404,
+                                detail=f'State code {statecode3} not found')
         url_3 = f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={statecode3}UR'
         df_3 = pd.read_csv(url_3, parse_dates=['DATE'])
         df_3.columns = ['Date', 'Percent']
