@@ -156,14 +156,14 @@ async def viz(city: str, statecode: str,
         city2max = max(city2_df['price_2020_08'].values)
         # If there's only 2 cities, make comparison / style.
         if city1max > city2max and not city3:
-                styling['city1color'] = '#9e3a29'
-                styling['city2color'] = 'darkcyan'
+                styling['city1color'] = '#CC0000'  # red
+                styling['city2color'] = '#4BB543'  # green
                 styling['title'] = (f'{city}, {statecode} has higher rental ' +
                                     f'rates than {city2}, {statecode2}.')
         # Make comparison / style (opposite order).
         elif city1max < city2max and not city3:
-                styling['city1color'] = 'darkcyan'
-                styling['city2color'] = '#9e3a29'
+                styling['city1color'] = '#4BB543'  # green
+                styling['city2color'] = '#CC0000'  # red
                 styling['title'] = (f'{city}, {statecode} has lower rental ' +
                                     f'rates than {city2}, {statecode2}.')
         # Check if there's 3 cities (max) to compare)
@@ -183,16 +183,16 @@ async def viz(city: str, statecode: str,
             # Make comparison / style.
             if (city1max > city2max) and (city2max > city3max):
                 # 1 > 2 > 3
-                    styling['city1color'] = '#9e3a29'  # red
+                    styling['city1color'] = '#CC0000'  # red
                     styling['city2color'] = 'darkcyan'
-                    styling['city3color'] = '#76259b'  # green
+                    styling['city3color'] = '#4BB543'  # green
                     styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
             # Make comparison / style.
             elif (city1max > city3max) and (city3max > city2max):
                 # 1 > 3 > 2
-                    styling['city1color'] = '#9e3a29'  # red
-                    styling['city2color'] = '#76259b'  # green
+                    styling['city1color'] = '#CC0000'  # red
+                    styling['city2color'] = '#4BB543'  # green
                     styling['city3color'] = 'darkcyan'
                     styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
@@ -200,15 +200,15 @@ async def viz(city: str, statecode: str,
             elif (city2max > city1max) and (city1max > city2max):
                 # 2 > 1 > 3
                     styling['city1color'] = 'darkcyan'
-                    styling['city2color'] = '#9e3a29'  # red
-                    styling['city3color'] = '#76259b'  # green
+                    styling['city2color'] = '#CC0000'  # red
+                    styling['city3color'] = '#4BB543'  # green
                     styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
                                         f'than {city3}, {statecode2}, but lower than {city2}, {statecode3}.')
             # Make comparison / style.
             elif (city2max > city3max) and (city3max > city1max):
                 # 2 > 3 > 1
-                    styling['city1color'] = '#76259b'  # green
-                    styling['city2color'] = '#9e3a29'  # red
+                    styling['city1color'] = '#4BB543'  # green
+                    styling['city2color'] = '#CC0000'  # red
                     styling['city3color'] = 'darkcyan'
                     styling['title'] = (f'{city}, {statecode} has lower rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
@@ -216,17 +216,17 @@ async def viz(city: str, statecode: str,
             elif (city3max > city1max) and (city1max > city2max):
                 # 3 > 1 > 2
                     styling['city1color'] = 'darkcyan'
-                    styling['city2color'] = '#76259b'  # green
-                    styling['city3color'] = '#9e3a29'  # red
+                    styling['city2color'] = '#4BB543'  # green
+                    styling['city3color'] = '#CC0000'  # red
                     styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
                                         f'than {city2}, {statecode2}, but lower than {city3}, {statecode3}.')
             # Make comparison / style.
             elif (city3max > city2max) and (city2max > city1max):
                 # 3 > 2 > 1
-                    styling['city1color'] = '#76259b'  # green
+                    styling['city1color'] = '#4BB543'  # green
                     styling['city2color'] = 'darkcyan'
-                    styling['city3color'] = '#9e3a29'  # red
-                    styling['title'] = (f'{city}. {statecode} has lower rental rates ' +
+                    styling['city3color'] = '#CC0000'  # red
+                    styling['title'] = (f'{city}, {statecode} has lower rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
     # Create array; populate with bar data for first city.
     figure_data = [go.Bar(name=city,
@@ -254,9 +254,16 @@ async def viz(city: str, statecode: str,
     fig = go.Figure(data=figure_data)
 
     # Update general figure layout.
-    fig.update_layout(barmode='group', title_text=styling.get('title'),
-                      xaxis_title='Number of Bedrooms',
-                      yaxis_title='Monthly Rental Estimate')
+    if city3:
+        fig.update_layout(barmode='group', title_text=styling.get('title'),
+                        xaxis_title='Number of Bedrooms',
+                        yaxis_title='Monthly Rental Estimate',
+                        font=dict(size=10))
+    else:
+        # Update general figure layout.
+        fig.update_layout(barmode='group', title_text=styling.get('title'),
+                        xaxis_title='Number of Bedrooms',
+                        yaxis_title='Monthly Rental Estimate')
 
     img = fig.to_image(format="png")
 
