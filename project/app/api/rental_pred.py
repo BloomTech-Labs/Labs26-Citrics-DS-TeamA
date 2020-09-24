@@ -42,10 +42,10 @@ async def pred(city: str, state: str):
         series = []
 
         for col in df.columns:
-            s = ExponentialSmoothing(df["2014-06-01":]["Studio"], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
+            s = ExponentialSmoothing(df["2014-06-01":][col], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
             s.name = col
             series.append(s)
 
-        return pd.concat(series, axis=1)
+        return pd.concat(series, axis=1).to_json(indent=2)
 
     return rental_predictions(city, state)
