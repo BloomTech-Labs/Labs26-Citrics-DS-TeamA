@@ -13,8 +13,8 @@ router = APIRouter()
 
 @router.get('/viz_view/{statecode}')
 async def viz(statecode: str,
-              statecode2: Optional[str]=None,
-              statecode3: Optional[str]=None):
+              statecode2: Optional[str] = None,
+              statecode3: Optional[str] = None):
     """
     Visualize state unemployment rate from [Federal Reserve Economic Data](https://fred.stlouisfed.org/) 📈
 
@@ -49,7 +49,7 @@ async def viz(statecode: str,
         'WI': 'Wisconsin', 'WY': 'Wyoming'
     }
     statecode = statecode.upper()
-    
+
     if statecode not in statecodes:
         raise HTTPException(status_code=404,
                             detail=f'State code {statecode} not found')
@@ -96,25 +96,25 @@ async def viz(statecode: str,
     # Restructure US to match state unemployment start dates.
     if not statecode2 and not statecode3:
         df_us = df_us[(df_us['Date'].dt.year >= min(df['Date'].dt.year)) &
-                    (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
-                    (df_us['Date'].dt.day >= min(df['Date'].dt.day))]
+                      (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
+                      (df_us['Date'].dt.day >= min(df['Date'].dt.day))]
     if statecode2 and not statecode3:
         df_us = df_us[(df_us['Date'].dt.year >= min(df['Date'].dt.year)) &
-                    (df_us['Date'].dt.year >= min(df_2['Date'].dt.year)) &
-                    (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
-                    (df_us['Date'].dt.month >= min(df_2['Date'].dt.month)) &
-                    (df_us['Date'].dt.day >= min(df['Date'].dt.day)) &
-                    (df_us['Date'].dt.day >= min(df_2['Date'].dt.day))]
+                      (df_us['Date'].dt.year >= min(df_2['Date'].dt.year)) &
+                      (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
+                      (df_us['Date'].dt.month >= min(df_2['Date'].dt.month)) &
+                      (df_us['Date'].dt.day >= min(df['Date'].dt.day)) &
+                      (df_us['Date'].dt.day >= min(df_2['Date'].dt.day))]
     if statecode2 and statecode3:
         df_us = df_us[(df_us['Date'].dt.year >= min(df['Date'].dt.year)) &
-                    (df_us['Date'].dt.year >= min(df_2['Date'].dt.year)) &
-                    (df_us['Date'].dt.year >= min(df_3['Date'].dt.year)) &
-                    (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
-                    (df_us['Date'].dt.month >= min(df_2['Date'].dt.month)) &
-                    (df_us['Date'].dt.month >= min(df_3['Date'].dt.month)) &
-                    (df_us['Date'].dt.day >= min(df['Date'].dt.day)) &
-                    (df_us['Date'].dt.day >= min(df_2['Date'].dt.day)) &
-                    (df_us['Date'].dt.day >= min(df_3['Date'].dt.day))]        
+                      (df_us['Date'].dt.year >= min(df_2['Date'].dt.year)) &
+                      (df_us['Date'].dt.year >= min(df_3['Date'].dt.year)) &
+                      (df_us['Date'].dt.month >= min(df['Date'].dt.month)) &
+                      (df_us['Date'].dt.month >= min(df_2['Date'].dt.month)) &
+                      (df_us['Date'].dt.month >= min(df_3['Date'].dt.month)) &
+                      (df_us['Date'].dt.day >= min(df['Date'].dt.day)) &
+                      (df_us['Date'].dt.day >= min(df_2['Date'].dt.day)) &
+                      (df_us['Date'].dt.day >= min(df_3['Date'].dt.day))]
 
     statename = statecodes[statecode]  # Fetch state name.
 
@@ -132,7 +132,7 @@ async def viz(statecode: str,
     # State
     st_5yrs = np.mean(df[(df['Date'].dt.year == five_yrs)]['Percent'])
     if statecode2:
-        # State 2 
+        # State 2
         st2_5yrs = np.mean(df_2[(df_2['Date'].dt.year == five_yrs)]['Percent'])
     if statecode3:
         # State 3
@@ -193,7 +193,7 @@ async def viz(statecode: str,
             style['state2color'] = '#4BB543'  # Success green
             style['state3color'] = 'darkcyan'  # Dark cyan
             style['us_color'] = 'black'
-    
+
         elif (st2_5yrs > st_5yrs) and (st_5yrs > st3_5yrs):
             style['title'] = f'{statename} Averaged Higher Unemployment than {state3}, but lower than {state2} since {five_yrs}.'
             style['state1color'] = 'darkcyan'  # Dark cyan
@@ -235,12 +235,12 @@ async def viz(statecode: str,
     # Check if there's a second and third trace we need to add.
     if statecode2:
         fig.add_trace(go.Scatter(x=df_2['Date'], y=df_2['Percent'],
-                                name=state2,
-                                line=dict(color=style.get('state2color'))))
+                                 name=state2,
+                                 line=dict(color=style.get('state2color'))))
     if statecode3:
         fig.add_trace(go.Scatter(x=df_3['Date'], y=df_3['Percent'],
-                                name=state3,
-                                line=dict(color=style.get('state3color'))))
+                                 name=state3,
+                                 line=dict(color=style.get('state3color'))))
     # Title and axes.
     if statecode3:
         fig.update_layout(title_text=style.get('title'),
