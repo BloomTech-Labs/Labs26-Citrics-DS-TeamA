@@ -47,3 +47,5 @@ async def pred(city: str, state: str):
             series.append(s)
 
         return pd.concat(series, axis=1).to_json(indent=2)
+
+    return rental_predictions(city, state)
