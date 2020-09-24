@@ -202,7 +202,7 @@ async def viz(statecode: str,
             style['us_color'] = 'black'
 
         elif (st3_5yrs > st_5yrs) and (st_5yrs > st2_5yrs):
-            style['title'] = f'{statename} Averaged Lower Unemployment than {state2} and {state3} since {five_yrs}.'
+            style['title'] = f'{statename} Averaged Lower Unemployment than {state3}, but higher than {state2} since {five_yrs}.'
             style['state1color'] = 'darkcyan'  # Dark cyan
             style['state2color'] = '#4BB543'  # Success green
             style['state3color'] = '#CC0000'  # Dark error red
@@ -217,7 +217,7 @@ async def viz(statecode: str,
     # Add US to figure.
     fig.add_trace(go.Scatter(x=df_us['Date'], y=df_us['Percent'],
                              name='United States',
-                             line=dict(color=style.get('us_color'), dash='dot')))
+                             line=dict(color=style.get('us_color'), dash='dash')))
     # Check if there's a second and third trace we need to add.
     if statecode2:
         fig.add_trace(go.Scatter(x=df_2['Date'], y=df_2['Percent'],
@@ -228,7 +228,11 @@ async def viz(statecode: str,
                                 name=state3,
                                 line=dict(color=style.get('state3color'))))
     # Title and axes.
-    fig.update_layout(title_text=style.get('title'))
+    if statecode3:
+        fig.update_layout(title_text=style.get('title'),
+                          font=dict(size=10))
+    else:
+        fig.update_layout(title_text=style.get('title'))
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
