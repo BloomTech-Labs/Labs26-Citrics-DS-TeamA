@@ -148,13 +148,13 @@ async def viz(statecode: str,
     if statecode and statecode2 and not statecode3:
         if st_5yrs > st2_5yrs:
             style['title'] = f'{statename} Averaged Higher Unemployment than {state2} since {five_yrs}.'
-            style['state1color'] = '#4BB543'  # Success Green
-            style['state2color'] = '#CC0000'  # Dark error red
+            style['state1color'] = '#CC0000'  # Dark error red
+            style['state2color'] = '#4BB543'  # Success green
             style['us_color'] = 'black'
         elif st_5yrs < st2_5yrs:
             style['title'] = f'{statename} Averaged Lower Unemployment than {state2} since {five_yrs}.'
-            style['state1color'] = '#CC0000'  # Dark error red
-            style['state2color'] = '#4BB543'  # Success Green
+            style['state1color'] = '#4BB543'  # Success green
+            style['state2color'] = '#CC0000'  # Dark error red
             style['us_color'] = 'black'
         elif st_5yrs == st2_5yrs:
             style['title'] = f'{statename} and {state2} Averaged the Same Unemployment since {five_yrs}.'
