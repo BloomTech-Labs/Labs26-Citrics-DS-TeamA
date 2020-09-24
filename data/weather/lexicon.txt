@@ -124,3 +124,6 @@
 04101 : Portland, ME
 04240 : Lewiston, ME
 97401 : Eugene, OR
+97123 : Hillsboro, OR
+97703 : Bend, OR
+98201 : Everett, WA
