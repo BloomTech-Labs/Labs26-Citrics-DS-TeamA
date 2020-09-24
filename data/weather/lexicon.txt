@@ -121,3 +121,6 @@
 57701 : Rapid City, SD
 82001 : Cheyenne, WY
 82601 : Casper, WY
+04101 : Portland, ME
+04240 : Lewiston, ME
+97401 : Eugene, OR
