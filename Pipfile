@@ -50,6 +50,7 @@ seaborn = "*"
 pipx = "*"
 awscli = "*"
 python-dotenv = "*"
+statsmodels = "*"
 
 [requires]
 python_version = "3.8"
