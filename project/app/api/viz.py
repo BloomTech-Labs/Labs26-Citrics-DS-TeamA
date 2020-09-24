@@ -46,6 +46,11 @@ async def viz(statecode: str,
         'WI': 'Wisconsin', 'WY': 'Wyoming'
     }
     statecode = statecode.upper()
+    if statecode2:
+        statecode2 = statecode2.upper()
+    if statecode3:
+        statecode3 = statecode3.upper()
+
     if statecode not in statecodes:
         raise HTTPException(status_code=404,
                             detail=f'State code {statecode} not found')
