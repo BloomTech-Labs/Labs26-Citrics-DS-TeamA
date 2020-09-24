@@ -102,20 +102,36 @@ async def viz(city: str, statecode: str,
             city3 = city3.replace("Ft.", "Fort")
 
     # Raise HTTPException for unknown inputs
-    if ((city not in citynames) or
-       (city2 not in citynames and city2) or
-       (city3 not in citynames and city3)):
+    if city not in citynames:
         raise HTTPException(
             status_code=404,
             detail=f'City name "{city}" not found!'
         )
-
-    if ((statecode not in statecodes) or
-       (statecode2 not in statecodes and city2) or
-       (statecode3 not in statecodes and city3)):
+    if city2 not in citynames and city2:
         raise HTTPException(
             status_code=404,
-            detail=f'State code "{statecode}" not found!'
+            detail=f'City name "{city2}" not found!'
+        )
+    if city3 not in citynames and city3:
+        raise HTTPException(
+            status_code=404,
+            detail=f'City name "{city3}" not found!'
+        )
+
+    if statecode not in statecodes:
+        raise HTTPException(
+            status_code=404,
+            detail=f'Statecode "{statecode}" not found!'
+        )
+    if statecode2 not in statecodes and statecode2:
+        raise HTTPException(
+            status_code=404,
+            detail=f'Statecode "{statecode2}" not found!'
+        )
+    if statecode3 not in statecodes and statecode3:
+        raise HTTPException(
+            status_code=404,
+            detail=f'Statecode "{statecode3}" not found!'
         )
 
     # Get subset for city input
@@ -138,14 +154,14 @@ async def viz(city: str, statecode: str,
         city2max = max(city2_df['price_2020_08'].values)
         # If there's only 2 cities, make comparison / style.
         if city1max > city2max and not city3:
-                styling['city1color'] = '#9e3a29'
-                styling['city2color'] = 'darkcyan'
+                styling['city1color'] = '#9e3a29'  # red
+                styling['city2color'] = '#76259b'  # green
                 styling['title'] = (f'{city}, {statecode} has higher rental ' +
                                     f'rates than {city2}, {statecode2}.')
         # Make comparison / style (opposite order).
         elif city1max < city2max and not city3:
-                styling['city1color'] = 'darkcyan'
-                styling['city2color'] = '#9e3a29'
+                styling['city1color'] = '#76259b'  # green
+                styling['city2color'] = '#9e3a29'  # red
                 styling['title'] = (f'{city}, {statecode} has lower rental ' +
                                     f'rates than {city2}, {statecode2}.')
         # Check if there's 3 cities (max) to compare)
@@ -165,51 +181,51 @@ async def viz(city: str, statecode: str,
             # Make comparison / style.
             if (city1max > city2max) and (city2max > city3max):
                 # 1 > 2 > 3
-                    styling['city1color'] = '#9e3a29'
-                    styling['city2color'] = '#76259b'
-                    styling['city3color'] = 'darkcyan'
-                    styling['title'] = (f'{city} has higher rental rates ' +
-                                        f'than {city2} and {city3}.')
+                    styling['city1color'] = '#9e3a29'  # red
+                    styling['city2color'] = 'darkcyan'
+                    styling['city3color'] = '#76259b'  # green
+                    styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
+                                        f'than {city2}, {statecode2} and {city3}, {statecode3}.')
             # Make comparison / style.
-            elif (city1max > city2max) and (city2max < city3max):
+            elif (city1max > city3max) and (city3max > city2max):
                 # 1 > 3 > 2
-                    styling['city1color'] = '#9e3a29'
-                    styling['city2color'] = 'darkcyan'
-                    styling['city3color'] = '#76259b'
-                    styling['title'] = (f'{city} has higher rental rates ' +
-                                        f'than {city2} and {city3}.')
-            # Make comparison / style.
-            elif (city2max > city1max) and (city1max < city3max):
-                # 2 > 1 > 3
-                    styling['city1color'] = '#76259b'
-                    styling['city2color'] = '#9e3a29'
+                    styling['city1color'] = '#9e3a29'  # red
+                    styling['city2color'] = '#76259b'  # green
                     styling['city3color'] = 'darkcyan'
-                    styling['title'] = (f'{city} has higher rental rates ' +
-                                        f'than {city3}, but lower than {city2}.')
+                    styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
+                                        f'than {city2}, {statecode2} and {city3}, {statecode3}.')
             # Make comparison / style.
-            elif (city1max > city2max) and (city2max < city3max):
+            elif (city2max > city1max) and (city1max > city2max):
+                # 2 > 1 > 3
+                    styling['city1color'] = 'darkcyan'
+                    styling['city2color'] = '#9e3a29'  # red
+                    styling['city3color'] = '#76259b'  # green
+                    styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
+                                        f'than {city3}, {statecode2}, but lower than {city2}, {statecode3}.')
+            # Make comparison / style.
+            elif (city2max > city3max) and (city3max > city1max):
                 # 2 > 3 > 1
-                    styling['city1color'] = '#9e3a29'
-                    styling['city2color'] = 'darkcyan'
-                    styling['city3color'] = '#76259b'
-                    styling['title'] = (f'{city} has lower rental rates ' +
-                                        f'than {city2} and {city3}.')
+                    styling['city1color'] = '#76259b'  # green
+                    styling['city2color'] = '#9e3a29'  # red
+                    styling['city3color'] = 'darkcyan'
+                    styling['title'] = (f'{city}, {statecode} has lower rental rates ' +
+                                        f'than {city2}, {statecode2} and {city3}, {statecode3}.')
             # Make comparison / style.
             elif (city3max > city1max) and (city1max > city2max):
                 # 3 > 1 > 2
                     styling['city1color'] = 'darkcyan'
-                    styling['city2color'] = '#9e3a29'
-                    styling['city3color'] = '#76259b'
-                    styling['title'] = (f'{city} has higher rental rates ' +
-                                        f'than {city2}, but lower than {city3}.')
+                    styling['city2color'] = '#76259b'  # green
+                    styling['city3color'] = '#9e3a29'  # red
+                    styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
+                                        f'than {city2}, {statecode2}, but lower than {city3}, {statecode3}.')
             # Make comparison / style.
-            elif (city1max < city2max) and (city2max < city3max):
+            elif (city3max > city2max) and (city2max > city1max):
                 # 3 > 2 > 1
-                    styling['city1color'] = 'darkcyan'
-                    styling['city2color'] = '#76259b'
-                    styling['city3color'] = '#9e3a29'
-                    styling['title'] = (f'{city} has lower rental rates ' +
-                                        f'than {city2} and {city3}.')
+                    styling['city1color'] = '#76259b'  # green
+                    styling['city2color'] = 'darkcyan'
+                    styling['city3color'] = '#9e3a29'  # red
+                    styling['title'] = (f'{city}. {statecode} has lower rental rates ' +
+                                        f'than {city2}, {statecode2} and {city3}, {statecode3}.')
 
     # Create array; populate with bar data for first city.
     figure_data = [go.Bar(name=city,
