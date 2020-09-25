@@ -131,3 +131,6 @@
 00901 : San Juan, PR
 99801 : Juneau, AK
 99701 : Fairbanks, AK
+76102 : Fort Worth, TX
+85201 : Mesa, AZ
+68183 : Omaha, NE
