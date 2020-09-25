@@ -127,3 +127,6 @@
 97123 : Hillsboro, OR
 97703 : Bend, OR
 98201 : Everett, WA
+00730 : Ponce, PR
+00901 : San Juan, PR
+99801 : Juneau, AK
