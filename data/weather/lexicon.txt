@@ -130,3 +130,4 @@
 00730 : Ponce, PR
 00901 : San Juan, PR
 99801 : Juneau, AK
+99701 : Fairbanks, AK
