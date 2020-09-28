@@ -3,7 +3,6 @@ import sys
 
 f = open("Dockerrun.aws.json", "r")
 docker = json.load(f)
-f.close()
 
 docker_id = input("Docker ID: ").lower()
 
@@ -21,7 +20,7 @@ else:
     docker["Image"]["Name"] = docker_id + "/labs26-citrics-ds-teama_web:latest"
 
 f = open("Dockerrun.aws.json", "w")
-json.dump(docker, f)
+json.dump(docker, f, indent=2)
 f.close()
 
 print(json.dumps(docker, indent=2))

@@ -2,7 +2,7 @@
 
 ## Please read before using the weather.py file:)
 
-The weather.py file is setup to pull data from the [World Weather Online API](https://www.worldweatheronline.com/developer/). The data from the API itself are stored in the data\weather directory along with information on the zipcodes of which locations statistics have already been pulled from the API.
+The *weather.py* file is setup to pull data from the [World Weather Online API](https://www.worldweatheronline.com/developer/). The data from the API itself are stored in the data\weather directory along with information on the zipcodes of which locations statistics have already been pulled from the API.
 
 ## Instructions
 
@@ -12,7 +12,7 @@ Follow the instructions in the following [link](https://www.worldweatheronline.c
 
 ### Packages
 
-Before attempting to use the weather.py file, make sure to check that you have the correct versions of **python-dotenv** and **wwo_hist** as listed in the global requirements.txt file.
+Before attempting to use the *weather.py* file, make sure to check that you have the correct versions of **python-dotenv** and **wwo_hist** as listed in the global requirements.txt file.
 
 If not using a virtual environment or if using conda:
 ```
@@ -34,7 +34,20 @@ python-dotenv                      0.14.0
 wwo-hist                           0.0.5
 ```
 
-If they are not installed and you are using a virtual environment of Conda:
+#### Installing Packages from requirements.txt file
+
+If you using a Conda environment, entering
+
+```
+conda install --yes --file requirements.txt
+```
+
+in command line will ensure that the appropriate version of both packages
+are installed on your local machine.
+
+#### Individual Package Installation
+
+If you are not installed and you are not using a virtual environment or are using Conda:
 ```
 pip install python-dotenv==0.14.0
 pip install wwo-hist==0.0.5
@@ -59,7 +72,7 @@ The weather.py file is setup to take the zip codes of the given locale as system
 For example, if I wanted to pull data for New York, Los Angeles, and Chicago I would run the file with the zip codes for each respective city as additional arguments like so:
 
 ```
-python weather.py 10007 90012 60602
+python utilities/weather.py 10007 90012 60602
 ```
 
 The script would then ask to input the names of each location IN ORDER. These inputs are then used to update the lexicon.
@@ -87,3 +100,5 @@ It is important for readability and consistency that these be changed to reflect
 {cityname}_{state id}.csv
 
 For example: New York would initally read out as 10007.csv, but would need to be manually changed to new_york_ny.csv
+
+**Also Important!** Even after following the steps above to retrieve data from the API, your job in still not done yet! These data you just pulled now exist in the data/weather directory as csv files, but in order for any files in the project directory to be able to recognize them when the DS API is deployed online, they need to be inserted into the database. To do this, follow the instructions for using the *insert.py* file in [its README](INSERT.md)
