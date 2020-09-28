@@ -81,7 +81,7 @@ def reset():
     cur.execute(reset_table)
     connection.commit()
 
-def reset_city(city, state):
+def reset_city(city=None, state=None, location=None):
     delete = """
     DELETE FROM historic_weather
     WHERE "city"='{city}' and "state"='{state}'
@@ -89,6 +89,36 @@ def reset_city(city, state):
 
     cur.execute(delete)
     connection.commit()
+
+def retrieve(state=None, city=None, location=None):
+    if state and city:
+        retrieve_records = """
+        SELECT * FROM historic_weather
+        WHERE "city"='{city}' and "state"='{state}'
+        """.format(city=city.title(), state=state.upper())
+
+    elif location:
+        retrieve_records = """
+        SELECT * FROM historic_weather
+        WHERE "location"='{location}'
+        """.format(location=location)
+
+    cur.execute(retrieve_records)
+
+    columns = [
+        "date_time",
+        "location",
+        "city",
+        "state",
+        "tempC",
+        "FeelsLikeC",
+        "precipMM",
+        "totalSnow_cm",
+        "humidity",
+        "pressure"
+    ]
+
+    return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
 if __name__ == "__main__":
     input1 = input("""
@@ -105,15 +135,17 @@ if __name__ == "__main__":
     If you would like to reset only those data for a single city, type
     'reset city', then type the desired city name and state abbreviation
     when prompted.
+
+    If you would like to retrieve data for a specific city, type 'retrieve'.
     """)
 
     if input1 == "reset":
-        input2 = input("City: ")
-        input3 = input("State: ")
-        remove_city(input2, input3)
+        reset()
 
     elif input1 == "reset city":
-        input2 = 
+        input2 = input("City: ")
+        input3 = input("State: ")
+        reset_city(input2, input3)
 
     elif input1 == "populate":
         csv_files = [f for f in os.listdir(os.path.join("data", "weather")) if f[-3:]  == "csv"]
@@ -123,7 +155,39 @@ if __name__ == "__main__":
     elif input1 == "exit" or input1 == "quit" or input1 == "q":
         sys.exit()
 
-    else:
+    elif input1 == "insert":
         input2 = input("City: ")
         input3 = input("State: ")
         insert_csv(input2, input3)
+
+    elif input1 == "retrieve":
+        input2 = input("""
+        Would you like to retrieve the records by city name, or by zipcode?
+        For the former, type 'city';
+        for the latter, type 'location'.
+        """)
+        if input2 == "city":
+            input3 = input("City: ")
+            input4 = input("State: ")
+            print(retrieve(city=input3, state=input4))
+
+        elif input2 == "location":
+            input3 = input("Zip Code: ")
+            print(retrieve(location=input3))
+
+        else:
+            print("""
+            Command not recognized.
+            'city' or 'location' are acceptable responses.
+            Check spelling, or
+            if you would like to leave the program without querying the
+            database, type 'exit', 'quit', or 'q'.
+            """)
+
+    else:
+        print("""
+        Command not recognized.
+        Check spelling, or
+        if you would like to leave the program without querying the
+        database, type 'exit', 'quit', or 'q'.
+        """)
