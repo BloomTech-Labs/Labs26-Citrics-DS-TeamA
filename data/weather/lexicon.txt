@@ -137,3 +137,6 @@
 22314 : Alexandria, VA
 23704 : Portsmouth, VA
 23669 : Hampton, VA
+90802 : Long Beach, CA
+33602 : Tampa, FL
+93306 : Bakersfield, CA
