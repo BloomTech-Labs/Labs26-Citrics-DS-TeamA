@@ -1,6 +1,6 @@
-import psycopg2
-import os
 from dotenv import load_dotenv
+import os
+import psycopg2
 import warnings
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
@@ -11,7 +11,7 @@ load_dotenv()
 
 DB_NAME = os.getenv("DB_NAME", "Invalid DB_NAME value")
 DB_USER = os.getenv("DB_USER", "Invalid DB_USER value")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PW value")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PASSWORD value")
 DB_HOST = os.getenv("DB_HOST", "Invalid DB_HOST value")
 
 connection = psycopg2.connect(
@@ -64,21 +64,3 @@ def viz(city, state):
     )
     return fig.show()
     # return px.line(df, x=df.index, y=df.columns).to_json()
-
-# w/ reconnecting to the api
-def viz(city, state):
-    df = pd.read_json(rental_predictions(city, state))
-    df.columns = [
-        "Studio",
-        "One Bedroom",
-        "Two Bedroom",
-        "Three Bedroom",
-        "Four Bedroom"
-    ]
-    fig = px.line(df, x=df.index, y=df.columns, title="Rental Price - Predicted",
-    labels=dict(index="Month", value="Price in USD"),
-    range_y=[0, df["Four Bedroom"].max()]
-    )
-    return fig.show()
-
-viz("New York", "NY")
