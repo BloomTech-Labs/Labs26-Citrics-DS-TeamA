@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import psycopg2
 import pandas as pd
+from deunderscore import deunderscore
 from psycopg2.extras import execute_values
 
 register_adapter(np.int64, psycopg2._psycopg.AsIs)
@@ -47,13 +48,13 @@ def insert_csv(city=None, state=None, filepath=None):
     if city and state:
         df = pd.read_csv(os.path.join("data", "weather", f"{city}_{state}.csv"))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
-        df.insert(2, "city", [city.title()] * len(df.index))
+        df.insert(2, "city", [deunderscore(city).title()] * len(df.index))
         df.insert(3, "state", [state.upper()] * len(df.index))
 
     elif filepath:
         df = pd.read_csv(os.path.join("data", "weather", filepath))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
-        df.insert(2, "city", [filepath[:-7].title()] * len(df.index))
+        df.insert(2, "city", [deunderscore(filepath[:-7]).title()] * len(df.index))
         df.insert(3, "state", [filepath[-6:-4].upper()] * len(df.index))
 
     insert_data = """
@@ -158,7 +159,7 @@ if __name__ == "__main__":
     elif input1 == "insert":
         input2 = input("City: ")
         input3 = input("State: ")
-        insert_csv(input2, input3)
+        insert_csv(city=input2, state=input3)
 
     elif input1 == "retrieve":
         input2 = input("""
