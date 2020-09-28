@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+from app.sql_query_function import fetch_query
+from dotenv import load_dotenv
 import psycopg2
 import os
 import warnings
@@ -10,20 +12,6 @@ router = APIRouter()
 @router.get("/rental/predict/{city}_{state}")
 async def pred(city: str, state: str):
 
-    DB_USER = "citrics"
-    DB_PASSWORD = "BnDW2WupbFpgZSewsZm7"
-    DB_NAME = "postgres"
-    DB_HOST = "citricsads.cav8gkdxva9e.us-east-1.rds.amazonaws.com"
-
-    connection = psycopg2.connect(
-        dbname=DB_NAME,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        host=DB_HOST
-        )
-
-    cur = connection.cursor()
-
     def rental_predictions(city, state):
         warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
         query = """
@@ -32,7 +20,7 @@ async def pred(city: str, state: str):
         WHERE "city"='{city}' and "state"='{state}';
         """.format(city=city, state=state)
 
-        cur.execute(query)
+        fetch_query(query)
 
         df =  pd.DataFrame.from_records(cur.fetchall(), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
         df.set_index("month", inplace=True)

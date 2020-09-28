@@ -37,10 +37,8 @@ def fetch_query(query, columns):
     columns = columns
     # List of tuples to DF
     df = pd.DataFrame(comments, columns=columns)
-    print(type(df))
     # DF to dictionary
     pairs = df.to_json(orient='records')
-    print(type(pairs))
     # Closing Connection
     conn.close()
 
