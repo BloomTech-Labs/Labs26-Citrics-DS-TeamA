@@ -134,3 +134,6 @@
 76102 : Fort Worth, TX
 85201 : Mesa, AZ
 68183 : Omaha, NE
+22314 : Alexandria, VA
+23704 : Portsmouth, VA
+23669 : Hampton, VA
