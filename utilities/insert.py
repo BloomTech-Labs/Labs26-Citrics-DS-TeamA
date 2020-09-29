@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 import os
 import psycopg2
 import pandas as pd
-from deunderscore import deunderscore
 from psycopg2.extras import execute_values
+import sys
 
 register_adapter(np.int64, psycopg2._psycopg.AsIs)
 register_adapter(np.float64, psycopg2._psycopg.AsIs)
@@ -25,6 +25,18 @@ connection = psycopg2.connect(
     )
 
 cur = connection.cursor()
+
+def deunderscore(string: str):
+    list_ = list(string)
+    for i in range(len(list_)):
+        if list_[i] == "_":
+            list_[i] = " "
+
+    new_string = ""
+    for char in list_:
+        new_string += char
+    
+    return new_string
 
 def insert_csv(city=None, state=None, filepath=None):
     create_table = """
