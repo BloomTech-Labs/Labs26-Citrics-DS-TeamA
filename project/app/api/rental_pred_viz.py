@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.sql_query_function import fetch_query
+from app.sql_query_function import fetch_query_records
 from dotenv import load_dotenv
 import psycopg2
 import os
@@ -21,7 +21,7 @@ async def viz(city: str, state: str):
         WHERE "city"='{city}' and "state"='{state}';
         """.format(city=city, state=state)
 
-        fetch_query(query)
+        fetch_query_records(query)
 
         df =  pd.DataFrame.from_records(cur.fetchall(), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
         df.set_index("month", inplace=True)
