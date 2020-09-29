@@ -222,8 +222,15 @@ async def viz(statecode: str,
             style['state3color'] = '#CC0000'  # Dark error red
             style['us_color'] = 'black'
 
-    # Instantiate Plotly figure
-    fig = go.Figure()
+    # Set background to be transparent.
+    layout = go.Layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+
+    # Instantiate figure.
+    fig = go.Figure(layout=layout)
+
     # Add state to figure.
     fig.add_trace(go.Scatter(x=df['Date'], y=df['Percent'],
                              name=statename,
