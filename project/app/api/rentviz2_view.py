@@ -52,7 +52,16 @@ async def viz(city: str, statecode: str,
 
     columns = ["city", "state", "bedroom_size", "price_2020_08"]
 
+    # Re-formatting bedroom values. Data type/graph population issue.
+    bedrooms = {'Studio': 'Studio',
+                '1br': 'One',
+                '2br': 'Two',
+                '3br': 'Three',
+                '4br': 'Four'}
+    
     df = pd.read_json(fetch_query(query, columns))
+    
+    df['bedroom_size'] = df['bedroom_size'].replace(bedrooms)
 
     # Make a set of cities in the rental price data
     citynames = set(df.city.to_list())
@@ -134,8 +143,6 @@ async def viz(city: str, statecode: str,
             status_code=404,
             detail=f'Statecode "{statecode3}" not found!'
         )
-
-
     # Get subset for city input
     city1_df = df[df.city == city]
     if city2 is not None:
@@ -153,8 +160,9 @@ async def viz(city: str, statecode: str,
     # If there's a single city to compare to:
     if city and city2:
         # Make comparison of values (we can change this to .any() or .all())
-        city1max = max(city1_df['price_2020_08'].values)
-        city2max = max(city2_df['price_2020_08'].values)
+        # Using min as our users are nomads and are likely using this for the most affordable price.
+        city1max = min(city1_df['price_2020_08'].values)
+        city2max = min(city2_df['price_2020_08'].values)
         # If there's only 2 cities, make comparison / style.
         if city1max > city2max and not city3:
                 styling['city1color'] = '#CC0000'  # red
@@ -169,9 +177,9 @@ async def viz(city: str, statecode: str,
                                     f'rates than {city2}, {statecode2}.')
         # Check if there's 3 cities (max) to compare)
         if city and city2 and city3:
-            city1max = max(city1_df['price_2020_08'].values)
-            city2max = max(city2_df['price_2020_08'].values)
-            city3max = max(city3_df['price_2020_08'].values)
+            city1max = min(city1_df['price_2020_08'].values)
+            city2max = min(city2_df['price_2020_08'].values)
+            city3max = min(city3_df['price_2020_08'].values)
 
             # POSSIBLE CONDITIONS:
             # 1 > 2 > 3
@@ -198,7 +206,7 @@ async def viz(city: str, statecode: str,
                     styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
             # Make comparison / style.
-            elif (city2max > city1max) and (city1max > city2max):
+            elif (city2max > city1max) and (city1max > city3max):
                 # 2 > 1 > 3
                     styling['city1color'] = 'darkcyan'
                     styling['city2color'] = '#CC0000'  # red
@@ -229,28 +237,6 @@ async def viz(city: str, statecode: str,
                     styling['city3color'] = '#CC0000'  # red
                     styling['title'] = (f'{city}, {statecode} has lower rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
-    # Create array; populate with bar data for first city.
-    figure_data = [go.Bar(name=f'{city}, {statecode}',
-                          x=city1_df['bedroom_size'],
-                          y=city1_df['price_2020_08'],
-                          marker_color=styling.get('city1color'))]
-
-    # If city2 exists, append a bar for it.
-    if city2:
-        fig2_bar = go.Bar(name=f'{city2}, {statecode2}',
-                          x=city2_df['bedroom_size'],
-                          y=city2_df['price_2020_08'],
-                          marker_color=styling.get('city2color'))
-        figure_data.append(fig2_bar)
-
-    # If city3 exists, append a bar for it.
-    if city3:
-        fig3_bar = go.Bar(name=f'{city3}, {statecode3}',
-                          x=city3_df['bedroom_size'],
-                          y=city3_df['price_2020_08'],
-                          marker_color=styling.get('city3color'))
-        figure_data.append(fig3_bar)
-
     # Set background to be transparent.
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -258,22 +244,30 @@ async def viz(city: str, statecode: str,
     )
 
     # Instantiate figure.
-    fig = go.Figure(data=figure_data, layout=layout)
+    fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
+                          x=city1_df['bedroom_size'],
+                          y=city1_df['price_2020_08'],
+                          marker_color=styling.get('city1color')),
+                          layout=layout)
+    # If city2 exists, add a bar for it.
+    if city2:
+        fig.add_bar(name=f'{city2}, {statecode2}',
+                            x=city2_df['bedroom_size'],
+                            y=city2_df['price_2020_08'],
+                            marker_color=styling.get('city2color'))
 
-    # Update general figure layout.
+    # If city3 exists, add a bar for it.
     if city3:
-        fig.update_layout(barmode='group', title_text=styling.get('title'),
-                        xaxis_title='Number of Bedrooms',
-                        yaxis_title='Monthly Rental Estimate',
-                        font=dict(family='Courier New, monospace', size=10),
-                        legend_title='Cities')
-    else:
-        # Update general figure layout.
-        fig.update_layout(barmode='group', title_text=styling.get('title'),
-                        xaxis_title='Number of Bedrooms',
-                        yaxis_title='Monthly Rental Estimate',
-                        font=dict(family='Courier New, monospace'),
-                        legend_title='Cities')
+        fig.add_bar(name=f'{city3}, {statecode3}',
+                          x=city3_df['bedroom_size'],
+                          y=city3_df['price_2020_08'],
+                          marker_color=styling.get('city3color')) 
+
+    fig.update_layout(barmode='group', title_text=styling.get('title'),
+                    xaxis_title='Number of Bedrooms',
+                    yaxis_title='Monthly Rental Estimate',
+                    font=dict(family='Open Sans, extra bold', size=10),
+                    legend_title='Cities')
 
     img = fig.to_image(format="png")
 
