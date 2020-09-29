@@ -8,22 +8,16 @@ router = APIRouter()
 
 # Load API keys.
 load_dotenv()
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+YELP_API = os.environ.get('YELP_API')
 WS_API_KEY = os.environ.get('WS_API_KEY')
 
 
 @router.get("/walkability/{city}_{statecode}")
 async def walkability(city: str, statecode: str):
     """Determine how walkable an area is based upon the popular metric,
-    [WalkScore](https://www.walkscore.com/professional/api.php),
-    using a variety of features available from Google's APIs, including:
-
-    - [Place Autocomplete](https://developers.google.com/places/web-service/autocomplete)
-    - [Place Search](https://developers.google.com/places/web-service/search)
-    - [Place Details](https://developers.google.com/places/web-service/details)
-
-    Due to limits on the number of results fetched from Google Place Autocomplete, uses a variety of formatted searches to gain the best
-    possible generalization of a city's WalkScore.
+    [Walkscore](https://www.walkscore.com/professional/api.php),
+    using the [Yelp Fusion API](https://www.yelp.com/developers/documentation/v3) to fetch addresses
+    from the specified location.
 
     ### Path Parameters
     `city`: City of which to retrieve WalkScore.
@@ -32,7 +26,7 @@ async def walkability(city: str, statecode: str):
     (case insensitive) for any of the 50 states or the District of Columbia.
 
     ### Response
-    JSON response of `city` and `walkability` (WalkScore calculation as a score out of 100)."""
+    JSON response of `city` and `walkability` (Walkscore calculation as a score out of 100)."""
 
     codes = {
         'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
@@ -60,58 +54,29 @@ async def walkability(city: str, statecode: str):
         raise HTTPException(status_code=404,
                             detail=f"State '{statecode}' not found.")
 
-    # Variety of string formats (only 5 results each - Google autocomplete API).
-    strs = [f"{city}, {statecode}",
-            f"{city}, {codes.get(statecode)}",
-            f"{city}, {statecode}, United States",
-            f"{city}, {codes.get(statecode)}, United States"]
+    headers = {'Authorization': 'Bearer {}'.format(YELP_API)}
+    params = {'location': f'{city}, {statecode}'}
 
-    place_ids = []  # Empty array to populate.
+    # Make request.
+    req = requests.get('https://api.yelp.com/v3/businesses/search',
+                       headers=headers, params=params)
 
-    list_places, places_response = [], []
-
-    # Iterate through the strings.
-    for input_string in strs:
-        # Make query to Google Autocomplete.
-        q = ('https://maps.googleapis.com/maps/api/place/autocomplete/' +
-             f'json?input={input_string}&key={GOOGLE_API_KEY}')
-        # Fetch the places from our results.
-        places = requests.get(q).json()['predictions']
-        list_places.append([dict(p)['description'].split(',')[0] for p in places])
-
-    # Append place IDs to list if doesn't already exist.
-    for place in list_places:
-        q = ('https://maps.googleapis.com/maps/api/' +
-             'place/findplacefromtext/' +
-             f'json?input={place}&inputtype=textquery' +
-             f'&key={GOOGLE_API_KEY}')
-        places_response.append(requests.get(q).json()['candidates'])
-
-    for response in places_response:
-        # Some results are returning as lists. Let's deal with that.
-        if isinstance(response, list):
-            place_ids.append([x.get('place_id') for x in
-                            response if x.get('place_id') not in place_ids])
-        else:
-            if response.get('place_id') not in place_ids:
-                place_ids.append(response.get('place_id'))
-
-    # Fetch addresses from place IDs.
-    addresses = []
-    for place in place_ids:
-        if place:
-            q = ('https://maps.googleapis.com/maps/api/place/details/' +
-                 f'json?place_id={place[0]}&key={GOOGLE_API_KEY}')
-            addresses.append(requests.get(q).json())
-
-    # From this, fetch data from walkscore API.
+    # Empty array to populate with walkscores.
     scores = []
-    for address in addresses:
-        lat_lon = address['result']['geometry']['location']
+
+    # Iterate through businesses, and make walkscore requests.
+    for business in req.json()['businesses']:
+        # Latitude / Longitude / Address needed for Walkscore API.
+        lat = business['coordinates']['latitude']
+        lon = business['coordinates']['longitude']
+        address = business['location']['address1']
+        
+        # Query
         q = ("https://api.walkscore.com/score?format=json" +
-             f"&address={address['result']['formatted_address']}" +
-             f"&lat={lat_lon['lat']}&lon={lat_lon['lng']}" +
+             f"&address={address}&lat={lat}&lon={lon}" +
              f"&wsapikey={WS_API_KEY}")
+
+        # Confirm Walkscore data has been returned and append if so.
         if requests.get(q).json().get('walkscore'):
             scores.append(requests.get(q).json().get('walkscore'))
 

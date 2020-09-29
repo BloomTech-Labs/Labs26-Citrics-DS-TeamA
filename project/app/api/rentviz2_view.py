@@ -147,7 +147,8 @@ async def viz(city: str, statecode: str,
     styling = dict()
     # If there's only one city (not a comparison)...
     if city and not city2 and not city3:
-        styling['city1color'] = px.colors.sequential.Darkmint
+        styling['city1color'] = ['lightgreen', '#4BB543', 'darkcyan',
+                                 '#663399', '#CC0000']
         styling['title'] = f'Rental Price Estimates for {city}, {statecode}'
     # If there's a single city to compare to:
     if city and city2:
@@ -229,14 +230,14 @@ async def viz(city: str, statecode: str,
                     styling['title'] = (f'{city}, {statecode} has lower rental rates ' +
                                         f'than {city2}, {statecode2} and {city3}, {statecode3}.')
     # Create array; populate with bar data for first city.
-    figure_data = [go.Bar(name=city,
+    figure_data = [go.Bar(name=f'{city}, {statecode}',
                           x=city1_df['bedroom_size'],
                           y=city1_df['price_2020_08'],
                           marker_color=styling.get('city1color'))]
 
     # If city2 exists, append a bar for it.
     if city2:
-        fig2_bar = go.Bar(name=city2,
+        fig2_bar = go.Bar(name=f'{city2}, {statecode2}',
                           x=city2_df['bedroom_size'],
                           y=city2_df['price_2020_08'],
                           marker_color=styling.get('city2color'))
@@ -244,26 +245,35 @@ async def viz(city: str, statecode: str,
 
     # If city3 exists, append a bar for it.
     if city3:
-        fig3_bar = go.Bar(name=city3,
+        fig3_bar = go.Bar(name=f'{city3}, {statecode3}',
                           x=city3_df['bedroom_size'],
                           y=city3_df['price_2020_08'],
                           marker_color=styling.get('city3color'))
         figure_data.append(fig3_bar)
 
+    # Set background to be transparent.
+    layout = go.Layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+    )
+
     # Instantiate figure.
-    fig = go.Figure(data=figure_data)
+    fig = go.Figure(data=figure_data, layout=layout)
 
     # Update general figure layout.
     if city3:
         fig.update_layout(barmode='group', title_text=styling.get('title'),
                         xaxis_title='Number of Bedrooms',
                         yaxis_title='Monthly Rental Estimate',
-                        font=dict(size=10))
+                        font=dict(family='Courier New, monospace', size=10),
+                        legend_title='Cities')
     else:
         # Update general figure layout.
         fig.update_layout(barmode='group', title_text=styling.get('title'),
                         xaxis_title='Number of Bedrooms',
-                        yaxis_title='Monthly Rental Estimate')
+                        yaxis_title='Monthly Rental Estimate',
+                        font=dict(family='Courier New, monospace'),
+                        legend_title='Cities')
 
     img = fig.to_image(format="png")
 
