@@ -251,9 +251,12 @@ async def viz(statecode: str,
     # Title and axes.
     if statecode3:
         fig.update_layout(title_text=style.get('title'),
-                          font=dict(size=10))
+                          font=dict(family='Courier New, monospace', size=10),
+                          legend_title='States')
     else:
-        fig.update_layout(title_text=style.get('title'))
+        fig.update_layout(title_text=style.get('title'),
+                          font=dict(family='Courier New, monospace'),
+                          legend_title='States')
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
