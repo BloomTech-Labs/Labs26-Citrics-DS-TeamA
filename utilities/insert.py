@@ -58,13 +58,13 @@ def insert_csv(city=None, state=None, filepath=None):
     connection.commit()
 
     if city and state:
-        df = pd.read_csv(os.path.join("data", "weather", f"{city}_{state}.csv"))
+        df = pd.read_csv(os.path.join("data", "weather", "historic", f"{city}_{state}.csv"))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
         df.insert(2, "city", [deunderscore(city).title()] * len(df.index))
         df.insert(3, "state", [state.upper()] * len(df.index))
 
     elif filepath:
-        df = pd.read_csv(os.path.join("data", "weather", filepath))
+        df = pd.read_csv(os.path.join("data", "weather", "historic", filepath))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
         df.insert(2, "city", [deunderscore(filepath[:-7]).title()] * len(df.index))
         df.insert(3, "state", [filepath[-6:-4].upper()] * len(df.index))

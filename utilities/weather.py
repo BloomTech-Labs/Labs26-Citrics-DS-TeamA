@@ -10,15 +10,12 @@ end_date = '31-AUG-2020'
 
 load_dotenv()
 
-DATA_PATH = os.path.join("data", "weather")
+DATA_PATH = os.path.join("data", "weather", "historic")
 os.chdir(DATA_PATH)
 
 WEATHER_KEY = os.environ.get("WEATHER_KEY")
 
 # Consult lexicon in data/weather directory before proceeding.
-# 88001 : Las Cruces, NM
-# 92101 : San Diego, CA
-
 locations = [str(code) for code in sys.argv[1:]]
 
 if len(sys.argv[1:]) > 3:
