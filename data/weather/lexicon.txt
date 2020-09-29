@@ -140,3 +140,6 @@
 90802 : Long Beach, CA
 33602 : Tampa, FL
 93306 : Bakersfield, CA
+80012 : Aurora, CO
+92701 : Santa Ana, CA
+89015 : Henderson, NV
