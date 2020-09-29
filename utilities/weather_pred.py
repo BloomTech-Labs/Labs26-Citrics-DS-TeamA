@@ -1,12 +1,13 @@
-from utilities.insert import retrieve
 from psycopg2.extensions import register_adapter, AsIs
 import numpy as np
 from dotenv import load_dotenv
 import os
 import psycopg2
 import pandas as pd
+from insert import retrieve
 import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
 
 register_adapter(np.int64, psycopg2._psycopg.AsIs)
 register_adapter(np.float64, psycopg2._psycopg.AsIs)
@@ -27,40 +28,46 @@ connection = psycopg2.connect(
 
 cur = connection.cursor()
 
-def historic_pred(city=None, state=None, location=None):
-    if city and state:
-        df = retrieve(city=city, state=state)
-
-    elif location:
-        df = retrieve(location=location)
-
+def weather_pred(city: str, state: str, statistic: str):
+    df = retrieve(city=city, state=state)
     df.set_index("date_time", inplace=True)
     df.index = pd.to_datetime(df.index)
 
-    minimum = df.resample("MS").min()
-    mean = df.resample("MS").mean()
-    maximum = df.resample("MS").max()
+    if statistic == "min":
+        df = df.resample("MS").min()
+
+    elif statistic == "mean":
+        df = df.resample("MS").mean()
+
+    elif statistic == "median":
+        df = df.resample("MS").median()
+
+    elif statistic == "max":
+        df = df.resample("MS").max()
+
+    else:
+        print("Exiting program...")
+        sys.exit()
 
     warnings.filterwarnings("ignore")
 
     series = []
 
-    for col in minimum.columns[3:]:
+    for col in df.columns[3:]:
         s = ExponentialSmoothing(df[col], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-        s.name = col + " min"
+        s.name = col
         series.append(s)
 
-    for col in mean.columns[3:]:
-        s = ExponentialSmoothing(df[col], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-        s.name = col + " mean"
-        series.append(s)
+    result = pd.concat(series, axis=1)
+    result.insert(0, "city", [city] * len(result))
+    result.insert(1, "state", [state] * len(result))
 
-    for col in maximum.columns[3:]:
-        s = ExponentialSmoothing(df[col], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-        s.name = col + " max"
-        series.append(s)
+    for col in result.columns[2:]:
+        result.loc[result[col] < 0.0, col] = 0.0
 
-    return pd.concat(series, axis=1).to_json(indent=2)
+    return result
+
 
 if __name__ == "__main__":
-    print(historic_pred(city="Salt Lake City", state="UT"))
+    stats = ["min", "mean", "median", "max"]
+    print(weather_pred(city="Salt Lake City", state="UT", statistic="mean"))
