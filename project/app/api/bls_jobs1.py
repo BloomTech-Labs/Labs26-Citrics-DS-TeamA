@@ -40,6 +40,10 @@ async def bls(city: str, statecode: str):
 
     df = pd.read_json(fetch_query(query, columns))
 
+    # Subset to include only occupations for which we have hourly & annual wage data
+    # (Removes 17 cities)
+    df = df.loc[df.annual_wage != 0]
+
     # Input sanitization
     city = city.title()
     statecode = statecode.lower().upper()
