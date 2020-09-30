@@ -7,9 +7,11 @@ import plotly.express as px
 router = APIRouter()
 
 
-@router.get('/rent_viz/{city}_{statecode}')
+@router.get('/rent_viz_dep/{city}_{statecode}')
 async def viz(city: str, statecode: str):
     """
+    # (DEPRECATED)
+    
     Visualize city-level **Studio** and **1-Bedroom** rental price estimates from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
 
