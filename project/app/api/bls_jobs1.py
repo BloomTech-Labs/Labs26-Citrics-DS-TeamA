@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from app.sql_query_function import fetch_query
 
+import pandas as pd
+
 router = APIRouter()
 
 
 @router.get('/bls_jobs/{city}_{statecode}')
 async def bls(city: str, statecode: str):
     """
-    Most prevelant job industry (city-level) per "Location Quotient"
+    Most prevelant job industry (city-level) per "Location Quotient" from
     [Burea of Labor Statistics](https://www.bls.gov/oes/tables.htm) 📈
 
     ## Response
@@ -46,7 +48,7 @@ async def bls(city: str, statecode: str):
 
     # Find matching metro-area in database
     match = df.loc[(df.city.str.contains(city)) &
-                   (df.state.str.contains(state))]
+                   (df.state.str.contains(statecode))]
 
     # Raise HTTPException for unknown inputs
     if len(match) < 1:
@@ -57,4 +59,4 @@ async def bls(city: str, statecode: str):
     # DF to dictionary
     pairs = match.to_json(orient='records')
 
-    return
+    return pairs
