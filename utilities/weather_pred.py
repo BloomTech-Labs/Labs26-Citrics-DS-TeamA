@@ -32,70 +32,79 @@ connection = psycopg2.connect(
 
 cur = connection.cursor()
 
-def weather_pred(city: str, state: str, metric=None):
-    df = retrieve(city=city, state=state)
-    df.set_index("date_time", inplace=True)
-    df.index = pd.to_datetime(df.index)
+def weather_pred(city: str, state: str, metric=None, found=False):
+    # If prediciton found in database:
+    retrieve_records = """
+    SELECT * FROM {metric}
+    WHERE "city"='{city}' and "state"='{state}'
+    """.format(metric=metric, city=city.title(), state=state.upper())
 
-    data = df[metric]
+    cur.execute(retrieve_records)
 
-    raw_series = {
-        "min" : data.resample("MS").min(),
-        "mean" : data.resample("MS").mean(),
-        "median" : data.resample("MS").median(),
-        "max" : data.resample("MS").max()
-    }
+    columns = [
+        "month",
+        "city",
+        "state",
+        "min",
+        "mean",
+        "med",
+        "max"
+    ]
 
-    warnings.filterwarnings("ignore")
+    result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
-    series = []
+    # If prediction not found in database
+    if len(result.index) == 0:
 
-    for d in raw_series.keys():
-        s = ExponentialSmoothing(raw_series[d], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-        s.name = d
-        series.append(s)
+        df = retrieve(city=city, state=state)
+        df.set_index("date_time", inplace=True)
+        df.index = pd.to_datetime(df.index)
 
-    result = pd.concat(series, axis=1)
-    result.index = result.index.astype(str)
-    result.insert(0, "city", [city] * len(result))
-    result.insert(1, "state", [state] * len(result))
+        data = df[metric]
 
-    for col in result.columns[2:]:
-        result.loc[result[col] < 0.0, col] = 0.0
+        raw_series = {
+            "min" : data.resample("MS").min(),
+            "mean" : data.resample("MS").mean(),
+            "median" : data.resample("MS").median(),
+            "max" : data.resample("MS").max()
+        }
 
-    create_table = """
-    CREATE TABLE IF NOT EXISTS {metric}(
-        month TIMESTAMP NOT NULL,
-        city varchar(20) NOT NULL,
-        state varchar(2) NOT NULL,
-        min FLOAT NOT NULL,
-        mean FLOAT NOT NULL,
-        med FLOAT NOT NULL,
-        max FLOAT NOT NULL
-    );
-    """.format(metric=metric)
+        warnings.filterwarnings("ignore")
 
-    cur.execute(create_table)
-    connection.commit()
+        series = []
 
-    insert_data = """
-    INSERT INTO {metric}(
-        month,
-        city,
-        state,
-        min,
-        mean,
-        med,
-        max
-    ) VALUES%s
-    """.format(metric=metric)
+        for d in raw_series.keys():
+            s = ExponentialSmoothing(raw_series[d], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
+            s.name = d
+            series.append(s)
 
-    execute_values(cur, insert_data, list(result.to_records(index=True)))
-    connection.commit()
-    # return result.index
+        result = pd.concat(series, axis=1)
+        result.index = result.index.astype(str)
+        result.insert(0, "city", [city] * len(result))
+        result.insert(1, "state", [state] * len(result))
+
+        for col in result.columns[2:]:
+            result.loc[result[col] < 0.0, col] = 0.0
+
+        insert_data = """
+        INSERT INTO {metric}(
+            month,
+            city,
+            state,
+            min,
+            mean,
+            med,
+            max
+        ) VALUES%s
+        """.format(metric=metric)
+
+        execute_values(cur, insert_data, list(result.to_records(index=True)))
+        connection.commit()
+
+    return result.to_json()
 
 
 if __name__ == "__main__":
-    weather_pred("Salt Lake City", "UT", "tempC")
+    print(weather_pred("Salt Lake City", "UT", "tempC"))
     # print(weather_pred("Salt Lake City", "UT", "tempC"))
     # print(weather_pred("Salt Lake City", "UT", "tempC").index)
