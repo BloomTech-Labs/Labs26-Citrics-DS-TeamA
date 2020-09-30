@@ -66,8 +66,8 @@ async def bls(city: str, statecode: str):
     # Raise HTTPException for unknown inputs
     if len(match) < 1:
         raise HTTPException(
-            statuscode=404,
-            detail=f'{city}, {state} not found!')
+            status_code=404,
+            detail=f'{city}, {statecode} not found!')
 
     # DF to dictionary
     pairs = match.to_json(orient='records')
