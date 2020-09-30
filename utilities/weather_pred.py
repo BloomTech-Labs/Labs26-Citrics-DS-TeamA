@@ -102,5 +102,10 @@ def weather_pred(city: str, state: str, metric: str):
 
     return result.to_json()
 
+def viz(city: str, state: str, metric: str):
+    df = pd.read_json(weather_pred(city, state, metric))
+    fig = px.line(df, x=df.index, y=df.columns)
+    return fig.show()
+
 if __name__ == "__main__":
-    print(weather_pred("Salt Lake City", "UT", "tempC"))
+    viz("Salt Lake City", "UT", "tempC")
