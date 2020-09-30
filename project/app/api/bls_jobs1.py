@@ -23,7 +23,14 @@ async def bls(city: str, statecode: str):
     ORDER BY j.city, j.loc_quotient DESC
     """
 
-    columns = ["city", "state", "occ_title", "jobs_1000", "loc_quotient"]
+    columns = [
+        "city",
+        "state",
+        "occ_title",
+        "jobs_1000",
+        "loc_quotient",
+        "hourly_wage",
+        "annual_wage"]
 
     df = pd.read_json(fetch_query(query, columns))
 
