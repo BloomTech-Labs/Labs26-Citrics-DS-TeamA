@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env
 load_dotenv()
 
-def fetch_query_records(query, columns):
+def fetch_query_records(query):
     """
     Creates a connection to database, returns query from specified table.
 
@@ -27,8 +27,6 @@ def fetch_query_records(query, columns):
         host=DB_HOST)
     # Creating Cursor Object
     cursor = conn.cursor()
-    # Fetch query
-    query = query
     # Execute query
     cursor.execute(query)
     # Query results
@@ -49,13 +47,9 @@ def fetch_query(query, columns):
     """
     
     # Fetch query
-    response = fetch_query_records(query, columns)
-
-    # Key-value pair names for df columns
-    columns = columns
+    response = fetch_query_records(query)
     # List of tuples to DF
     df = pd.DataFrame(response, columns=columns)
     # DF to dictionary
     pairs = df.to_json(orient='records')
-
     return pairs
