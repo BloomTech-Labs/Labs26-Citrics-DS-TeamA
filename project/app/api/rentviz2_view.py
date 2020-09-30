@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 router = APIRouter()
 
 
-@router.get('/rent_viz2_view/{city}_{statecode}')
+@router.get('/rent_viz_view/{city}_{statecode}')
 async def viz(city: str, statecode: str,
               city2: Optional[str]=None, statecode2: Optional[str]=None,
               city3: Optional[str]=None, statecode3: Optional[str]=None):
