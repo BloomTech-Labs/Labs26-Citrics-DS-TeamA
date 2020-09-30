@@ -17,8 +17,6 @@ async def predict(city: str, state: str, metric: str):
     WHERE "city"='{city}' and "state"='{state}'
     """.format(metric=metric, city=city.title(), state=state.upper())
 
-    cur.execute(retrieve_records)
-
     columns = [
         "month",
         "city",
@@ -29,7 +27,7 @@ async def predict(city: str, state: str, metric: str):
         "max"
     ]
 
-    result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+    result = pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
@@ -55,7 +53,7 @@ async def predict(city: str, state: str, metric: str):
             "pressure"
         ]
 
-        return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+        return pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
 
     # If prediction not found in database
     if len(result.index) == 0:

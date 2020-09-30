@@ -10,8 +10,6 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import datetime
 from psycopg2.extras import execute_values
 
-
-
 register_adapter(np.int64, psycopg2._psycopg.AsIs)
 register_adapter(np.float64, psycopg2._psycopg.AsIs)
 register_adapter(np.datetime64, psycopg2._psycopg.AsIs)
@@ -32,7 +30,7 @@ connection = psycopg2.connect(
 
 cur = connection.cursor()
 
-def weather_pred(city: str, state: str, metric=None, found=False):
+def weather_pred(city: str, state: str, metric: str):
     # If prediciton found in database:
     retrieve_records = """
     SELECT * FROM {metric}
@@ -103,9 +101,6 @@ def weather_pred(city: str, state: str, metric=None, found=False):
         connection.commit()
 
     return result.to_json()
-
-
-
 
 if __name__ == "__main__":
     print(weather_pred("Salt Lake City", "UT", "tempC"))
