@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.sql_query_function import fetch_query_records
+from app.database import PostgreSQL
 from dotenv import load_dotenv
 import psycopg2
 import os
@@ -11,11 +11,18 @@ router = APIRouter()
 
 @router.get("/weather/predict/{city}_{state}_{metric}")
 async def predict(city: str, state: str, metric: str):
+
+    db = PostgreSQL()
+    connection = db.connection()
+    cur = connection.cursor()
+
     # If prediciton found in database:
     retrieve_records = """
     SELECT * FROM {metric}
     WHERE "city"='{city}' and "state"='{state}'
     """.format(metric=metric, city=city.title(), state=state.upper())
+
+    cur.execute(retrieve_records)
 
     columns = [
         "month",
