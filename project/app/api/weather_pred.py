@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from app.database import PostgreSQL
 from dotenv import load_dotenv
+from app.database import PostgreSQL
+import numpy as np
 import psycopg2
 import os
 import warnings
@@ -13,6 +14,7 @@ router = APIRouter()
 async def predict(city: str, state: str, metric: str):
 
     db = PostgreSQL()
+    db.adapters(np.int64, np.float64, np.datetime64)
     connection = db.connection()
     cur = connection.cursor()
 
