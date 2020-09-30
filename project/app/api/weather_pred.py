@@ -1,38 +1,16 @@
-from psycopg2.extensions import register_adapter, AsIs
-import numpy as np
+from fastapi import APIRouter
+from app.sql_query_function import fetch_query_records
 from dotenv import load_dotenv
-import os
 import psycopg2
-import pandas as pd
-from insert import retrieve
+import os
 import warnings
+import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-import datetime
-from psycopg2.extras import execute_values
 
+router = APIRouter()
 
-
-register_adapter(np.int64, psycopg2._psycopg.AsIs)
-register_adapter(np.float64, psycopg2._psycopg.AsIs)
-register_adapter(np.datetime64, psycopg2._psycopg.AsIs)
-
-load_dotenv()
-
-DB_NAME = os.getenv("DB_NAME", "Invalid DB_NAME value")
-DB_USER = os.getenv("DB_USER", "Invalid DB_USER value")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PASSWORD value")
-DB_HOST = os.getenv("DB_HOST", "Invalid DB_HOST value")
-
-connection = psycopg2.connect(
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST
-    )
-
-cur = connection.cursor()
-
-def weather_pred(city: str, state: str, metric=None, found=False):
+@router.get("/weather/predict/{city}_{state}_{metric}")
+async def predict(city: str, state: str, metric: str):
     # If prediciton found in database:
     retrieve_records = """
     SELECT * FROM {metric}
@@ -54,6 +32,30 @@ def weather_pred(city: str, state: str, metric=None, found=False):
     result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
+
+    # For use in historic weather retrieval.
+    def retrieve(state: str, city: str):
+        retrieve_records = """
+        SELECT * FROM historic_weather
+        WHERE "city"='{city}' and "state"='{state}'
+        """.format(city=city.title(), state=state.upper())
+
+        cur.execute(retrieve_records)
+
+        columns = [
+            "date_time",
+            "location",
+            "city",
+            "state",
+            "tempC",
+            "FeelsLikeC",
+            "precipMM",
+            "totalSnow_cm",
+            "humidity",
+            "pressure"
+        ]
+
+        return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
     # If prediction not found in database
     if len(result.index) == 0:
@@ -103,9 +105,3 @@ def weather_pred(city: str, state: str, metric=None, found=False):
         connection.commit()
 
     return result.to_json()
-
-
-
-
-if __name__ == "__main__":
-    print(weather_pred("Salt Lake City", "UT", "tempC"))

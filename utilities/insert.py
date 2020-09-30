@@ -135,22 +135,22 @@ def retrieve(state=None, city=None, location=None):
 
 if __name__ == "__main__":
     input1 = input("""
-    Welcome to the Historical Weather Database Insertion Utility!\n
-    If you would like to insert a city, simply type 'insert' in the prompt
-    below, then type the city name and state abbreviation when prompted.
+Welcome to the Historical Weather Database Insertion Utility!\n
+If you would like to insert a city, simply type 'insert' in the prompt
+below, then type the city name and state abbreviation when prompted.
 
-    If you would like to repopulate the database with all the historic data
-    found in the data/weather directory, type 'populate'
+If you would like to repopulate the database with all the historic data
+found in the data/weather directory, type 'populate'
 
-    If you would like to reset the entire Historic Weather Database, simply
-    type 'reset'.
+If you would like to reset the entire Historic Weather Database, simply
+type 'reset'.
 
-    If you would like to reset only those data for a single city, type
-    'reset city', then type the desired city name and state abbreviation
-    when prompted.
+If you would like to reset only those data for a single city, type
+'reset city', then type the desired city name and state abbreviation
+when prompted.
 
-    If you would like to retrieve data for a specific city, type 'retrieve'.
-    """)
+If you would like to retrieve data for a specific city, type 'retrieve'.
+""")
 
     if input1 == "reset":
         reset()
@@ -161,7 +161,7 @@ if __name__ == "__main__":
         reset_city(input2, input3)
 
     elif input1 == "populate":
-        csv_files = [f for f in os.listdir(os.path.join("data", "weather")) if f[-3:]  == "csv"]
+        csv_files = [f for f in os.listdir(os.path.join("data", "weather", "historic")) if f[-3:]  == "csv"]
         for f in csv_files:
             insert_csv(filepath=f)
 
@@ -175,10 +175,10 @@ if __name__ == "__main__":
 
     elif input1 == "retrieve":
         input2 = input("""
-        Would you like to retrieve the records by city name, or by zipcode?
-        For the former, type 'city';
-        for the latter, type 'location'.
-        """)
+Would you like to retrieve the records by city name, or by zipcode?
+For the former, type 'city';
+for the latter, type 'location'.
+""")
         if input2 == "city":
             input3 = input("City: ")
             input4 = input("State: ")
@@ -190,17 +190,17 @@ if __name__ == "__main__":
 
         else:
             print("""
-            Command not recognized.
-            'city' or 'location' are acceptable responses.
-            Check spelling, or
-            if you would like to leave the program without querying the
-            database, type 'exit', 'quit', or 'q'.
-            """)
+Command not recognized.
+'city' or 'location' are acceptable responses.
+Check spelling, or
+if you would like to leave the program without querying the
+database, type 'exit', 'quit', or 'q'.
+""")
 
     else:
         print("""
-        Command not recognized.
-        Check spelling, or
-        if you would like to leave the program without querying the
-        database, type 'exit', 'quit', or 'q'.
-        """)
+Command not recognized.
+Check spelling, or
+if you would like to leave the program without querying the
+database, type 'exit', 'quit', or 'q'.
+""")
