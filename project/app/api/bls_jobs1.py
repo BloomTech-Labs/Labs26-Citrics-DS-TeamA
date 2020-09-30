@@ -12,6 +12,12 @@ async def bls(city: str, statecode: str):
     Most prevelant job industry (city-level) per "Location Quotient" from
     [Burea of Labor Statistics](https://www.bls.gov/oes/tables.htm) 📈
 
+    ## Path Parameters
+    `city`: The name of a U.S. city; e.g. `Atlanta` or `Los Angeles`
+
+    `statecode`: The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
+    (case insensitive) for any of the 50 states or the District of Columbia.
+
     ## Response
     JSON string of most prevelant job industry for more than 350
     U.S. cities.
