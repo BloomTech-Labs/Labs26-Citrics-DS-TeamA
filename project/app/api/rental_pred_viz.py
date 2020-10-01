@@ -5,12 +5,13 @@ import psycopg2
 import os
 import warnings
 import pandas as pd
+import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import plotly.express as px
 
 router = APIRouter()
 
-@router.get("/rental/predict/{city}_{state}")
+@router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
 
     def rental_predictions(city, state):
@@ -19,11 +20,9 @@ async def viz(city: str, state: str):
         SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
         FROM rental
         WHERE "city"='{city}' and "state"='{state}';
-        """.format(city=city, state=state)
+        """.format(city=city.title(), state=state.upper())
 
-        fetch_query_records(query)
-
-        df =  pd.DataFrame.from_records(cur.fetchall(), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
+        df =  pd.DataFrame.from_records(fetch_query_records(query), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
         df.set_index("month", inplace=True)
         df.index = pd.to_datetime(df.index)
         df.index.freq = "MS"
@@ -31,7 +30,7 @@ async def viz(city: str, state: str):
         series = []
 
         for col in df.columns:
-            s = ExponentialSmoothing(df["2014-06-01":][col], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
+            s = ExponentialSmoothing(df["2014-06-01":][col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
             s.name = col
             series.append(s)
 
@@ -49,4 +48,4 @@ async def viz(city: str, state: str):
     labels=dict(index="Month", value="Price in USD"),
     range_y=[0, df["Four Bedroom"].max()]
     )
-    return fig.to_json(indent=2)
+    return fig.to_json()
