@@ -13,6 +13,26 @@ router = APIRouter()
 
 @router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
+    """
+    **Input**
+
+    city: str  <- city name, any capitalization, spaces between multi-word city names are required
+
+    state: str <- two-letter state abbreviation, any capitalization
+
+    **Output**
+
+    json string for visualization showing rental price predictions:
+    - Studio
+    - One Bedroom
+    - Two Bedroom
+    - Three Bedroom
+    - Four Bedroom
+
+    for 24 months from the present (September 2020)
+
+    with "month" as the independent variable.
+    """
 
     def rental_predictions(city, state):
         warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
