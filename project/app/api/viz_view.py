@@ -82,6 +82,8 @@ async def viz(statecode: str,
         if statecode3:
             statecode2 = statecode3
             statecode3 = None
+        else:
+            statecode2 = None
 
     if statecode and not statecode2 and not statecode3:
         return single(statecode)
