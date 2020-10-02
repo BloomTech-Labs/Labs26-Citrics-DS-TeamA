@@ -165,6 +165,8 @@ async def viz(city: str, statecode: str,
             if city3 and statecode3:
                 city2, statecode2 = city3, statecode3
                 city3, statecode3 = None, None
+            elif not city3 and not statecode3:
+                city2, statecode2 = None, None
 
         if city and not city2 and not city3:
             return single(city1_df, city, statecode)
