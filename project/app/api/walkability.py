@@ -1,15 +1,12 @@
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException
+from app.sql_query_function import fetch_query_records
+
 import json
 import os
 import requests
 
 router = APIRouter()
-
-# Load API keys.
-load_dotenv()
-YELP_API = os.environ.get('YELP_API')
-WS_API_KEY = os.environ.get('WS_API_KEY')
 
 
 @router.get("/walkability/{city}_{statecode}")
@@ -27,6 +24,9 @@ async def walkability(city: str, statecode: str):
 
     ### Response
     JSON response of `city` and `walkability` (Walkscore calculation as a score out of 100)."""
+
+    statecode = statecode.upper()  # Ensure state code is uppercase.
+    city = city.title()  # Capitalize first letter of city.
 
     codes = {
         'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
@@ -46,40 +46,14 @@ async def walkability(city: str, statecode: str):
         'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
         'WI': 'Wisconsin', 'WY': 'Wyoming'
         }
-
-    statecode = statecode.upper()  # Ensure state code is uppercase.
-    city = city.title()  # Capitalize first letter of city.
-
     if statecode not in codes:
         raise HTTPException(status_code=404,
                             detail=f"State '{statecode}' not found.")
 
-    headers = {'Authorization': 'Bearer {}'.format(YELP_API)}
-    params = {'location': f'{city}, {statecode}'}
+    # Make query to database
+    citystate = f'{city}, {statecode}'
+    query = f"""SELECT walkscore FROM WALKABILITY WHERE city='{citystate}';"""
+    data = fetch_query_records(query)
 
-    # Make request.
-    req = requests.get('https://api.yelp.com/v3/businesses/search',
-                       headers=headers, params=params)
-
-    # Empty array to populate with walkscores.
-    scores = []
-
-    # Iterate through businesses, and make walkscore requests.
-    for business in req.json()['businesses']:
-        # Latitude / Longitude / Address needed for Walkscore API.
-        lat = business['coordinates']['latitude']
-        lon = business['coordinates']['longitude']
-        address = business['location']['address1']
-        
-        # Query
-        q = ("https://api.walkscore.com/score?format=json" +
-             f"&address={address}&lat={lat}&lon={lon}" +
-             f"&wsapikey={WS_API_KEY}")
-
-        # Confirm Walkscore data has been returned and append if so.
-        if requests.get(q).json().get('walkscore'):
-            scores.append(requests.get(q).json().get('walkscore'))
-
-    # Return average walkscore.
-    walk = round(sum(scores) / len(scores), 2)
-    return json.dumps({'city': f'{city}, {statecode}', 'walkability': walk})
+    # Return fetched data
+    return json.dumps({'city': citystate, 'walkability': data[0][0]})
