@@ -97,8 +97,9 @@ for i in range(len(cities)):
         if ws_req.get('walkscore'):
             cityscores.append(ws_req.get('walkscore'))
         # Maximize API calls / sleep (5000 / day maximum for Walkscore API)
-        time_sleep = 1 / (5000 / 24 / 60 / 60)
+        time_sleep = 1 / ((5000 / 24 / 60 / 60))
         time.sleep(time_sleep)
+
 
     # Average walkscores.
     walk = round(sum(cityscores) / len(cityscores), 2)
@@ -106,7 +107,7 @@ for i in range(len(cities)):
     print(f'Inserting: {citystate} - Walkscore: {walk} ({i} / {len(cities)})')
     # Insert into database, commit changes, and close connection.
     curs.execute(f'''INSERT INTO WALKABILITY (city, walkscore)
-                     VALUES ('{citystate}) ON CONFLICT (city)
+                     VALUES ('{citystate}', {walk}) ON CONFLICT (city)
                      DO UPDATE SET walkscore={walk};''')
     conn.commit()
     conn.close()
