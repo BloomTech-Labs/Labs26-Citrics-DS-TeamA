@@ -2,7 +2,6 @@ import os
 import psycopg2
 import pandas as pd
 import requests
-import sqlite3
 import time
 from dotenv import load_dotenv
 from sql_query_function import fetch_query
