@@ -99,7 +99,6 @@ for i in range(len(cities)):
         time_sleep = 1 / ((5000 / 24 / 60 / 60))
         time.sleep(time_sleep)
 
-
     # Average walkscores.
     walk = round(sum(cityscores) / len(cityscores), 2)
 
