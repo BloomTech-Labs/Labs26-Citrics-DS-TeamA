@@ -23,7 +23,7 @@ class PostgreSQL:
 
     def adapters(*args):
         for adapter in args:
-            register_adapter(arg, psycopg2._psycopg.AsIs)
+            register_adapter(adapter, psycopg2._psycopg.AsIs)
 
     def cursor(self):
         self.cursor = self.connection.cursor()
