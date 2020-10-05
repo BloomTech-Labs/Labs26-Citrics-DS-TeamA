@@ -3,6 +3,7 @@ import os
 import psycopg2
 from psycopg2.extensions import register_adapter, AsIs
 import pandas as pd
+
 # Load environment variables from .env
 load_dotenv()
 
@@ -33,14 +34,3 @@ class PostgreSQL:
 
     def close(self):
         self.connection.close()
-
-    def fetch_records(self, query):
-        self.excecute(query)
-        response = self.cursor.fetchall()
-        self.close()
-        return response
-
-    def fetch_json(self, query, columns):
-        response = self.fetch_records(query)
-        df = pd.DataFrame(response, columns=columns)
-        return df.to_json(orient="records")
