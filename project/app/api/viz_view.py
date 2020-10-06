@@ -367,7 +367,9 @@ def three(statecode, statecode2, statecode3):
     # Title and axes.
     fig.update_layout(title_text=style.get('title'),
                       font=dict(family='Open Sans, extra bold', size=9),
-                      legend_title='States')
+                      legend_title='States',
+                      height=412,
+                      width=640)
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
