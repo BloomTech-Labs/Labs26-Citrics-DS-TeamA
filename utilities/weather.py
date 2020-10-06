@@ -10,7 +10,7 @@ end_date = '31-AUG-2020'
 
 load_dotenv()
 
-DATA_PATH = os.path.join("data", "weather", "historic")
+DATA_PATH = os.path.join("data", "weather")
 os.chdir(DATA_PATH)
 
 WEATHER_KEY = os.environ.get("WEATHER_KEY")

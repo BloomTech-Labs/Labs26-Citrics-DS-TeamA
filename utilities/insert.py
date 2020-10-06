@@ -57,14 +57,25 @@ def insert_csv(city=None, state=None, filepath=None):
     cur.execute(create_table)
     connection.commit()
 
+    city_name = list(city)
+    for i in range(len(city_name)):
+        if city_name[i] == " ":
+            city_name[i] = "_"
+
+    city = ""
+    for char in city_name:
+        city += char
+
+    print(city)
+
     if city and state:
-        df = pd.read_csv(os.path.join("data", "weather", "historic", f"{city}_{state}.csv"))
+        df = pd.read_csv(os.path.join("data", "weather", f"{city.lower()}_{state.lower()}.csv"))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
         df.insert(2, "city", [deunderscore(city).title()] * len(df.index))
         df.insert(3, "state", [state.upper()] * len(df.index))
 
     elif filepath:
-        df = pd.read_csv(os.path.join("data", "weather", "historic", filepath))
+        df = pd.read_csv(os.path.join("data", "weather", filepath))
         df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
         df.insert(2, "city", [deunderscore(filepath[:-7]).title()] * len(df.index))
         df.insert(3, "state", [filepath[-6:-4].upper()] * len(df.index))
