@@ -356,6 +356,8 @@ def three(city1_df, city2_df, city3_df,
                           yaxis_title='Monthly Rental Estimate',
                           font=dict(family='Open Sans, extra bold',
                                     size=10),
-                          legend_title='Cities')
+                          legend_title='Cities',
+                          height=412,
+                          width=640)
 
         return fig.to_json()

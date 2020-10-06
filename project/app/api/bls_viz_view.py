@@ -93,10 +93,13 @@ async def bls_viz(city: str, statecode: str):
                             marker_color=styling.get('city1color')),
                             layout=layout)
 
+
     fig.update_layout(barmode='group', title_text=styling.get('title'),
                         xaxis_title='Occupational Title',
                         yaxis_title='Average Annual Salary',
-                        font=dict(family='Open Sans, extra bold', size=10))
+                        font=dict(family='Open Sans, extra bold', size=10),
+                        height=412,
+                        width=640)
                         # legend_title='Cities')
 
     img = fig.to_image(format="png")
