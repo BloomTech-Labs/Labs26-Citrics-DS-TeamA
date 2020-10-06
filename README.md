@@ -37,6 +37,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 - [Bonus Jobs Data?](https://datausa.io/cart)
 - [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 - [Population](https://public.opendatasoft.com/explore/dataset/worldcitiespop/api/?disjunctive.country)
+- [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html)
 
 **AWS / DOCS**
 - [AWS Instructions](https://docs.labs.lambdaschool.com/guides/aws/elastic-beanstalk/elastic-beanstalk-dns)
