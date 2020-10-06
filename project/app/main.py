@@ -19,8 +19,7 @@ from app.api import (
     census,
     weather_pred, 
     weather_pred_viz,
-    rental_pred_viz_view,
-    weather_pred_viz_view
+    rental_pred_viz_view
     )
 
 # Description Text
@@ -29,7 +28,7 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='1.4',
+    version='1.5',
     docs_url='/',
 )
 
@@ -52,7 +51,6 @@ app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
 app.include_router(rental_pred_viz_view.router)
-app.include_router(weather_pred_viz_view.router)
 
 app.add_middleware(
     CORSMiddleware,
