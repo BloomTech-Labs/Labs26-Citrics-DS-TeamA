@@ -111,16 +111,16 @@ async def viz(city: str, state: str):
 
         return result.to_json(indent=2)
         
-    return rental_predictions(city, state)
-    # viz.columns = [
-    #     "Studio",
-    #     "One Bedroom",
-    #     "Two Bedroom",
-    #     "Three Bedroom",
-    #     "Four Bedroom"
-    # ]
-    # fig = px.line(df, x=viz.index, y=viz.columns, title="Rental Price - Predicted, {city}, {state}",
-    # labels=dict(index="Month", value="Price in USD"),
-    # range_y=[0, df["Four Bedroom"].max() + 100]
-    # )
-    # return fig.to_json()
+    df = pd.read_json(rental_predictions(city, state))[["Studio", "onebr", "twobr", "threebr", "fourbr"]]
+    df.columns = [
+        "Studio",
+        "One Bedroom",
+        "Two Bedroom",
+        "Three Bedroom",
+        "Four Bedroom"
+    ]
+    fig = px.line(df, x=df.index, y=df.columns, title="Rental Price - Predicted, {city}, {state}",
+    labels=dict(index="Month", value="Price in USD"),
+    range_y=[0, df["Four Bedroom"].max() + 100]
+    )
+    return fig.to_json()
