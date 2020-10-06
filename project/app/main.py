@@ -18,7 +18,8 @@ from app.api import (
     bls_viz, 
     census,
     weather_pred, 
-    weather_pred_viz
+    weather_pred_viz,
+    rental_pred_viz_view
     )
 
 # Description Text
@@ -49,6 +50,7 @@ app.include_router(rental_pred_viz.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
+app.include_router(rental_pred_viz_view.router)
 
 app.add_middleware(
     CORSMiddleware,
