@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from app.api import predict, viz, viz_view, rental1, walkability, current, rentviz2, rentviz2_view, rent_city_states, rental_pred, rental_pred_viz, bls_jobs1, bls_viz_view, bls_viz
+from app.api import predict, viz, viz_view, rental1, walkability, current, rentviz2, rentviz2_view, rent_city_states, rental_pred, rental_pred_viz, bls_jobs1, bls_viz_view, bls_viz, census
 
 # Description Text
 DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences."
@@ -9,7 +9,7 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='1.2',
+    version='1.3',
     docs_url='/',
 )
 
@@ -28,6 +28,7 @@ app.include_router(bls_jobs1.router)
 app.include_router(bls_viz.router)
 app.include_router(bls_viz_view.router)
 app.include_router(rental_pred_viz.router)
+app.include_router(census.router)
 
 app.add_middleware(
     CORSMiddleware,
