@@ -10,11 +10,13 @@ import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
 import plotly.express as px
+import io
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
-@router.get("/rental/predict/viz/{city}_{state}")
-async def viz(city: str, state: str):
+@router.get("/rental/predict/viz/view/{city}_{state}")
+async def view(city: str, state: str):
     """
     **Input**
 
@@ -129,4 +131,7 @@ async def viz(city: str, state: str):
         height=412,
         width=640
         )
-    return fig.to_json()
+
+    img = fig.to_image(format="png")
+    return StreamingResponse(io.BytesIO(img), media_type="image/png")
+    
