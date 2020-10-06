@@ -300,7 +300,7 @@ def three(city1_df, city2_df, city3_df,
                 styling['city2color'] = '#CC0000'  # red
                 styling['city3color'] = '#4BB543'  # green
                 styling['title'] = (f'{city}, {statecode} has higher rental rates ' +
-                                    f'than {city3}, {statecode2}, but lower than {city2}, {statecode3}.')
+                                    f'than {city3}, {statecode3}, but lower than {city2}, {statecode2}.')
         # Make comparison / style.
         elif (city2max > city3max) and (city3max > city1max):
             # 2 > 3 > 1
