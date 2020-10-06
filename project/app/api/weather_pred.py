@@ -7,6 +7,7 @@ import os
 import warnings
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from psycopg2.extras import execute_values
 
 router = APIRouter()
 
@@ -36,7 +37,7 @@ async def predict(city: str, state: str, metric: str):
         "max"
     ]
 
-    result = pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
+    result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
@@ -62,7 +63,7 @@ async def predict(city: str, state: str, metric: str):
             "pressure"
         ]
 
-        return pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
+        return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
     # If prediction not found in database
     if len(result.index) == 0:
