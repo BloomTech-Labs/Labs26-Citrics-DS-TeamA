@@ -7,13 +7,14 @@ import os
 import warnings
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+import plotly.express as px
 
 router = APIRouter()
 
 @router.get("/weather/predict/viz/{city}_{state}_{metric}")
 async def viz(city: str, state: str, metric: str):
 
-    def predict(city: str, state: str, metric: str):
+    def pred(city: str, state: str, metric: str):
         db = PostgreSQL()
         db.adapters(np.int64, np.float64, np.datetime64)
         connection = db.connection()
@@ -37,7 +38,7 @@ async def viz(city: str, state: str, metric: str):
             "max"
         ]
 
-        result = pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
+        result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
         result.set_index("month", inplace=True)
         result.index = pd.to_datetime(result.index)
 
@@ -63,7 +64,7 @@ async def viz(city: str, state: str, metric: str):
                 "pressure"
             ]
 
-            return pd.DataFrame.from_records(fetch_query_records(retrieve_records), columns=columns)
+            return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
         # If prediction not found in database
         if len(result.index) == 0:
@@ -114,4 +115,15 @@ async def viz(city: str, state: str, metric: str):
 
         return result.to_json()
 
-    return predict(city, state, metric)
+    df = pd.read_json(pred(city, state, metric))[["min", "mean", "med", "max"]]
+    fig = px.line(df, x=df.index, y=df.columns, title="{metric}- Predicted, {city}, {state}",
+    labels=dict(index="Month", value=""),
+    range_y=[0, df["max"].max() + 15]
+    )
+
+    fig.update_layout(
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+        )
+    return fig.to_json()
