@@ -124,8 +124,9 @@ async def viz(city: str, state: str):
     range_y=[0, df["Four Bedroom"].max() + 100]
     )
 
-    fig.update_layout(font=dict(family='Open Sans, extra bold',
-                                    size=10),
-                      height=412,
-                      width=640)
+    fig.update_layout(
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+        )
     return fig.to_json()
