@@ -2,7 +2,6 @@ import os
 import psycopg2
 import pandas as pd
 import requests
-import sqlite3
 import time
 from dotenv import load_dotenv
 from sql_query_function import fetch_query
@@ -99,7 +98,6 @@ for i in range(len(cities)):
         # Maximize API calls / sleep (5000 / day maximum for Walkscore API)
         time_sleep = 1 / ((5000 / 24 / 60 / 60))
         time.sleep(time_sleep)
-
 
     # Average walkscores.
     walk = round(sum(cityscores) / len(cityscores), 2)
