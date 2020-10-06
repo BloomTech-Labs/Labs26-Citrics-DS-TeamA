@@ -7,6 +7,7 @@ import os
 import warnings
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from psycopg2.extras import execute_values
 import plotly.express as px
 
 router = APIRouter()
