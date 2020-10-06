@@ -54,6 +54,7 @@ async def pred(city: str, state: str):
             "month",
             "city",
             "state",
+            "Studio",
             "onebdr",
             "twobdr",
             "threebdr",
@@ -88,8 +89,6 @@ async def pred(city: str, state: str):
             result.index = result.index.astype(str)
             result.insert(0, "city", city)
             result.insert(1, "state", state)
-
-            print(result.to_records(index=True))
 
             insert_data = """
             INSERT INTO rental_pred(
