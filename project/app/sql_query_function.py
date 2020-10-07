@@ -13,7 +13,7 @@ def fetch_query_records(query):
 
     Input: query: a SQL query (string)
 
-    Returns: response: cursos.fetchall() object in array form
+    Returns: response: cursor.fetchall() object in array form
     """
     DB_NAME = os.getenv("DB_NAME")
     DB_USER = os.getenv("DB_USER")
