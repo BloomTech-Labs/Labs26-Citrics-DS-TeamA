@@ -7,6 +7,7 @@ import pandas as pd
 # Load environment variables from .env
 load_dotenv()
 
+
 class PostgreSQL:
     def __init__(self):
         self.name = os.getenv("DB_NAME")
@@ -48,7 +49,8 @@ CREATE TABLE IF NOT EXISTS {table_name}(
         self.connection.commit()
 
     def drop_table(self, table_name: str):
-        self.connection.cursor().execute("DROP TABLE {table_name};".format(table_name=table_name))
+        self.connection.cursor().execute(
+            "DROP TABLE {table_name};".format(table_name=table_name))
         self.connection.commit()
 
     def fetch_query_records(self, query: str):
@@ -61,7 +63,3 @@ CREATE TABLE IF NOT EXISTS {table_name}(
         self.fetch_query_records(query)
         df = pd.DataFrame(response, columns=columns)
         return df.to_json(orient=records)
-
-    
-
-    

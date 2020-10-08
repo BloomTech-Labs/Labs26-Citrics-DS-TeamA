@@ -22,9 +22,10 @@ connection = psycopg2.connect(
     user=DB_USER,
     password=DB_PASSWORD,
     host=DB_HOST
-    )
+)
 
 cur = connection.cursor()
+
 
 def deunderscore(string: str):
     list_ = list(string)
@@ -35,8 +36,9 @@ def deunderscore(string: str):
     new_string = ""
     for char in list_:
         new_string += char
-    
+
     return new_string
+
 
 def insert_csv(city=None, state=None, filepath=None):
     create_table = """
@@ -69,15 +71,19 @@ def insert_csv(city=None, state=None, filepath=None):
     print(city)
 
     if city and state:
-        df = pd.read_csv(os.path.join("data", "weather", f"{city.lower()}_{state.lower()}.csv"))
-        df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
+        df = pd.read_csv(os.path.join("data", "weather",
+                                      f"{city.lower()}_{state.lower()}.csv"))
+        df = df[["date_time", "location", "tempC", "FeelsLikeC",
+                 "precipMM", "totalSnow_cm", "humidity", "pressure"]]
         df.insert(2, "city", [deunderscore(city).title()] * len(df.index))
         df.insert(3, "state", [state.upper()] * len(df.index))
 
     elif filepath:
         df = pd.read_csv(os.path.join("data", "weather", filepath))
-        df = df[["date_time", "location", "tempC", "FeelsLikeC", "precipMM", "totalSnow_cm", "humidity", "pressure"]]
-        df.insert(2, "city", [deunderscore(filepath[:-7]).title()] * len(df.index))
+        df = df[["date_time", "location", "tempC", "FeelsLikeC",
+                 "precipMM", "totalSnow_cm", "humidity", "pressure"]]
+        df.insert(2, "city", [deunderscore(
+            filepath[:-7]).title()] * len(df.index))
         df.insert(3, "state", [filepath[-6:-4].upper()] * len(df.index))
 
     insert_data = """
@@ -98,12 +104,14 @@ def insert_csv(city=None, state=None, filepath=None):
     execute_values(cur, insert_data, list(df.to_records(index=False)))
     connection.commit()
 
+
 def reset():
     reset_table = """
     DROP TABLE historic_weather;
     """
     cur.execute(reset_table)
     connection.commit()
+
 
 def reset_city(city=None, state=None, location=None):
     delete = """
@@ -113,6 +121,7 @@ def reset_city(city=None, state=None, location=None):
 
     cur.execute(delete)
     connection.commit()
+
 
 def retrieve(state=None, city=None, location=None):
     if state and city:
@@ -144,6 +153,7 @@ def retrieve(state=None, city=None, location=None):
 
     return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
 
+
 if __name__ == "__main__":
     input1 = input("""
 Welcome to the Historical Weather Database Insertion Utility!\n
@@ -172,7 +182,8 @@ If you would like to retrieve data for a specific city, type 'retrieve'.
         reset_city(input2, input3)
 
     elif input1 == "populate":
-        csv_files = [f for f in os.listdir(os.path.join("data", "weather", "historic")) if f[-3:]  == "csv"]
+        csv_files = [f for f in os.listdir(os.path.join(
+            "data", "weather", "historic")) if f[-3:] == "csv"]
         for f in csv_files:
             insert_csv(filepath=f)
 

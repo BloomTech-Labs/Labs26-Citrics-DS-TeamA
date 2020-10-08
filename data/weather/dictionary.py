@@ -20,18 +20,18 @@ by_zip = {}
 for i in range(len(zipcodes)):
     by_zip[zipcodes[i]] = cities[i]
 
-by_city= {}
+by_city = {}
 
 for i in range(len(zipcodes)):
     by_city[cities[i]] = zipcodes[i]
 
-by_zip_tup = sorted(list(by_zip.items()), key=lambda x:x[0])
-by_city_tup = sorted(list(by_city.items()), key=lambda x:x[0])
-by_state_tup = sorted(list(by_city.items()), key=lambda x:x[0][-2:])
+by_zip_tup = sorted(list(by_zip.items()), key=lambda x: x[0])
+by_city_tup = sorted(list(by_city.items()), key=lambda x: x[0])
+by_state_tup = sorted(list(by_city.items()), key=lambda x: x[0][-2:])
 
-by_zip = {key:val for (key, val) in by_zip_tup}
-by_city = {key:val for (key, val) in by_city_tup}
-by_state = {key:val for (key, val) in by_state_tup}
+by_zip = {key: val for (key, val) in by_zip_tup}
+by_city = {key: val for (key, val) in by_city_tup}
+by_state = {key: val for (key, val) in by_state_tup}
 
 by_zip_json = json.dumps(by_zip, indent=2)
 by_city_json = json.dumps(by_city, indent=2)

@@ -7,6 +7,7 @@ import pandas as pd
 # Load environment variables from .env
 load_dotenv()
 
+
 class PostgreSQL:
     def __init__(self):
         self.name = os.getenv("DB_NAME")
@@ -48,21 +49,6 @@ CREATE TABLE IF NOT EXISTS {table_name}(
         self.connection.commit()
 
     def drop_table(self, table_name: str):
-        self.connection.cursor().execute("DROP TABLE {table_name};".format(table_name=table_name))
+        self.connection.cursor().execute(
+            "DROP TABLE {table_name};".format(table_name=table_name))
         self.connection.commit()
-
-if __name__ == "__main__":
-    pass
-    # table_name = "weather_pred"
-    # columns = {
-    #     "month" : "TIMESTAMP NOT NULL",
-    #     "city" : "varchar(20) NOT NULL",
-    #     "state" : "varchar(2) NOT NULL",
-    #     "tempC" : "INT NOT NULL",
-    #     "FeelsLikeC" : "INT NOT NULL",
-    #     "precipMM" : "FLOAT NOT NULL",
-    #     "humidity" : "INT NOT NULL"
-    # }
-
-    # PostgreSQL().drop_table(table_name)
-    # PostgreSQL().create_table(table_name, columns)
