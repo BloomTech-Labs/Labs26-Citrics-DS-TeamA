@@ -35,7 +35,7 @@ def view(city: str, state: str):
     def rental_predictions(city, state):
 
         db = PostgreSQL()
-        conn = db.connection()
+        conn = db.connection
         cur = conn.cursor()
 
         db.adapters(np.float64)
@@ -59,8 +59,7 @@ def view(city: str, state: str):
         ]
 
         result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
-        result.set_index("month")
-        result.index = pd.to_datetime(result.index)
+        result.set_index("month", inplace=True)
 
         if len(result.index) == 0:
             warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
@@ -80,12 +79,11 @@ def view(city: str, state: str):
             series = []
 
             for col in df.columns:
-                s = ExponentialSmoothing(df["2014-06-01":][col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
+                s = ExponentialSmoothing(df[col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
                 s.name = col
                 series.append(s)
 
             result = pd.concat(series, axis=1)
-            result.index = result.index.astype(str)
             result.insert(0, "city", city)
             result.insert(1, "state", state)
 
@@ -127,7 +125,6 @@ def view(city: str, state: str):
     
     fig.add_trace(go.Scatter(x=df.index, y=df['Studio'], mode='lines'))
 
-
     fig.update_layout(
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
@@ -135,3 +132,6 @@ def view(city: str, state: str):
         )
 
     return fig.show()
+
+if __name__ == "__main__":
+    view("Atlanta", "GA")
