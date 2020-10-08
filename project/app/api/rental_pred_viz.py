@@ -9,9 +9,10 @@ import pandas as pd
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
-import plotly.graph_objects as go 
+import plotly.graph_objects as go
 
 router = APIRouter()
+
 
 @router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
@@ -66,7 +67,8 @@ async def viz(city: str, state: str):
         result.set_index("month", inplace=True)
 
         if len(result.index) == 0:
-            warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
+            warnings.filterwarnings(
+                "ignore", message="After 0.13 initialization must be handled at model creation")
             query = """
             SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
             FROM rental
@@ -75,15 +77,17 @@ async def viz(city: str, state: str):
 
             cur.execute(query)
 
-            df =  pd.DataFrame.from_records(cur.fetchall(), columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
+            df = pd.DataFrame.from_records(cur.fetchall(), columns=[
+                                           "month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
             df.set_index("month", inplace=True)
             df.index = pd.to_datetime(df.index)
             df.index.freq = "MS"
-            
+
             series = []
 
             for col in df.columns:
-                s = ExponentialSmoothing(df[col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
+                s = ExponentialSmoothing(df[col].astype(
+                    np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
                 s.name = col
                 series.append(s)
 
@@ -105,12 +109,14 @@ async def viz(city: str, state: str):
             ) VALUES%s
             """
 
-            execute_values(cur, insert_data, list(result.to_records(index=True)))
+            execute_values(cur, insert_data, list(
+                result.to_records(index=True)))
             conn.commit()
 
         return result.to_json(indent=2)
-        
-    df = pd.read_json(rental_predictions(city, state))[["Studio", "onebr", "twobr", "threebr", "fourbr"]]
+
+    df = pd.read_json(rental_predictions(city, state))[
+        ["Studio", "onebr", "twobr", "threebr", "fourbr"]]
     df.columns = [
         "Studio",
         "One Bedroom",
@@ -119,26 +125,27 @@ async def viz(city: str, state: str):
         "Four Bedroom"
     ]
     layout = go.Layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)',
-            yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
-        )
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
+    )
 
     styling = {
-        "Studio" : "lightgreen",
-        "One Bedroom" : "#4BB543",
-        "Two Bedroom" : "darkcyan",
-        "Three Bedroom" : "#663399",
-        "Four Bedroom" : "#CC0000"
+        "Studio": "lightgreen",
+        "One Bedroom": "#4BB543",
+        "Two Bedroom": "darkcyan",
+        "Three Bedroom": "#663399",
+        "Four Bedroom": "#CC0000"
     }
 
     fig = go.Figure(
         data=go.Scatter(name=f"Rental Price - Predicted {city}, {state}"),
         layout=layout
-        )
+    )
 
     for col in df.columns:
-        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines', marker_color=styling[col]))
+        fig.add_trace(go.Scatter(name=col, x=df.index,
+                                 y=df[col], mode='lines', marker_color=styling[col]))
 
     fig.update_layout(
         title=f"Rental Price - Predicted {city}, {state}",
@@ -146,6 +153,6 @@ async def viz(city: str, state: str):
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
         width=640
-        )
+    )
 
     return fig.to_json()

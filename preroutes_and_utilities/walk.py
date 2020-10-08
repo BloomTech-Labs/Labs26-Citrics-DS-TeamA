@@ -44,10 +44,10 @@ for state in df['state']:
 
 # Create connection; create table if it doesn't already exist.
 conn = psycopg2.connect(
-                        dbname=DB_NAME,
-                        user=DB_USER,
-                        password=DB_PASSWORD,
-                        host=DB_HOST)
+    dbname=DB_NAME,
+    user=DB_USER,
+    password=DB_PASSWORD,
+    host=DB_HOST)
 curs = conn.cursor()
 curs.execute('''CREATE TABLE IF NOT EXISTS WALKABILITY
              (city STR(100) PRIMARY KEY,
@@ -60,10 +60,10 @@ conn.close()  # Close connection.
 for i in range(len(cities)):
     # Create connection / cursor.
     conn = psycopg2.connect(
-                            dbname=DB_NAME,
-                            user=DB_USER,
-                            password=DB_PASSWORD,
-                            host=DB_HOST)
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST)
     curs = conn.cursor()
 
     # Current city / state

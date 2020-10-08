@@ -7,6 +7,7 @@ import psycopg2
 # Load environment variables from .env
 load_dotenv()
 
+
 def fetch_query_records(query):
     """
     Creates a connection to database, returns query from specified table.
@@ -37,6 +38,7 @@ def fetch_query_records(query):
 
     return response
 
+
 def fetch_query(query, columns):
     """
     Creates a connection to database, returns query from specified table
@@ -53,14 +55,3 @@ def fetch_query(query, columns):
     # DF to dictionary
     pairs = df.to_json(orient='records')
     return pairs
-
-if __name__ == "__main__":
-    print(
-        fetch_query_records(
-            query = """
-            SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
-            FROM rental
-            WHERE "city"='King of Prussia' and "state"='PA';
-            """
-        )
-    )

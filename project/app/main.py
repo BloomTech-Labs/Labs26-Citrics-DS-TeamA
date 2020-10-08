@@ -15,13 +15,12 @@ from app.api import (
     rental_pred_viz,
     bls_jobs1,
     bls_viz_view,
-    bls_viz, 
+    bls_viz,
     census,
-    weather_pred, 
+    weather_pred,
     weather_pred_viz,
-    rental_pred_viz_view,
     static
-    )
+)
 
 # Description Text
 DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences."
@@ -51,7 +50,6 @@ app.include_router(rental_pred_viz.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
-app.include_router(rental_pred_viz_view.router)
 app.include_router(static.router)
 
 app.add_middleware(

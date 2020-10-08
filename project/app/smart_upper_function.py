@@ -1,6 +1,8 @@
 import sys
 
 # Function to sanitize input string (cityname param)
+
+
 def smart_upper(x):
     """"
     Upper case the first letter of a string, as well as
@@ -10,14 +12,14 @@ def smart_upper(x):
 
     Returns: new_string: str (e.g. 'New York')
     """
-    
+
     x = x.lower()
-    
+
     # Can start by splitting the string
     split_str = x.split()
 
     if len(split_str) == 1:
-        
+
         first_letter = split_str[0][0]
 
         # If no space was in string, simply uppercase the first letter
@@ -38,8 +40,9 @@ def smart_upper(x):
     # Join smart-uppercased words in word basket
     return " ".join(wb)
 
+
 if __name__ == "__main__":
-    
+
     def test_smart_upper():
 
         input_string = input("Please enter a city name ('quit' to exit): ")
