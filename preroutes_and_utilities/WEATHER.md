@@ -72,7 +72,7 @@ The weather.py file is setup to take the zip codes of the given locale as system
 For example, if I wanted to pull data for New York, Los Angeles, and Chicago I would run the file with the zip codes for each respective city as additional arguments like so:
 
 ```
-python utilities/weather.py 10007 90012 60602
+python preroutes_and_utilities/weather.py 10007 90012 60602
 ```
 
 The script would then ask to input the names of each location IN ORDER. These inputs are then used to update the lexicon.

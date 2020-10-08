@@ -10,7 +10,7 @@ The simplest part of this README;
 in command line or terminal, simply type:
 
 ```
-python utilities/config.py
+python preroutes_and_utilities/config.py
 ```
 
 You should see a message in command line or terminal prompting you to enter your Docker ID:
