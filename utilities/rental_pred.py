@@ -115,23 +115,34 @@ def view(city: str, state: str):
     ]
     layout = go.Layout(
             paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
+            plot_bgcolor='rgba(0,0,0,0)',
+            yaxis=dict(range=([0, df["Four Bedroom"].max() + 100]))
         )
-    # fig = px.line(df, x=df.index, y=df.columns, title="Rental Price - Predicted, {city}, {state}",
-    # labels=dict(index="Month", value="Price in USD"),
-    # range_y=[0, df["Four Bedroom"].max() + 100]
-    # )
-    fig = go.Figure(layout=layout)
-    
-    fig.add_trace(go.Scatter(x=df.index, y=df['Studio'], mode='lines'))
+
+    styling = {
+        "Studio" : "lightgreen",
+        "One Bedroom" : "#4BB543",
+        "Two Bedroom" : "darkcyan",
+        "Three Bedroom" : "#663399",
+        "Four Bedroom" : "#CC0000"
+    }
+
+    fig = go.Figure(
+        data=go.Scatter(name=f"Rental Price - Predicted {city}, {state}"),
+        layout=layout
+        )
+
+    for col in df.columns:
+        fig.add_trace(go.Scatter(x=df.index, y=df[col], mode='lines'))
 
     fig.update_layout(
+        title=f"Rental Price - Predicted {city}, {state}",
+        yaxis_title="US Dollars",
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
         width=640
         )
-
     return fig.show()
 
 if __name__ == "__main__":
-    view("Atlanta", "GA")
+    view("New York", "NY")
