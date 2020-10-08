@@ -20,7 +20,6 @@ from app.api import (
     weather_pred, 
     weather_pred_viz,
     rental_pred_viz_view,
-    rental_pred_viz_view_go,
     static
     )
 
@@ -53,7 +52,6 @@ app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
 app.include_router(rental_pred_viz_view.router)
-app.include_router(rental_pred_viz_view_go.router)
 app.include_router(static.router)
 
 app.add_middleware(

@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
-import plotly.express as px
+import plotly.graph_objects as go 
 
 router = APIRouter()
 
@@ -39,10 +39,10 @@ async def viz(city: str, state: str):
     def rental_predictions(city, state):
 
         db = PostgreSQL()
-        conn = db.connection()
+        conn = db.connection
         cur = conn.cursor()
 
-        db.adapters(np.float64)
+        db.adapters(np.float64, np.datetime64)
 
         retrieve_records = """
         SELECT * FROM rental_pred
@@ -63,8 +63,7 @@ async def viz(city: str, state: str):
         ]
 
         result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
-        result.set_index("month")
-        result.index = pd.to_datetime(result.index)
+        result.set_index("month", inplace=True)
 
         if len(result.index) == 0:
             warnings.filterwarnings("ignore", message="After 0.13 initialization must be handled at model creation")
@@ -84,7 +83,7 @@ async def viz(city: str, state: str):
             series = []
 
             for col in df.columns:
-                s = ExponentialSmoothing(df["2014-06-01":][col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(12)
+                s = ExponentialSmoothing(df[col].astype(np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
                 s.name = col
                 series.append(s)
 
@@ -119,14 +118,34 @@ async def viz(city: str, state: str):
         "Three Bedroom",
         "Four Bedroom"
     ]
-    fig = px.line(df, x=df.index, y=df.columns, title="Rental Price - Predicted, {city}, {state}",
-    labels=dict(index="Month", value="Price in USD"),
-    range_y=[0, df["Four Bedroom"].max() + 100]
-    )
+    layout = go.Layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
+        )
+
+    styling = {
+        "Studio" : "lightgreen",
+        "One Bedroom" : "#4BB543",
+        "Two Bedroom" : "darkcyan",
+        "Three Bedroom" : "#663399",
+        "Four Bedroom" : "#CC0000"
+    }
+
+    fig = go.Figure(
+        data=go.Scatter(name=f"Rental Price - Predicted {city}, {state}"),
+        layout=layout
+        )
+
+    for col in df.columns:
+        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines', marker_color=styling[col]))
 
     fig.update_layout(
+        title=f"Rental Price - Predicted {city}, {state}",
+        yaxis_title="US Dollars",
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
         width=640
         )
+
     return fig.to_json()
