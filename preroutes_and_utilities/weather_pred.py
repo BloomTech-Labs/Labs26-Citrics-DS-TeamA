@@ -11,6 +11,7 @@ import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import datetime
 from psycopg2.extras import execute_values
+import plotly.graph_objects as go
 
 register_adapter(np.int64, psycopg2._psycopg.AsIs)
 register_adapter(np.float64, psycopg2._psycopg.AsIs)
@@ -48,7 +49,6 @@ def weather_pred(city: str, state: str, metric: str):
         "state",
         "min",
         "mean",
-        "med",
         "max"
     ]
 
@@ -67,7 +67,6 @@ def weather_pred(city: str, state: str, metric: str):
         raw_series = {
             "min": data.resample("MS").min(),
             "mean": data.resample("MS").mean(),
-            "median": data.resample("MS").median(),
             "max": data.resample("MS").max()
         }
 
@@ -86,8 +85,9 @@ def weather_pred(city: str, state: str, metric: str):
         result.insert(0, "city", [city] * len(result))
         result.insert(1, "state", [state] * len(result))
 
-        for col in result.columns[2:]:
-            result.loc[result[col] < 0.0, col] = 0.0
+        if metric != "tempC" and metric != "FeelsLikeC":
+            for col in result.columns[2:]:
+                result.loc[result[col] < 0.0, col] = 0.0
 
         insert_data = """
         INSERT INTO {metric}(
@@ -96,7 +96,6 @@ def weather_pred(city: str, state: str, metric: str):
             state,
             min,
             mean,
-            med,
             max
         ) VALUES%s
         """.format(metric=metric)
@@ -108,10 +107,52 @@ def weather_pred(city: str, state: str, metric: str):
 
 
 def viz(city: str, state: str, metric: str):
-    df = pd.read_json(weather_pred(city, state, metric))
-    fig = px.line(df, x=df.index, y=df.columns)
+
+    nomenclature = {
+        "tempC" : ("Temperature", "Deg. C", "Deg. F"),
+        "FeelsLikeC" : ("Temperature Adjusted for Dew Point and Wind Chill", "Deg. C", "Deg. F"),
+        "precipMM" : ("Precipitation", "Milimeters", "Inches"),
+        "totalSnow_cm" : ("Snow", "Centimeters", "Inches")
+    }
+
+    df = pd.read_json(weather_pred(city, state, metric))[["min", "mean", "max"]]
+    df.columns = ["Low", "Average", "High"]
+
+    if metric == "tempC" or metric == "FeelsLikeC":
+        yrange = [-25, 40]
+
+    else:
+        yrange=None
+
+    layout = go.Layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(range=yrange)
+    )
+
+    fig = go.Figure(
+        data=go.Scatter(name=f"{nomenclature[metric][0]}"),
+        layout=layout
+    )
+
+    if metric == "tempC" or metric == "FeelsLikeC":
+        for col in df.columns:
+            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+
+    else:
+        for col in df.columns[1:]:
+            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+
+    fig.update_layout(
+        title=f"{nomenclature[metric][0]}",
+        yaxis_title=f"{nomenclature[metric][1]}",
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+    )
+
     return fig.show()
 
 
 if __name__ == "__main__":
-    viz("Salt Lake City", "UT", "tempC")
+    viz("Salt Lake City", "UT", "totalSnow_cm")
