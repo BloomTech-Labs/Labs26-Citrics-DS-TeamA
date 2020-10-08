@@ -134,7 +134,7 @@ def view(city: str, state: str):
         )
 
     for col in df.columns:
-        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines', marker_color=styling[col]))
 
     fig.update_layout(
         title=f"Rental Price - Predicted {city}, {state}",
