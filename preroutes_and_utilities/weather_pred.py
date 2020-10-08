@@ -81,7 +81,6 @@ def weather_pred(city: str, state: str, metric: str):
             series.append(s)
 
         result = pd.concat(series, axis=1)
-        print(result)
         result.index = result.index.astype(str)
         result.insert(0, "city", [city] * len(result))
         result.insert(1, "state", [state] * len(result))
@@ -110,17 +109,18 @@ def weather_pred(city: str, state: str, metric: str):
 def viz(city: str, state: str, metric: str):
 
     nomenclature = {
-        "tempC" : ("Temperature", "Deg. C"),
-        "FeelsLikeC" : ("Temperature Adjusted for Dew Point and Wind Chill", "Deg. C"),
-        "precipMM" : ("Precipitation", "Milimeters"),
-        "totalSnow_cm" : ("Snow", "Centimeters")
+        "tempC" : ("Temperature", "Deg. C", "Deg. F"),
+        "FeelsLikeC" : ("Temperature Adjusted for Dew Point and Wind Chill", "Deg. C", "Deg. F"),
+        "precipMM" : ("Precipitation", "Milimeters", "Inches"),
+        "totalSnow_cm" : ("Snow", "Centimeters", "Inches")
     }
 
     df = pd.read_json(weather_pred(city, state, metric))[["min", "mean", "max"]]
     df.columns = ["Low", "Average", "High"]
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        plot_bgcolor='rgba(0,0,0,0)',
+        yaxis=dict(range=[-25, 40])
     )
 
     fig = go.Figure(
@@ -131,8 +131,16 @@ def viz(city: str, state: str, metric: str):
     for col in df.columns:
         fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
 
+    fig.update_layout(
+        title=f"{nomenclature[metric][0]}",
+        yaxis_title=f"{nomenclature[metric][1]}",
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+    )
+
     return fig.show()
 
 
 if __name__ == "__main__":
-    viz("Salt Lake City", "UT", "tempC")
+    viz("tallahassee", "fl", "tempC")
