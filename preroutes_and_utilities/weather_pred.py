@@ -1,4 +1,4 @@
-# utilities/weather.pred <- preroute
+# preroutes_and_utilities/weather.pred <- preroute
 
 from psycopg2.extensions import register_adapter, AsIs
 import numpy as np
