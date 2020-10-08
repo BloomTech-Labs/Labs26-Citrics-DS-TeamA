@@ -1,3 +1,5 @@
+# preroutes_and_utilities/insert.py <- utility
+
 from psycopg2.extensions import register_adapter, AsIs
 import numpy as np
 from dotenv import load_dotenv

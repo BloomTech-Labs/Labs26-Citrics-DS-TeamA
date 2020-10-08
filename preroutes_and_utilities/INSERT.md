@@ -60,7 +60,7 @@ pipenv install psycopg2==2.8.5
 Unlike, the *weather.py* script, *insert.py* takes command-line input after running
 
 ```
-python utilities/insert.py
+python preroutes_and_utilities/insert.py
 ```
 
 as opposed to command-line arguments.
