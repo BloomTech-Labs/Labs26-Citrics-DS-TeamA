@@ -18,6 +18,7 @@ parso==0.7.1
 pathlib==1.0.1
 pexpect==4.8.0
 pickleshare==0.7.5
+plotly==4.11.0
 prompt-toolkit==3.0.7
 psycopg2-binary==2.8.5
 ptyprocess==0.6.0
@@ -30,6 +31,7 @@ requests==2.24.0
 scikit-learn==0.23.2
 scipy==1.5.2
 six==1.15.0
+statsmodels==0.12.0 
 threadpoolctl==2.1.0
 toml==0.10.1
 tornado==6.0.4

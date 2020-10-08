@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS {table_name}(
         self.connection.commit()
 
 if __name__ == "__main__":
+    pass
     # table_name = "weather_pred"
     # columns = {
     #     "month" : "TIMESTAMP NOT NULL",
