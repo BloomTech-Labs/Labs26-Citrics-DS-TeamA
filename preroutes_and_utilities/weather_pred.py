@@ -117,10 +117,17 @@ def viz(city: str, state: str, metric: str):
 
     df = pd.read_json(weather_pred(city, state, metric))[["min", "mean", "max"]]
     df.columns = ["Low", "Average", "High"]
+
+    if metric == "tempC" or metric == "FeelsLikeC":
+        yrange = [-25, 40]
+
+    else:
+        yrange=None
+
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        yaxis=dict(range=[-25, 40])
+        yaxis=dict(range=yrange)
     )
 
     fig = go.Figure(
@@ -128,8 +135,13 @@ def viz(city: str, state: str, metric: str):
         layout=layout
     )
 
-    for col in df.columns:
-        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+    if metric == "tempC" or metric == "FeelsLikeC":
+        for col in df.columns:
+            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+
+    else:
+        for col in df.columns[1:]:
+            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
 
     fig.update_layout(
         title=f"{nomenclature[metric][0]}",
@@ -143,4 +155,4 @@ def viz(city: str, state: str, metric: str):
 
 
 if __name__ == "__main__":
-    viz("tallahassee", "fl", "tempC")
+    viz("Salt Lake City", "UT", "totalSnow_cm")
