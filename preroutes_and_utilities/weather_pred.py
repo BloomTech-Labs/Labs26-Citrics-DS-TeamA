@@ -34,12 +34,45 @@ connection = psycopg2.connect(
 cur = connection.cursor()
 
 
-def weather_pred(city: str, state: str, metric: str):
+def weather_pred(city: str, state: str, metric: str, si: bool):
+
     # If prediciton found in database:
-    retrieve_records = """
-    SELECT * FROM {metric}
-    WHERE "city"='{city}' and "state"='{state}'
-    """.format(metric=metric, city=city.title(), state=state.upper())
+    imperial = {
+        "tempC" : "tempF",
+        "FeelsLikeC" : "FeelsLikeF",
+        "precipMM" : "precipIN",
+        "totalSnow_cm" : "totalSnow_in"
+    }
+
+    # If metric values are desired:
+
+    if si == True:
+        retrieve_records = f"""
+        SELECT
+            'date_time',
+            'city', 
+            'state',
+            'tempc',
+            'feelslikec',
+            'precipmm',
+            'totalsnow_cm'
+        FROM {metric}
+        WHERE "city"='{city.title()}' and "state"='{state.upper()}'
+        """
+    # If imperial values are desired
+    else:
+        retrieve_records = f"""
+        SELECT
+            'date_time',
+            'city', 
+            'state',
+            'tempc',
+            'feelslikec',
+            'precipmm',
+            'totalsnow_cm'
+        FROM {imperial[metric]}
+        WHERE "city"='{city}' and "state"='{state}'
+        """
 
     cur.execute(retrieve_records)
 
@@ -89,24 +122,67 @@ def weather_pred(city: str, state: str, metric: str):
             for col in result.columns[2:]:
                 result.loc[result[col] < 0.0, col] = 0.0
 
-        insert_data = """
-        INSERT INTO {metric}(
-            month,
-            city,
-            state,
-            min,
-            mean,
-            max
-        ) VALUES%s
-        """.format(metric=metric)
+        # Converting metric to imperial values if necessary
+        # Helper functions
+
+        # Celsius to Fahrenheit
+        def to_fahrenheit(temp: float) -> float:
+            return ((temp / 5) * 9) + 32
+
+        # Centimeters to Inches
+        def cm_to_inch(measure: float) -> float:
+            return measure / 2.54
+
+        # Milimeters to Inches
+        def mm_to_inch(measure: float) -> float:
+            return measure / 25.4
+
+        print(df.columns)
+
+        if si == False:
+            if metric == "tempC" or metric == "FeelsLikeC":
+                for col in result.columns[2:]:
+                    result[col] = result[col].apply(to_fahrenheit)
+
+            elif metric == "totalSnow_cm":
+                for col in result.columns[2:]:
+                    result[col] = result[col].apply(cm_to_inch)
+
+            elif metric == "precipMM":
+                for col in result.columns[2:]:
+                    result[col] = result[col].apply(mm_to_inch)
+
+            metric = imperial[metric]
+            insert_data = """
+                INSERT INTO {metric}(
+                    month,
+                    city,
+                    state,
+                    min,
+                    mean,
+                    max
+                ) VALUES%s
+                """.format(metric=metric)
+
+        else:
+            insert_data = """
+            INSERT INTO {metric}(
+                month,
+                city,
+                state,
+                min,
+                mean,
+                max
+            ) VALUES%s
+            """.format(metric=metric)
 
         execute_values(cur, insert_data, list(result.to_records(index=True)))
         connection.commit()
 
-    return result.to_json()
+    return result.to_json(indent=2)
 
 
-def viz(city: str, state: str, metric: str):
+def viz(city: str, state: str, metric: str, si : bool):
 
     nomenclature = {
         "tempC" : ("Temperature", "Deg. C", "Deg. F"),
@@ -115,7 +191,7 @@ def viz(city: str, state: str, metric: str):
         "totalSnow_cm" : ("Snow", "Centimeters", "Inches")
     }
 
-    df = pd.read_json(weather_pred(city, state, metric))[["min", "mean", "max"]]
+    df = pd.read_json(weather_pred(city, state, metric, si))[["min", "mean", "max"]]
     df.columns = ["Low", "Average", "High"]
 
     if metric == "tempC" or metric == "FeelsLikeC":
@@ -155,4 +231,5 @@ def viz(city: str, state: str, metric: str):
 
 
 if __name__ == "__main__":
-    viz("Salt Lake City", "UT", "totalSnow_cm")
+    # viz("Salt Lake City", "UT", "totalSnow_cm", "metric", si=True)
+    print(weather_pred("Salt Lake City", "UT", "totalSnow_cm", False))
