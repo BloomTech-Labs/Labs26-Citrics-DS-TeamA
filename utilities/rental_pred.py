@@ -38,7 +38,7 @@ def view(city: str, state: str):
         conn = db.connection
         cur = conn.cursor()
 
-        db.adapters(np.float64)
+        db.adapters(np.float64, np.datetime64)
 
         retrieve_records = """
         SELECT * FROM rental_pred
@@ -84,6 +84,7 @@ def view(city: str, state: str):
                 series.append(s)
 
             result = pd.concat(series, axis=1)
+            result.index = result.index.astype(str)
             result.insert(0, "city", city)
             result.insert(1, "state", state)
 
@@ -116,7 +117,7 @@ def view(city: str, state: str):
     layout = go.Layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
-            yaxis=dict(range=([0, df["Four Bedroom"].max() + 100]))
+            yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
         )
 
     styling = {
@@ -133,7 +134,7 @@ def view(city: str, state: str):
         )
 
     for col in df.columns:
-        fig.add_trace(go.Scatter(x=df.index, y=df[col], mode='lines'))
+        fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
 
     fig.update_layout(
         title=f"Rental Price - Predicted {city}, {state}",
