@@ -34,7 +34,7 @@ connection = psycopg2.connect(
 cur = connection.cursor()
 
 
-def weather_pred(city: str, state: str, metric: str, si):
+def weather_pred(city: str, state: str, metric: str, si: bool):
 
     # If prediciton found in database:
     imperial = {
@@ -145,11 +145,11 @@ def weather_pred(city: str, state: str, metric: str, si):
                     result[col] = result[col].apply(to_fahrenheit)
 
             elif metric == "totalSnow_cm":
-                for col in df.columns[2:]:
+                for col in result.columns[2:]:
                     result[col] = result[col].apply(cm_to_inch)
 
             elif metric == "precipMM":
-                for col in df.columns[2:]:
+                for col in result.columns[2:]:
                     result[col] = result[col].apply(mm_to_inch)
 
             metric = imperial[metric]
@@ -232,4 +232,4 @@ def viz(city: str, state: str, metric: str, si : bool):
 
 if __name__ == "__main__":
     # viz("Salt Lake City", "UT", "totalSnow_cm", "metric", si=True)
-    print(weather_pred("Salt Lake City", "UT", "tempC", False))
+    print(weather_pred("Salt Lake City", "UT", "totalSnow_cm", False))
