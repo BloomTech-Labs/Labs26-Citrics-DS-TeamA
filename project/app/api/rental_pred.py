@@ -44,29 +44,33 @@ async def pred(city: str, state: str):
     db.adapters(np.float64, np.datetime64)
 
     retrieve_records = """
-    SELECT * FROM rental_pred
+    SELECT * FROM rp
     WHERE "city"='{city}' and "state"='{state}'
     """.format(city=city.title(), state=state.upper())
 
     cur.execute(retrieve_records)
 
     columns = [
-        "month",
+        "year",
         "city",
         "state",
         "Studio",
-        "onebr",
-        "twobr",
+        "oner",
+        "twor",
         "threebr",
         "fourbr",
     ]
 
     result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
-    result.set_index("month", inplace=True)
+    result.set_index("year", inplace=True)
+
+    if len(result.index) > 0:
+        result = result.resample("Y").mean()[:2]
 
     if len(result.index) == 0:
         warnings.filterwarnings(
-            "ignore", message="After 0.13 initialization must be handled at model creation")
+            "ignore", message="After 0.13 initialization must be handled at model creation"
+            )
         query = """
         SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
         FROM rental
@@ -75,8 +79,10 @@ async def pred(city: str, state: str):
 
         cur.execute(query)
 
-        df = pd.DataFrame.from_records(cur.fetchall(), columns=[
-                                        "month", "Studio", "onebr", "twobr", "threebr", "fourbr"])
+        df = pd.DataFrame.from_records(
+            cur.fetchall(),
+            columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"]
+            )
         df.set_index("month", inplace=True)
         df.index = pd.to_datetime(df.index)
         df.index.freq = "MS"
@@ -84,31 +90,39 @@ async def pred(city: str, state: str):
         series = []
 
         for col in df.columns:
-            s = ExponentialSmoothing(df[col].astype(
-                np.int64), trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
+            s = ExponentialSmoothing(
+                df[col].astype(np.int64),
+                trend="add",
+                seasonal="add",
+                seasonal_periods=12
+            ).fit().forecast(30)
             s.name = col
             series.append(s)
 
         result = pd.concat(series, axis=1)
+        result = result.resample("Y").mean()[:2]
         result.index = result.index.astype(str)
         result.insert(0, "city", city)
         result.insert(1, "state", state)
 
         insert_data = """
-        INSERT INTO rental_pred(
-            month,
+        INSERT INTO rp(
+            year,
             city,
             state,
             Studio,
-            onebdr,
-            twobdr,
-            threebdr,
-            fourbdr
+            onebr,
+            twobr,
+            threebr,
+            fourbr
         ) VALUES%s
         """
 
-        execute_values(cur, insert_data, list(
-            result.to_records(index=True)))
+        execute_values(
+            cur, 
+            insert_data, 
+            list(result.to_records(index=True))
+            )
         conn.commit()
 
     return result.to_json(indent=2)
