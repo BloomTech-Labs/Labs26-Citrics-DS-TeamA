@@ -35,44 +35,19 @@ cur = connection.cursor()
 
 
 def weather_pred(city: str, state: str, metric: str, si: bool):
-
-    # If prediciton found in database:
-    imperial = {
-        "tempC" : "tempF",
-        "FeelsLikeC" : "FeelsLikeF",
-        "precipMM" : "precipIN",
-        "totalSnow_cm" : "totalSnow_in"
-    }
-
-    # If metric values are desired:
-
-    if si == True:
-        retrieve_records = f"""
-        SELECT
-            'date_time',
-            'city', 
-            'state',
-            'tempc',
-            'feelslikec',
-            'precipmm',
-            'totalsnow_cm'
-        FROM {metric}
-        WHERE "city"='{city.title()}' and "state"='{state.upper()}'
-        """
-    # If imperial values are desired
-    else:
-        retrieve_records = f"""
-        SELECT
-            'date_time',
-            'city', 
-            'state',
-            'tempc',
-            'feelslikec',
-            'precipmm',
-            'totalsnow_cm'
-        FROM {imperial[metric]}
-        WHERE "city"='{city}' and "state"='{state}'
-        """
+    # Checking database for records    
+    retrieve_records = f"""
+    SELECT
+        date_time,
+        city, 
+        state,
+        tempc,
+        feelslikec,
+        precipmm,
+        totalsnow_cm
+    FROM historic_weather
+    WHERE "city"='{city.title()}' and "state"='{state.upper()}'
+    """
 
     cur.execute(retrieve_records)
 
@@ -137,8 +112,6 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
         def mm_to_inch(measure: float) -> float:
             return measure / 25.4
 
-        print(df.columns)
-
         if si == False:
             if metric == "tempC" or metric == "FeelsLikeC":
                 for col in result.columns[2:]:
@@ -151,6 +124,14 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
             elif metric == "precipMM":
                 for col in result.columns[2:]:
                     result[col] = result[col].apply(mm_to_inch)
+
+            # If imperial measurements are desired:
+            imperial = {
+                "tempC" : "tempF",
+                "FeelsLikeC" : "FeelsLikeF",
+                "precipMM" : "precipIN",
+                "totalSnow_cm" : "totalSnow_in"
+            }
 
             metric = imperial[metric]
             insert_data = """
