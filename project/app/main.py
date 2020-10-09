@@ -43,13 +43,11 @@ app.include_router(viz_view.router)
 app.include_router(bls_jobs1.router)
 app.include_router(bls_viz.router)
 app.include_router(bls_viz_view.router)
-app.include_router(rental_pred_viz.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
 app.include_router(static.router)
 app.include_router(routing.router)
-app.include_router(rp_dynamic.router)
 
 app.add_middleware(
     CORSMiddleware,
