@@ -32,8 +32,6 @@ app = FastAPI(
     docs_url='/',
 )
 
-app.include_router(predict.router)
-
 app.include_router(rent_city_states.router)
 app.include_router(rental1.router)
 app.include_router(walkability.router)
