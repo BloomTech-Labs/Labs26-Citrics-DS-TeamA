@@ -115,8 +115,8 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
 
         result = pd.concat(series, axis=1)
         result.index = result.index.astype(str)
-        result.insert(0, "city", [city] * len(result))
-        result.insert(1, "state", [state] * len(result))
+        result.insert(0, "city", [city.title()] * len(result))
+        result.insert(1, "state", [state.upper()] * len(result))
 
         if metric != "tempC" and metric != "FeelsLikeC":
             for col in result.columns[2:]:
@@ -194,11 +194,19 @@ def viz(city: str, state: str, metric: str, si : bool):
     df = pd.read_json(weather_pred(city, state, metric, si))[["min", "mean", "max"]]
     df.columns = ["Low", "Average", "High"]
 
-    if metric == "tempC" or metric == "FeelsLikeC":
-        yrange = [-25, 40]
+    if si == True:
+        if metric == "tempC" or metric == "FeelsLikeC":
+            yrange = [-25, 40]
 
-    else:
-        yrange=None
+        else:
+            yrange=None
+
+    # elif si == False:
+    #     if metric == "tempC" or metric == "FeelsLikeC":
+    #         yrange = [-25, 40]
+
+    #     else:
+    #         yrange=None
 
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
