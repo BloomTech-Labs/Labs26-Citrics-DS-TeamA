@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 router = APIRouter()
 
 
-@router.get("/rental/predict/dynamic/{city}_{state}")
+@router.get("/rental/predict/{city}_{state}")
 async def pred(city: str, state: str):
     """
     **Input**
@@ -113,7 +113,7 @@ async def pred(city: str, state: str):
 
     return result.to_json(indent=2)
 
-@router.get("/rental/predict/viz/dynamic/{city}_{state}")
+@router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
     """
     **Input**
