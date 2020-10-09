@@ -11,7 +11,6 @@ from app.api import (
     rentviz2_view,
     rent_city_states,
     rental_pred,
-    rental_pred_viz,
     bls_jobs1,
     bls_viz_view,
     bls_viz,
@@ -19,8 +18,7 @@ from app.api import (
     weather_pred,
     weather_pred_viz,
     static,
-    routing,
-    rp_dynamic
+    routing
 )
 
 # Description Text
