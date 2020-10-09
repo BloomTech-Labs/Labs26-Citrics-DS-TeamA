@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.api import (
-    predict,
     viz,
     viz_view,
     rental1,
@@ -19,7 +18,9 @@ from app.api import (
     census,
     weather_pred,
     weather_pred_viz,
-    static
+    static,
+    routing,
+    rp_dynamic
 )
 
 # Description Text
@@ -28,7 +29,7 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='1.8',
+    version='1.7',
     docs_url='/',
 )
 
@@ -49,6 +50,8 @@ app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(weather_pred_viz.router)
 app.include_router(static.router)
+app.include_router(routing.router)
+app.include_router(rp_dynamic.router)
 
 app.add_middleware(
     CORSMiddleware,
