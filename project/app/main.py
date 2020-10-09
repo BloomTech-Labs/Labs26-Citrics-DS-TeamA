@@ -28,11 +28,9 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='1.7',
+    version='1.8',
     docs_url='/',
 )
-
-app.include_router(predict.router)
 
 app.include_router(rent_city_states.router)
 app.include_router(rental1.router)
