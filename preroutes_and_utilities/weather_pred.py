@@ -45,31 +45,28 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
     }
 
     # If metric values are desired:
-
     if si == True:
         retrieve_records = f"""
         SELECT
-            'date_time',
-            'city', 
-            'state',
-            'tempc',
-            'feelslikec',
-            'precipmm',
-            'totalsnow_cm'
+            month,
+            city,
+            state,
+            min,
+            mean,
+            max
         FROM {metric}
         WHERE "city"='{city.title()}' and "state"='{state.upper()}'
         """
-    # If imperial values are desired
+    # If imperial values are desired:
     else:
         retrieve_records = f"""
         SELECT
-            'date_time',
-            'city', 
-            'state',
-            'tempc',
-            'feelslikec',
-            'precipmm',
-            'totalsnow_cm'
+            month,
+            city,
+            state,
+            min,
+            mean,
+            max
         FROM {imperial[metric]}
         WHERE "city"='{city}' and "state"='{state}'
         """
@@ -91,7 +88,7 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
 
     # If prediction not found in database
     if len(result.index) == 0:
-        df = retrieve(city=city, state=state)
+        df = retrieve(city=city, state=state)[:-1]
         df.set_index("date_time", inplace=True)
         df.index = pd.to_datetime(df.index)
 
@@ -115,8 +112,8 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
 
         result = pd.concat(series, axis=1)
         result.index = result.index.astype(str)
-        result.insert(0, "city", [city] * len(result))
-        result.insert(1, "state", [state] * len(result))
+        result.insert(0, "city", [city.title()] * len(result))
+        result.insert(1, "state", [state.upper()] * len(result))
 
         if metric != "tempC" and metric != "FeelsLikeC":
             for col in result.columns[2:]:
@@ -136,8 +133,6 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
         # Milimeters to Inches
         def mm_to_inch(measure: float) -> float:
             return measure / 25.4
-
-        print(df.columns)
 
         if si == False:
             if metric == "tempC" or metric == "FeelsLikeC":
@@ -179,7 +174,7 @@ def weather_pred(city: str, state: str, metric: str, si: bool):
         execute_values(cur, insert_data, list(result.to_records(index=True)))
         connection.commit()
 
-    return result.to_json(indent=2)
+    return result.to_json(indent=2, orient="records")
 
 
 def viz(city: str, state: str, metric: str, si : bool):
@@ -194,11 +189,21 @@ def viz(city: str, state: str, metric: str, si : bool):
     df = pd.read_json(weather_pred(city, state, metric, si))[["min", "mean", "max"]]
     df.columns = ["Low", "Average", "High"]
 
-    if metric == "tempC" or metric == "FeelsLikeC":
-        yrange = [-25, 40]
+    if si == True:
+        if metric == "tempC" or metric == "FeelsLikeC":
+            yrange = [-25, 45]
+            yaxis_title = f"{nomenclature[metric][1]}"
 
-    else:
-        yrange=None
+        else:
+            yrange = None
+
+    elif si == False:
+        if metric == "tempC" or metric == "FeelsLikeC":
+            yrange = [-25, 120]
+            yaxis_title = f"{nomenclature[metric][2]}"
+
+        else:
+            yrange = None
 
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
@@ -221,7 +226,7 @@ def viz(city: str, state: str, metric: str, si : bool):
 
     fig.update_layout(
         title=f"{nomenclature[metric][0]}",
-        yaxis_title=f"{nomenclature[metric][1]}",
+        yaxis_title=yaxis_title,
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
         width=640
@@ -231,5 +236,6 @@ def viz(city: str, state: str, metric: str, si : bool):
 
 
 if __name__ == "__main__":
-    # viz("Salt Lake City", "UT", "totalSnow_cm", "metric", si=True)
-    print(weather_pred("Salt Lake City", "UT", "totalSnow_cm", False))
+    viz("Anchorage", "AK", "tempC", True)
+    viz("Anchorage", "AK", "tempC", False)
+    # print(weather_pred("Salt Lake City", "UT", "totalSnow_cm", False))
