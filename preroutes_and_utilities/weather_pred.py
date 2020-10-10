@@ -13,7 +13,8 @@ import datetime
 from psycopg2.extras import execute_values
 import plotly.graph_objects as go
 
-def weather_pred(city: str, state: str, si: bool):
+
+def weather_pred(city: str, state: str, metric=None):
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
@@ -21,7 +22,7 @@ def weather_pred(city: str, state: str, si: bool):
 
     # If prediciton found in database
     # If metric values are desired:
-    if si == True:
+    if metric == True:
         table = "feelslikec"
 
     else:
@@ -35,7 +36,8 @@ def weather_pred(city: str, state: str, si: bool):
 
     cur.execute(retrieve_pred)
 
-    result = pd.DataFrame.from_records(cur.fetchall(), columns=["month", "mean"])
+    result = pd.DataFrame.from_records(
+        cur.fetchall(), columns=["month", "mean"])
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
@@ -65,14 +67,14 @@ def weather_pred(city: str, state: str, si: bool):
         warnings.filterwarnings(
             "ignore",
             message="After 0.13 initialization must be handled at model creation"
-            )
+        )
 
         result = ExponentialSmoothing(
             series.astype(np.int64),
             trend="add",
             seasonal="add",
             seasonal_periods=12
-            ).fit().forecast(24)
+        ).fit().forecast(24)
 
         c = pd.Series([city] * len(result.index))
         c.index = result.index
@@ -85,11 +87,10 @@ def weather_pred(city: str, state: str, si: bool):
 
         # Converting for temperature in Fahrenheit if needed
         # Conversion Helper Function
-
         def to_fahr(temp: float) -> float:
             return ((temp * 9) / 5) + 32
 
-        if si == False:
+        if metric != True:
             result["temp"] = result["temp"].apply(to_fahr)
 
         insert_pred = """
@@ -102,16 +103,58 @@ def weather_pred(city: str, state: str, si: bool):
         """.format(table=table)
 
         execute_values(
-            cur, 
+            cur,
             insert_pred,
             list(result.to_records(index=True))
-            )
+        )
         conn.commit()
 
     return result.to_json(indent=2)
 
 
+def weather_viz(city1: tuple, city2=None, city3=None, metric=None):
+    cities = []
+    
+    first = pd.read_json(weather_pred(city1[0], city1[1], metric))["temp"]
+    first.name = f"{city1[0]}, {city1[1]}"
+    cities.append(first)
+
+    if city2:
+        second = pd.read_json(weather_pred(city2[0], city2[1], metric))["temp"]
+        second.name = f"{city2[0]}, {city2[1]}"
+        cities.append(second)
+
+    if city3:
+        third = pd.read_json(weather_pred(city3[0], city3[1], metric))["temp"]
+        third.name = f"{city3[0]}, {city3[1]}"
+        cities.append(third)
+
+    layout = go.Layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        )
+
+    if metric == True:
+        letter = "C"
+
+    else:
+        letter = "F"
+    
+    fig = go.Figure(
+        data=go.Scatter(name=f"Adjusted Temperature {letter}"),
+        layout=layout
+    )
+
+    for city in cities:
+        fig.add_trace(go.Scatter(name=city.name, x=city.index, y=city.values))
+
+    fig.update_layout(
+        title=f"Adjusted Temperature {letter}",
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+    )
+    return fig.show()
+
 if __name__ == "__main__":
-    print(weather_pred("Salt Lake City", "UT", True))
-    print("")
-    print(weather_pred("Salt Lake City", "UT", False))
+    weather_viz(city1=("Salt Lake City", "UT"), city2=("Atlanta", "GA"), city3=("Houston", "TX"), metric=True)
