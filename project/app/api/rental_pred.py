@@ -9,6 +9,8 @@ import pandas as pd
 import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
+from datetime import datetime
+from functools import reduce
 import plotly.graph_objects as go
 
 router = APIRouter()
@@ -70,7 +72,7 @@ async def pred(city: str, state: str):
     if len(result.index) == 0:
         warnings.filterwarnings(
             "ignore", message="After 0.13 initialization must be handled at model creation"
-            )
+        )
         query = """
         SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
         FROM rental
@@ -82,7 +84,7 @@ async def pred(city: str, state: str):
         df = pd.DataFrame.from_records(
             cur.fetchall(),
             columns=["month", "Studio", "onebr", "twobr", "threebr", "fourbr"]
-            )
+        )
         df.set_index("month", inplace=True)
         df.index = pd.to_datetime(df.index)
         df.index.freq = "MS"
@@ -119,13 +121,14 @@ async def pred(city: str, state: str):
         """
 
         execute_values(
-            cur, 
-            insert_data, 
+            cur,
+            insert_data,
             list(result.to_records(index=True))
-            )
+        )
         conn.commit()
 
     return result.to_json(indent=2)
+
 
 @router.get("/rental/predict/table/{city1}_{state1}")
 async def table(
@@ -136,8 +139,65 @@ async def table(
     city3=None,
     state3=None,
     metric=None
-    ):
-    pass
+):
+    columns = [
+        "Year",
+        "City",
+        "State",
+        "Studio",
+        "One Bedroom",
+        "Two Bedroom",
+        "Three Bedroom",
+        "Four Bedroom"
+    ]
+
+    dfs = []
+    df1 = pd.read_json(await pred(city1, state1))
+    df1.insert(0, "city", city1)
+    df1.insert(1, "state", state1)
+    df1 = df1.reset_index()
+    df1.columns = columns
+    dfs.append(df1)
+
+    if city2 and state2:
+        df2 = pd.read_json(await pred(city2, state2))
+        df2.insert(0, "city", city2)
+        df2.insert(1, "state", state2)
+        df2 = df2.reset_index()
+        df2.columns = columns
+        dfs.append(df2)
+
+    if city3 and state3:
+        df3 = pd.read_json(await pred(city3, state3))
+        df3.insert(0, "city", city3)
+        df3.insert(1, "state", state3)
+        df3 = df3.reset_index()
+        df3.columns = columns
+        dfs.append(df3)
+
+    def to_year(datetime_obj) -> int:
+        return datetime_obj.year
+
+    for DataFrame in dfs:
+            DataFrame["Year"] = DataFrame["Year"].apply(to_year)
+            DataFrame.round({
+                "Studio" : 0,
+                "One Bedroom" : 0,
+                "Two Bedroom" : 0,
+                "Three Bedroom" : 0,
+                "Four Bedroom" : 0
+            })
+
+    if len(dfs) > 1:
+        df = reduce(lambda left, right: pd.merge(
+            left, right, how='outer', on=columns
+            ), 
+            dfs
+        )
+
+        return df.to_html()
+
+    return dfs[0].to_html()
 
 @router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
