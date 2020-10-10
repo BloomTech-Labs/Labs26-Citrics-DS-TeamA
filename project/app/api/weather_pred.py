@@ -15,8 +15,8 @@ import plotly.graph_objects as go
 router = APIRouter()
 
 
-@router.get("/weather/predict/{city}_{state}_{metric}")
-async def pred(city: str, state: str, metric: Optional[bool] = False):
+@router.get("/weather/predict/{city}_{state}")
+async def pred(city: str, state: str, metric=False):
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
@@ -129,7 +129,7 @@ async def viz(
     cities = []
 
     first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
-    first.name = f"{city1[:-4].title()}, {city1[-2:].upper()}"
+    first.name = f"{city1.title()}, {state1.upper()}"
     cities.append(first)
 
     if city2 and state2:
