@@ -15,8 +15,8 @@ import plotly.graph_objects as go
 router = APIRouter()
 
 
-@router.get("/weather/predict/{city}_{state}_{metric}")
-async def pred(city: str, state: str, metric: Optional[bool] = False):
+@router.get("/weather/predict/{city}_{state}")
+async def pred(city: str, state: str, metric=False):
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
