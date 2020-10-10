@@ -127,6 +127,18 @@ async def pred(city: str, state: str):
 
     return result.to_json(indent=2)
 
+@router.get("/rental/predict/table/{city1}_{state1}")
+async def table(
+    city1: str,
+    state1: str,
+    city2=None,
+    state2=None,
+    city3=None,
+    state3=None,
+    metric=None
+    ):
+    pass
+
 @router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
     """
