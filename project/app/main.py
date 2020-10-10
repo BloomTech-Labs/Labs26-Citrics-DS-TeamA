@@ -16,7 +16,6 @@ from app.api import (
     bls_viz,
     census,
     weather_pred,
-    weather_pred_viz,
     static,
     routing
 )
@@ -45,7 +44,6 @@ app.include_router(bls_viz.router)
 app.include_router(bls_viz_view.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
-app.include_router(weather_pred_viz.router)
 app.include_router(static.router)
 app.include_router(routing.router)
 
