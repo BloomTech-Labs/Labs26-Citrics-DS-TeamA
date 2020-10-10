@@ -9,7 +9,6 @@ import psycopg2
 import pandas as pd
 import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-import datetime
 from psycopg2.extras import execute_values
 import plotly.graph_objects as go
 
