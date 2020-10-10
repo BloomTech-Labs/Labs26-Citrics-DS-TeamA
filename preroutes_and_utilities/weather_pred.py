@@ -1,241 +1,159 @@
 # preroutes_and_utilities/weather.pred <- preroute
 
 from psycopg2.extensions import register_adapter, AsIs
-import numpy as np
 from dotenv import load_dotenv
 import os
+from database import PostgreSQL
+import numpy as np
 import psycopg2
 import pandas as pd
-from insert import retrieve
 import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-import datetime
 from psycopg2.extras import execute_values
 import plotly.graph_objects as go
 
-register_adapter(np.int64, psycopg2._psycopg.AsIs)
-register_adapter(np.float64, psycopg2._psycopg.AsIs)
-register_adapter(np.datetime64, psycopg2._psycopg.AsIs)
 
-load_dotenv()
+def weather_pred(city: str, state: str, metric=None):
+    db = PostgreSQL()
+    conn = db.connection
+    cur = conn.cursor()
+    db.adapters(np.int64, np.float64, np.datetime64)
 
-DB_NAME = os.getenv("DB_NAME", "Invalid DB_NAME value")
-DB_USER = os.getenv("DB_USER", "Invalid DB_USER value")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "Invalid DB_PASSWORD value")
-DB_HOST = os.getenv("DB_HOST", "Invalid DB_HOST value")
-
-connection = psycopg2.connect(
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST
-)
-
-cur = connection.cursor()
-
-
-def weather_pred(city: str, state: str, metric: str, si: bool):
-
-    # If prediciton found in database:
-    imperial = {
-        "tempC" : "tempF",
-        "FeelsLikeC" : "FeelsLikeF",
-        "precipMM" : "precipIN",
-        "totalSnow_cm" : "totalSnow_in"
-    }
-
+    # If prediciton found in database
     # If metric values are desired:
-    if si == True:
-        retrieve_records = f"""
-        SELECT
-            month,
-            city,
-            state,
-            min,
-            mean,
-            max
-        FROM {metric}
-        WHERE "city"='{city.title()}' and "state"='{state.upper()}'
-        """
-    # If imperial values are desired:
+    if metric == True:
+        table = "feelslikec"
+
     else:
-        retrieve_records = f"""
-        SELECT
-            month,
-            city,
-            state,
-            min,
-            mean,
-            max
-        FROM {imperial[metric]}
-        WHERE "city"='{city}' and "state"='{state}'
-        """
+        table = "feelslikef"
 
-    cur.execute(retrieve_records)
+    retrieve_pred = f"""
+    SELECT month, mean
+    FROM {table}
+    WHERE "city"='{city}' and "state"='{state}'
+    """
 
-    columns = [
-        "month",
-        "city",
-        "state",
-        "min",
-        "mean",
-        "max"
-    ]
+    cur.execute(retrieve_pred)
 
-    result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+    result = pd.DataFrame.from_records(
+        cur.fetchall(), columns=["month", "mean"])
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
+    if len(result.index) > 0:
+        c = pd.Series([city] * len(result.index))
+        c.index = result.index
+        s = pd.Series([state] * len(result.index))
+        s.index = result.index
+
+        result = pd.concat([c, s, result], axis=1)
+        result.columns = ["city", "state", "temp"]
+
     # If prediction not found in database
-    if len(result.index) == 0:
-        df = retrieve(city=city, state=state)[:-1]
-        df.set_index("date_time", inplace=True)
-        df.index = pd.to_datetime(df.index)
+    elif len(result.index) == 0:
+        retrieve_data = f"""
+        SELECT date_time, FeelsLikeC
+        FROM historic_weather
+        Where "city"='{city}' and "state"='{state}'
+        """
 
-        data = df[metric]
+        cur.execute(retrieve_data)
 
-        raw_series = {
-            "min": data.resample("MS").min(),
-            "mean": data.resample("MS").mean(),
-            "max": data.resample("MS").max()
-        }
+        df = pd.DataFrame.from_records(cur.fetchall())
+        df.set_index(0, inplace=True)
+        series = df.resample("MS").mean()
 
-        warnings.filterwarnings("ignore")
+        warnings.filterwarnings(
+            "ignore",
+            message="After 0.13 initialization must be handled at model creation"
+        )
 
-        series = []
+        result = ExponentialSmoothing(
+            series.astype(np.int64),
+            trend="add",
+            seasonal="add",
+            seasonal_periods=12
+        ).fit().forecast(24)
 
-        for d in raw_series.keys():
-            s = ExponentialSmoothing(
-                raw_series[d], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-            s.name = d
-            series.append(s)
+        c = pd.Series([city] * len(result.index))
+        c.index = result.index
+        s = pd.Series([state] * len(result.index))
+        s.index = result.index
 
-        result = pd.concat(series, axis=1)
+        result = pd.concat([c, s, result], axis=1)
+        result.columns = ["city", "state", "temp"]
         result.index = result.index.astype(str)
-        result.insert(0, "city", [city.title()] * len(result))
-        result.insert(1, "state", [state.upper()] * len(result))
 
-        if metric != "tempC" and metric != "FeelsLikeC":
-            for col in result.columns[2:]:
-                result.loc[result[col] < 0.0, col] = 0.0
+        # Converting for temperature in Fahrenheit if needed
+        # Conversion Helper Function
+        def to_fahr(temp: float) -> float:
+            return ((temp * 9) / 5) + 32
 
-        # Converting metric to imperial values if necessary
-        # Helper functions
+        if metric != True:
+            result["temp"] = result["temp"].apply(to_fahr)
 
-        # Celsius to Fahrenheit
-        def to_fahrenheit(temp: float) -> float:
-            return ((temp / 5) * 9) + 32
+        insert_pred = """
+        INSERT INTO {table}(
+            month,
+            city,
+            state,
+            mean
+        ) VALUES%s
+        """.format(table=table)
 
-        # Centimeters to Inches
-        def cm_to_inch(measure: float) -> float:
-            return measure / 2.54
+        execute_values(
+            cur,
+            insert_pred,
+            list(result.to_records(index=True))
+        )
+        conn.commit()
 
-        # Milimeters to Inches
-        def mm_to_inch(measure: float) -> float:
-            return measure / 25.4
-
-        if si == False:
-            if metric == "tempC" or metric == "FeelsLikeC":
-                for col in result.columns[2:]:
-                    result[col] = result[col].apply(to_fahrenheit)
-
-            elif metric == "totalSnow_cm":
-                for col in result.columns[2:]:
-                    result[col] = result[col].apply(cm_to_inch)
-
-            elif metric == "precipMM":
-                for col in result.columns[2:]:
-                    result[col] = result[col].apply(mm_to_inch)
-
-            metric = imperial[metric]
-            insert_data = """
-                INSERT INTO {metric}(
-                    month,
-                    city,
-                    state,
-                    min,
-                    mean,
-                    max
-                ) VALUES%s
-                """.format(metric=metric)
-
-        else:
-            insert_data = """
-            INSERT INTO {metric}(
-                month,
-                city,
-                state,
-                min,
-                mean,
-                max
-            ) VALUES%s
-            """.format(metric=metric)
-
-        execute_values(cur, insert_data, list(result.to_records(index=True)))
-        connection.commit()
-
-    return result.to_json(indent=2, orient="records")
+    return result.to_json(indent=2)
 
 
-def viz(city: str, state: str, metric: str, si : bool):
+def weather_viz(city1: tuple, city2=None, city3=None, metric=None):
+    cities = []
+    
+    first = pd.read_json(weather_pred(city1[0], city1[1], metric))["temp"]
+    first.name = f"{city1[0]}, {city1[1]}"
+    cities.append(first)
 
-    nomenclature = {
-        "tempC" : ("Temperature", "Deg. C", "Deg. F"),
-        "FeelsLikeC" : ("Temperature Adjusted for Dew Point and Wind Chill", "Deg. C", "Deg. F"),
-        "precipMM" : ("Precipitation", "Milimeters", "Inches"),
-        "totalSnow_cm" : ("Snow", "Centimeters", "Inches")
-    }
+    if city2:
+        second = pd.read_json(weather_pred(city2[0], city2[1], metric))["temp"]
+        second.name = f"{city2[0]}, {city2[1]}"
+        cities.append(second)
 
-    df = pd.read_json(weather_pred(city, state, metric, si))[["min", "mean", "max"]]
-    df.columns = ["Low", "Average", "High"]
-
-    if si == True:
-        if metric == "tempC" or metric == "FeelsLikeC":
-            yrange = [-25, 45]
-            yaxis_title = f"{nomenclature[metric][1]}"
-
-        else:
-            yrange = None
-
-    elif si == False:
-        if metric == "tempC" or metric == "FeelsLikeC":
-            yrange = [-25, 120]
-            yaxis_title = f"{nomenclature[metric][2]}"
-
-        else:
-            yrange = None
+    if city3:
+        third = pd.read_json(weather_pred(city3[0], city3[1], metric))["temp"]
+        third.name = f"{city3[0]}, {city3[1]}"
+        cities.append(third)
 
     layout = go.Layout(
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        yaxis=dict(range=yrange)
-    )
+        )
 
+    if metric == True:
+        letter = "C"
+
+    else:
+        letter = "F"
+    
     fig = go.Figure(
-        data=go.Scatter(name=f"{nomenclature[metric][0]}"),
+        data=go.Scatter(name=f"Adjusted Temperature {letter}"),
         layout=layout
     )
 
-    if metric == "tempC" or metric == "FeelsLikeC":
-        for col in df.columns:
-            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
-
-    else:
-        for col in df.columns[1:]:
-            fig.add_trace(go.Scatter(name=col, x=df.index, y=df[col], mode='lines'))
+    for city in cities:
+        fig.add_trace(go.Scatter(name=city.name, x=city.index, y=city.values))
 
     fig.update_layout(
-        title=f"{nomenclature[metric][0]}",
-        yaxis_title=yaxis_title,
+        title=f"Adjusted Temperature {letter}",
         font=dict(family='Open Sans, extra bold', size=10),
         height=412,
         width=640
     )
-
     return fig.show()
 
-
 if __name__ == "__main__":
-    viz("Anchorage", "AK", "tempC", True)
-    viz("Anchorage", "AK", "tempC", False)
-    # print(weather_pred("Salt Lake City", "UT", "totalSnow_cm", False))
+    weather_viz(city1=("Salt Lake City", "UT"), city2=("Atlanta", "GA"), city3=("Houston", "TX"), metric=True)

@@ -1,115 +1,170 @@
 from fastapi import APIRouter
+from typing import Optional
+from psycopg2.extensions import register_adapter, AsIs
 from dotenv import load_dotenv
+import os
 from app.database import PostgreSQL
 import numpy as np
 import psycopg2
-import os
-import warnings
 import pandas as pd
+import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
+import plotly.graph_objects as go
 
 router = APIRouter()
 
+
 @router.get("/weather/predict/{city}_{state}_{metric}")
-async def predict(city: str, state: str, metric: str):
-
+async def pred(city: str, state: str, metric: Optional[bool] = False):
     db = PostgreSQL()
+    conn = db.connection
+    cur = conn.cursor()
     db.adapters(np.int64, np.float64, np.datetime64)
-    connection = db.connection()
-    cur = connection.cursor()
 
-    # If prediciton found in database:
-    retrieve_records = """
-    SELECT * FROM {metric}
+    # If prediciton found in database
+    # If metric values are desired:
+    if metric == True:
+        table = "feelslikec"
+
+    else:
+        table = "feelslikef"
+
+    retrieve_pred = f"""
+    SELECT month, mean
+    FROM {table}
     WHERE "city"='{city}' and "state"='{state}'
-    """.format(metric=metric, city=city.title(), state=state.upper())
+    """
 
-    cur.execute(retrieve_records)
+    cur.execute(retrieve_pred)
 
-    columns = [
-        "month",
-        "city",
-        "state",
-        "min",
-        "mean",
-        "med",
-        "max"
-    ]
-
-    result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+    result = pd.DataFrame.from_records(
+        cur.fetchall(),
+        columns=["month", "mean"]
+    )
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
-    # For use in historic weather retrieval.
-    def retrieve(state: str, city: str):
-        retrieve_records = """
-        SELECT * FROM historic_weather
-        WHERE "city"='{city}' and "state"='{state}'
-        """.format(city=city.title(), state=state.upper())
+    if len(result.index) > 0:
+        c = pd.Series([city] * len(result.index))
+        c.index = result.index
+        s = pd.Series([state] * len(result.index))
+        s.index = result.index
 
-        cur.execute(retrieve_records)
-
-        columns = [
-            "date_time",
-            "location",
-            "city",
-            "state",
-            "tempC",
-            "FeelsLikeC",
-            "precipMM",
-            "totalSnow_cm",
-            "humidity",
-            "pressure"
-        ]
-
-        return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+        result = pd.concat([c, s, result], axis=1)
+        result.columns = ["city", "state", "temp"]
 
     # If prediction not found in database
-    if len(result.index) == 0:
-        df = retrieve(city=city, state=state)
-        df.set_index("date_time", inplace=True)
-        df.index = pd.to_datetime(df.index)
+    elif len(result.index) == 0:
+        retrieve_data = f"""
+        SELECT date_time, FeelsLikeC
+        FROM historic_weather
+        Where "city"='{city}' and "state"='{state}'
+        """
 
-        data = df[metric]
+        cur.execute(retrieve_data)
 
-        raw_series = {
-            "min" : data.resample("MS").min(),
-            "mean" : data.resample("MS").mean(),
-            "median" : data.resample("MS").median(),
-            "max" : data.resample("MS").max()
-        }
+        df = pd.DataFrame.from_records(cur.fetchall())
+        df.set_index(0, inplace=True)
+        series = df.resample("MS").mean()
 
-        warnings.filterwarnings("ignore")
+        warnings.filterwarnings(
+            "ignore",
+            message="After 0.13 initialization must be handled at model creation"
+        )
 
-        series = []
+        result = ExponentialSmoothing(
+            series.astype(np.int64),
+            trend="add",
+            seasonal="add",
+            seasonal_periods=12
+        ).fit().forecast(24)
 
-        for d in raw_series.keys():
-            s = ExponentialSmoothing(raw_series[d], trend="add", seasonal="add", seasonal_periods=12).fit().forecast(24)
-            s.name = d
-            series.append(s)
+        c = pd.Series([city] * len(result.index))
+        c.index = result.index
+        s = pd.Series([state] * len(result.index))
+        s.index = result.index
 
-        result = pd.concat(series, axis=1)
+        result = pd.concat([c, s, result], axis=1)
+        result.columns = ["city", "state", "temp"]
         result.index = result.index.astype(str)
-        result.insert(0, "city", [city] * len(result))
-        result.insert(1, "state", [state] * len(result))
 
-        for col in result.columns[2:]:
-            result.loc[result[col] < 0.0, col] = 0.0
+        # Converting for temperature in Fahrenheit if needed
+        # Conversion Helper Function
+        def to_fahr(temp: float) -> float:
+            return ((temp * 9) / 5) + 32
 
-        insert_data = """
-        INSERT INTO {metric}(
+        if metric != True:
+            result["temp"] = result["temp"].apply(to_fahr)
+
+        insert_pred = """
+        INSERT INTO {table}(
             month,
             city,
             state,
-            min,
-            mean,
-            med,
-            max
+            mean
         ) VALUES%s
-        """.format(metric=metric)
+        """.format(table=table)
 
-        execute_values(cur, insert_data, list(result.to_records(index=True)))
-        connection.commit()
+        execute_values(
+            cur,
+            insert_pred,
+            list(result.to_records(index=True))
+        )
+        conn.commit()
 
-    return result.to_json()
+    return result.to_json(indent=2)
+
+
+@router.get("/weather/predict/viz/{city1}_{state1}")
+async def viz(
+    city1: str,
+    state1: str,
+    city2=None,
+    state2=None,
+    city3=None,
+    state3=None,
+    metric=None
+):
+    cities = []
+
+    first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
+    first.name = f"{city1[:-4].title()}, {city1[-2:].upper()}"
+    cities.append(first)
+
+    if city2 and state2:
+        second = pd.read_json(await pred(city2.title(), state2.upper(), metric))["temp"]
+        second.name = f"{city2.title()}, {state2.upper()}"
+        cities.append(second)
+
+    if city3 and state3:
+        third = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
+        third.name = f"{city3.title()}, {state3.upper()}"
+        cities.append(third)
+
+    layout = go.Layout(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+    )
+
+    if metric == True:
+        letter = "C"
+
+    else:
+        letter = "F"
+
+    fig = go.Figure(
+        data=go.Scatter(name=f"Adjusted Temperature {letter}"),
+        layout=layout
+    )
+
+    for city in cities:
+        fig.add_trace(go.Scatter(name=city.name, x=city.index, y=city.values))
+
+    fig.update_layout(
+        title=f"Adjusted Temperature {letter}",
+        font=dict(family='Open Sans, extra bold', size=10),
+        height=412,
+        width=640
+    )
+    return fig.to_json()
