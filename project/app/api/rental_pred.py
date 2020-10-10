@@ -159,6 +159,8 @@ async def table(
     df1.columns = columns
     dfs.append(df1)
 
+    print(dfs[0].dtypes)
+
     if city2 and state2:
         df2 = pd.read_json(await pred(city2, state2))
         df2.insert(0, "city", city2)
@@ -179,14 +181,9 @@ async def table(
         return datetime_obj.year
 
     for DataFrame in dfs:
-            DataFrame["Year"] = DataFrame["Year"].apply(to_year)
-            DataFrame.round({
-                "Studio" : 0,
-                "One Bedroom" : 0,
-                "Two Bedroom" : 0,
-                "Three Bedroom" : 0,
-                "Four Bedroom" : 0
-            })
+        DataFrame["Year"] = DataFrame["Year"].apply(to_year)
+        for col in dfs[0].columns[3:]:
+            DataFrame[col] = DataFrame[col].astype(int)
 
     if len(dfs) > 1:
         df = reduce(lambda left, right: pd.merge(
@@ -195,9 +192,11 @@ async def table(
             dfs
         )
 
-        return df.to_html()
+        print(df)
 
-    return dfs[0].to_html()
+        return df.to_html(index=False)
+
+    return dfs[0].to_html(index=False)
 
 @router.get("/rental/predict/viz/{city}_{state}")
 async def viz(city: str, state: str):
