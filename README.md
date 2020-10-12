@@ -6,8 +6,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 ### **Mission:**
 Using visualizations for a variety of metrics, such as how walkable a city is, predominant industries, unemployment rates, as well as predictions for rental prices, our users can make a more well-informed decision on what is best for them before making their move.
 
-[AWS Deployed API](https://ds.citrics.dev/)
-[Web-Deployed Implementation](https://a.citrics.dev/)
+[AWS Deployed API](https://ds.citrics.dev/) / [Web-Deployed Implementation](https://a.citrics.dev/)
 
 ## Directory Structure
 ```
