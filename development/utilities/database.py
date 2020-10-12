@@ -1,5 +1,9 @@
 # preroutes_and_utilities/database.py <- utility
 
+import sys
+from os.path import dirname
+sys.path.append(dirname(__file__))
+
 from dotenv import load_dotenv
 import os
 import psycopg2
