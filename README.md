@@ -90,7 +90,7 @@ Finding a place to live is hard! Nomads struggle with finding the right city for
 ├── README.md  <- You are here! Data Science API README file.
 ├── docker-compose.yml <- Build file for Docker deployment.
 └── requirements.txt  <- The requirements file for reproducing environment.
----
+```
 
 ## **Resources**
 
