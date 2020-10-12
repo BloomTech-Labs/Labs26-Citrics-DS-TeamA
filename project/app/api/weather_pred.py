@@ -17,6 +17,33 @@ router = APIRouter()
 
 @router.get("/weather/predict/{city}_{state}")
 async def pred(city: str, state: str, metric=False):
+    """
+    **Input**
+
+    `city: str`    <- city name with any capitalization
+
+    `state: str`   <- two-letter state abbreviation with any capitalization
+
+    `metric: bool` <- *(Optional)* default, False, will output predictions and make
+    database queries for adjusted temperature in degrees Fahrenheit;
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
+    True will do so for adjusted temperature in degrees Celsius.
+
+    **Output**
+
+    json object with predictions for
+    
+    **monthly temperature** of `city` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
+    
+    from the present (September 2020)
+    """
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
@@ -33,7 +60,7 @@ async def pred(city: str, state: str, metric=False):
     retrieve_pred = f"""
     SELECT month, mean
     FROM {table}
-    WHERE "city"='{city}' and "state"='{state}'
+    WHERE "city"='{city.title()}' and "state"='{state.upper()}'
     """
 
     cur.execute(retrieve_pred)
@@ -80,9 +107,9 @@ async def pred(city: str, state: str, metric=False):
             seasonal_periods=12
         ).fit().forecast(24)
 
-        c = pd.Series([city] * len(result.index))
+        c = pd.Series([city.title()] * len(result.index))
         c.index = result.index
-        s = pd.Series([state] * len(result.index))
+        s = pd.Series([state.upper()] * len(result.index))
         s.index = result.index
 
         result = pd.concat([c, s, result], axis=1)
@@ -126,6 +153,41 @@ async def viz(
     state3=None,
     metric=None
 ):
+    """
+    **Input**
+
+    `city1: str`   <- city name with any capitalization
+
+    `state1: str`  <- two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `metric: bool` <- *(Optional)* default, False, will output visualization for predictions
+    and make database queries for adjusted temperature in degrees Fahrenheit;
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
+    True will do so for adjusted temperature in degrees Celsius.
+
+    **Output**
+
+    json object of visualization of predictions for
+    
+    **monthly temperature** of `city1` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
+    
+    from the present (September 2020)
+    """
     cities = []
 
     first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
