@@ -54,13 +54,13 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    ├── app <- Folder containing all files related to app deployment.
 │    │    ├── api <- Files used in API deployment.
 │    │    │    ├── __init__.py <- Init file for api folder.
-│    │    │    ├── bls_jobs1.py
+│    │    │    ├── bls_jobs1.py <- Returns JSON string containing job data for top industry in BLS data.
 │    │    │    ├── bls_viz.py <- Returns JSON output of BLS data visualizations.
 │    │    │    ├── bls_viz_view.py <- Returns PNG of BLS data visualizations.
-│    │    │    ├── census.py
+│    │    │    ├── census.py <- Returns Census data.
 │    │    │    ├── current.py <- Returns current weather data calculated in both imperial and metric.
 │    │    │    ├── predict.py <- Starter predict file. (DEPRECATED)
-│    │    │    ├── rent_city_states.py
+│    │    │    ├── rent_city_states.py <- Deals with duplicate values (requested by front-end).
 │    │    │    ├── rental1.py <- Fetches rental prices from SQL database.
 │    │    │    ├── rental_pred.py <- Makes rental price predictions.
 │    │    │    ├── rentviz1.py <- Returns JSON output of rental price visualizations, unstyled. (DEPRECATED)
