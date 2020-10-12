@@ -82,20 +82,24 @@ async def bls_viz(city: str, statecode: str):
     )
 
     # Set Title
-    styling['title'] = f'The mot prevelant job in {city}, {statecode} is {sub["occ_title"][0]} with an average annual salary of {sub["annual_wage"][0]}'
+    styling["title"] = "Hover over bars for Job Industry"
+
+    x = sub["occ_title"]
+    y= sub["annual_wage"]
 
     fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
-                            x=sub['occ_title'],
-                            y=sub['annual_wage'],
-                            marker_color=styling.get('city1color')),
-                            layout=layout)
+                                x=x,
+                                y=y,
+                                marker=dict(color=y, colorscale="greens")),
+                                layout=layout)
 
     fig.update_layout(barmode='group', title_text=styling.get('title'),
-                        xaxis_title='Occupational Title',
-                        yaxis_title='Average Annual Salary',
-                        font=dict(family='Open Sans, extra bold', size=10),
-                        height=412,
-                        width=640)
-                        # legend_title='Cities')
+                    xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
+                    yaxis_title='Average Annual Salary',
+                    font=dict(family='Open Sans, extra bold', size=10),
+                    height=412,
+                    width=640)
+
+    fig.update_xaxes(showticklabels=False) # hide all the xticks
 
     return fig.to_json()
