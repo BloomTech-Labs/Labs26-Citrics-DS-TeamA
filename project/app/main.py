@@ -26,7 +26,7 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='1.7',
+    version='1.8',
     docs_url='/',
 )
 
