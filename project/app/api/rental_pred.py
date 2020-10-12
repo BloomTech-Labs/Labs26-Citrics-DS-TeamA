@@ -34,8 +34,7 @@ async def pred(city: str, state: str):
     - Three Bedroom
     - Four Bedroom
 
-    as the average of the monthly predictions for the given year,
-    with year represented as an integer.
+    as the average of the monthly prediction for each year
     """
 
     db = PostgreSQL()
@@ -133,6 +132,8 @@ async def pred(city: str, state: str):
 
     return result.to_json(indent=2)
     
+
+# Unused visualization route...
 
 # @router.get("/rental/predict/viz/{city}_{state}")
 # async def viz(city: str, state: str):
