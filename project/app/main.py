@@ -16,8 +16,7 @@ from app.api import (
     bls_viz,
     census,
     weather_pred,
-    static,
-    routing
+    static
 )
 
 # Description Text
@@ -45,7 +44,6 @@ app.include_router(bls_viz_view.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(static.router)
-app.include_router(routing.router)
 
 app.add_middleware(
     CORSMiddleware,
