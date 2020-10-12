@@ -34,7 +34,7 @@ async def pred(city: str, state: str):
     - Three Bedroom
     - Four Bedroom
 
-    as the average of the monthly prediction for each year
+    as the average of the monthly prediction for `city` each year
     """
 
     db = PostgreSQL()
@@ -131,7 +131,7 @@ async def pred(city: str, state: str):
         conn.commit()
 
     return result.to_json(indent=2)
-    
+
 
 # Unused visualization route...
 

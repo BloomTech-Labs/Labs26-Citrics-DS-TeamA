@@ -20,13 +20,15 @@ async def pred(city: str, state: str, metric=False):
     """
     **Input**
 
-    city: str <- city name with any capitalization
+    `city: str`    <- city name with any capitalization
 
-    state: str <- two-letter state abbreviation with any capitalization
+    `state: str`   <- two-letter state abbreviation with any capitalization
 
-    metric: bool <- default, False, will output predictions and make
+    `metric: bool` <- *(Optional)* default, False, will output predictions and make
     database queries for adjusted temperature in degrees Fahrenheit;
 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -37,7 +39,8 @@ async def pred(city: str, state: str, metric=False):
 
     json object with predictions for
     
-    **monthly temperature** adjusted for dew point and wind chill for 24 months
+    **monthly temperature** of `city` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
     
     from the present (September 2020)
     """
@@ -150,6 +153,41 @@ async def viz(
     state3=None,
     metric=None
 ):
+    """
+    **Input**
+
+    `city1: str`   <- city name with any capitalization
+
+    `state1: str`  <- two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `metric: bool` <- *(Optional)* default, False, will output visualization for predictions
+    and make database queries for adjusted temperature in degrees Fahrenheit;
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
+    True will do so for adjusted temperature in degrees Celsius.
+
+    **Output**
+
+    json object of visualization of predictions for
+    
+    **monthly temperature** of `city1` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
+    
+    from the present (September 2020)
+    """
     cities = []
 
     first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
