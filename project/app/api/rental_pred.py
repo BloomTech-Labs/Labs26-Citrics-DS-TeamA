@@ -34,19 +34,17 @@ async def pred(city: str, state: str):
     - Three Bedroom
     - Four Bedroom
 
-    for 24 months from the present (September 2020)
-
-    with "month" attribute in json's datetime format.
+    as the average of the monthly prediction for each year
     """
 
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
 
-    db.adapters(np.float64, np.datetime64)
+    db.adapters(np.int64)
 
     retrieve_records = """
-    SELECT * FROM rp
+    SELECT * FROM rental_pred
     WHERE "city"='{city}' and "state"='{state}'
     """.format(city=city.title(), state=state.upper())
 
@@ -65,9 +63,6 @@ async def pred(city: str, state: str):
 
     result = pd.DataFrame.from_records(cur.fetchall(), columns=columns)
     result.set_index("year", inplace=True)
-
-    if len(result.index) > 0:
-        result = result.resample("Y").mean()[:2]
 
     if len(result.index) == 0:
         warnings.filterwarnings(
@@ -101,14 +96,22 @@ async def pred(city: str, state: str):
             s.name = col
             series.append(s)
 
+        def to_year(datetime_obj) -> int:
+            return datetime_obj.year
+
         result = pd.concat(series, axis=1)
-        result = result.resample("Y").mean()[:2]
-        result.index = result.index.astype(str)
+        result = result.resample("Y").mean()[1:3]
+        result.reset_index(inplace=True)
+        result["index"] = result["index"].apply(to_year)
+        result.set_index("index", inplace=True)
         result.insert(0, "city", city)
         result.insert(1, "state", state)
 
+        for col in result.columns[2:]:
+            result[col] = result[col].astype(int)
+
         insert_data = """
-        INSERT INTO rp(
+        INSERT INTO rental_pred(
             year,
             city,
             state,
@@ -128,136 +131,70 @@ async def pred(city: str, state: str):
         conn.commit()
 
     return result.to_json(indent=2)
+    
 
+# Unused visualization route...
 
-@router.get("/rental/predict/table/{city1}_{state1}")
-async def table(
-    city1: str,
-    state1: str,
-    city2=None,
-    state2=None,
-    city3=None,
-    state3=None,
-    metric=None
-):
-    columns = [
-        "Year",
-        "City",
-        "State",
-        "Studio",
-        "One Bedroom",
-        "Two Bedroom",
-        "Three Bedroom",
-        "Four Bedroom"
-    ]
+# @router.get("/rental/predict/viz/{city}_{state}")
+# async def viz(city: str, state: str):
+#     """
+#     **Input**
 
-    dfs = []
-    df1 = pd.read_json(await pred(city1, state1))
-    df1.insert(0, "city", city1)
-    df1.insert(1, "state", state1)
-    df1 = df1.reset_index()
-    df1.columns = columns
-    dfs.append(df1)
+#     city: str  <- city name, any capitalization, spaces between multi-word city names are required
 
-    print(dfs[0].dtypes)
+#     state: str <- two-letter state abbreviation, any capitalization
 
-    if city2 and state2:
-        df2 = pd.read_json(await pred(city2, state2))
-        df2.insert(0, "city", city2)
-        df2.insert(1, "state", state2)
-        df2 = df2.reset_index()
-        df2.columns = columns
-        dfs.append(df2)
+#     **Output**
 
-    if city3 and state3:
-        df3 = pd.read_json(await pred(city3, state3))
-        df3.insert(0, "city", city3)
-        df3.insert(1, "state", state3)
-        df3 = df3.reset_index()
-        df3.columns = columns
-        dfs.append(df3)
+#     json string for visualization showing rental price predictions:
+#     - Studio
+#     - One Bedroom
+#     - Two Bedroom
+#     - Three Bedroom
+#     - Four Bedroom
 
-    def to_year(datetime_obj) -> int:
-        return datetime_obj.year
+#     for 24 months from the present (September 2020)
 
-    for DataFrame in dfs:
-        DataFrame["Year"] = DataFrame["Year"].apply(to_year)
-        for col in dfs[0].columns[3:]:
-            DataFrame[col] = DataFrame[col].astype(int)
+#     with "month" as the independent variable.
+#     """
+#     df = pd.read_json(await pred(city, state))[
+#         ["Studio", "onebr", "twobr", "threebr", "fourbr"]]
+#     df.columns = [
+#         "Studio",
+#         "One Bedroom",
+#         "Two Bedroom",
+#         "Three Bedroom",
+#         "Four Bedroom"
+#     ]
+#     layout = go.Layout(
+#         paper_bgcolor='rgba(0,0,0,0)',
+#         plot_bgcolor='rgba(0,0,0,0)',
+#         yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
+#     )
 
-    if len(dfs) > 1:
-        df = reduce(lambda left, right: pd.merge(
-            left, right, how='outer', on=columns
-            ), 
-            dfs
-        )
+#     styling = {
+#         "Studio": "lightgreen",
+#         "One Bedroom": "#4BB543",
+#         "Two Bedroom": "darkcyan",
+#         "Three Bedroom": "#663399",
+#         "Four Bedroom": "#CC0000"
+#     }
 
-        print(df)
+#     fig = go.Figure(
+#         data=go.Scatter(name=f"Rental Price - Predicted {city}, {state}"),
+#         layout=layout
+#     )
 
-        return df.to_html(index=False)
+#     for col in df.columns:
+#         fig.add_trace(go.Scatter(name=col, x=df.index,
+#                                  y=df[col], mode='lines', marker_color=styling[col]))
 
-    return dfs[0].to_html(index=False)
+#     fig.update_layout(
+#         title=f"Rental Price - Predicted {city}, {state}",
+#         yaxis_title="US Dollars",
+#         font=dict(family='Open Sans, extra bold', size=10),
+#         height=412,
+#         width=640
+#     )
 
-@router.get("/rental/predict/viz/{city}_{state}")
-async def viz(city: str, state: str):
-    """
-    **Input**
-
-    city: str  <- city name, any capitalization, spaces between multi-word city names are required
-
-    state: str <- two-letter state abbreviation, any capitalization
-
-    **Output**
-
-    json string for visualization showing rental price predictions:
-    - Studio
-    - One Bedroom
-    - Two Bedroom
-    - Three Bedroom
-    - Four Bedroom
-
-    for 24 months from the present (September 2020)
-
-    with "month" as the independent variable.
-    """
-    df = pd.read_json(await pred(city, state))[
-        ["Studio", "onebr", "twobr", "threebr", "fourbr"]]
-    df.columns = [
-        "Studio",
-        "One Bedroom",
-        "Two Bedroom",
-        "Three Bedroom",
-        "Four Bedroom"
-    ]
-    layout = go.Layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        yaxis=dict(range=([500, df["Four Bedroom"].max() + 100]))
-    )
-
-    styling = {
-        "Studio": "lightgreen",
-        "One Bedroom": "#4BB543",
-        "Two Bedroom": "darkcyan",
-        "Three Bedroom": "#663399",
-        "Four Bedroom": "#CC0000"
-    }
-
-    fig = go.Figure(
-        data=go.Scatter(name=f"Rental Price - Predicted {city}, {state}"),
-        layout=layout
-    )
-
-    for col in df.columns:
-        fig.add_trace(go.Scatter(name=col, x=df.index,
-                                 y=df[col], mode='lines', marker_color=styling[col]))
-
-    fig.update_layout(
-        title=f"Rental Price - Predicted {city}, {state}",
-        yaxis_title="US Dollars",
-        font=dict(family='Open Sans, extra bold', size=10),
-        height=412,
-        width=640
-    )
-
-    return fig.to_json()
+#     return fig.to_json()

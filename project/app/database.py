@@ -34,25 +34,6 @@ class PostgreSQL:
     def close(self):
         self.connection.close()
 
-    def create_table(self, table_name: str, columns: dict):
-        create_table = """
-CREATE TABLE IF NOT EXISTS {table_name}(
-""".format(table_name=table_name)
-
-        for key in columns.keys():
-            create_table += f"  {key} " + f"{columns[key]},\n"
-
-        create_table = create_table[:-2]
-        create_table += "\n);"
-
-        self.connection.cursor().execute(create_table)
-        self.connection.commit()
-
-    def drop_table(self, table_name: str):
-        self.connection.cursor().execute(
-            "DROP TABLE {table_name};".format(table_name=table_name))
-        self.connection.commit()
-
     def fetch_query_records(self, query: str):
         self.connection.cursor().execute(query)
         response = list(self.connection.cursor().catchall())
