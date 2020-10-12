@@ -29,8 +29,6 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
 │    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
 │    ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
-│    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
-│    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
 │    ├── README.md <- README for notebooks directory.
 │    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
 │    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
