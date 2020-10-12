@@ -59,7 +59,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    │    ├── census.py <- Returns Census data.
 │    │    │    ├── current.py <- Returns current weather data calculated in both imperial and metric.
 │    │    │    ├── predict.py <- Starter predict file. (DEPRECATED)
-│    │    │    ├── rent_city_states.py <- Deals with duplicate values (requested by front-end).
+│    │    │    ├── rent_city_states.py <- Returns cities and states, dealing with duplicate values (requested by front-end).
 │    │    │    ├── rental1.py <- Fetches rental prices from SQL database.
 │    │    │    ├── rental_pred.py <- Makes rental price predictions.
 │    │    │    ├── rentviz1.py <- Returns JSON output of rental price visualizations, unstyled. (DEPRECATED)
@@ -79,7 +79,6 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    ├── __init__.py <- Init file.
 │    │    ├── database.py <- Utility file for PostgreSQL database usage.
 │    │    ├── main.py <- Main API file; handles routes.
-│    │    ├── smart_upper_function.py <- Utility file, does .title() (DEPRECATE - ?)
 │    │    ├── sql_query_function.py <- Utility file for SQL queries.
 │    │    └── string_formatter.py <- Utility file for sanitization of input for formatting used in data/weather.
 │    ├── Dockerfile <- Dockerfile for Docker deployment.
