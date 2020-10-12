@@ -87,10 +87,12 @@ async def bls_viz(city: str, statecode: str):
     x = sub["occ_title"]
     y= sub["annual_wage"]
 
+    color_scale = "tealgrn"
+
     fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
                                 x=x,
                                 y=y,
-                                marker=dict(color=y, colorscale="greens")),
+                                marker=dict(color=y, colorscale=color_scale)),
                                 layout=layout)
 
     fig.update_layout(barmode='group', title_text=styling.get('title'),
