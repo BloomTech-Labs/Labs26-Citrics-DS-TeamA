@@ -1,12 +1,16 @@
 # Citrics A
 
-### **Mission:**
+## Description:
 Finding a place to live is hard! Nomads struggle with finding the right city for them. Citrics is a city comparison tool that allows users to compare cities and find cities based on user preferences.
 
-[AWS Deployed API](http://26-citrics-a-ds.eba-tjpigfip.us-east-1.elasticbeanstalk.com/)
+### **Mission:**
+Using visualizations for a variety of metrics, such as how walkable a city is, predominant industries, unemployment rates, as well as predictions for rental prices, our users can make a more well-informed decision on what is best for them before making their move.
+
+[AWS Deployed API](https://ds.citrics.dev/)
+[Web-Deployed Implementation](https://a.citrics.dev/)
+
 ## Directory Structure
 ```
-
 ├── data <- Collection of datasets used in this project.
 │    ├── BLS <- Files related to the Bureau of Labor Statistics data.
 │    │    ├── BLS 2019 Data - All May 2019 Data.csv.zip <- All BLS data in .zip file.
