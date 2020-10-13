@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, validator
 log = logging.getLogger(__name__)
 router = APIRouter()
 
+# Different approach than the one in use
 
 class Item(BaseModel):
     """Use this data model to parse the request body JSON."""

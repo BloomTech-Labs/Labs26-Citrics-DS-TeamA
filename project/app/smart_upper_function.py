@@ -2,6 +2,8 @@ import sys
 
 # Function to sanitize input string (cityname param)
 
+# .title() does the same thing!
+
 
 def smart_upper(x):
     """"
