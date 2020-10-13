@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from app.sql_query_function import fetch_query
-from app.smart_upper_function import smart_upper
 from typing import Optional
 
 import pandas as pd
