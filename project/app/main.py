@@ -16,7 +16,8 @@ from app.api import (
     bls_viz,
     census,
     weather_pred,
-    static
+    static,
+    adv_search
 )
 
 # Description Text
@@ -25,7 +26,7 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='2.1',
+    version='2.2',
     docs_url='/',
 )
 
@@ -44,6 +45,7 @@ app.include_router(bls_viz_view.router)
 app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(static.router)
+app.include_router(adv_search.router)
 
 
 app.add_middleware(
