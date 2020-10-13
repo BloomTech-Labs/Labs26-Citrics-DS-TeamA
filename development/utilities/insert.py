@@ -185,7 +185,7 @@ If you would like to retrieve data for a specific city, type 'retrieve'.
 
     elif input1 == "populate":
         csv_files = [f for f in os.listdir(os.path.join(
-            "data", "weather", "historic")) if f[-3:] == "csv"]
+            "data", "weather")) if f[-3:] == "csv"]
         for f in csv_files:
             insert_csv(filepath=f)
 

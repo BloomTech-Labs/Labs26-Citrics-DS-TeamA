@@ -34,8 +34,8 @@ async def bls_viz(city: str, statecode: str):
     WHERE annual_wage > 0
     """
 
-    columns = ["city", "state", "occ_title", "jobs_1000", "loc_quotient", 
-            "hourly_wage", "annual_wage"]
+    columns = ["city", "state", "occ_title", "jobs_1000", "loc_quotient",
+               "hourly_wage", "annual_wage"]
 
     df = pd.read_json(fetch_query(query, columns))
 
@@ -69,11 +69,12 @@ async def bls_viz(city: str, statecode: str):
             detail=f'{city}, {statecode} not found!')
 
     # Subset of top jobs for matching city
-    sub = match.sort_values(['city','loc_quotient'],ascending=False).groupby('city').head(10)
+    sub = match.sort_values(['city', 'loc_quotient'],
+                            ascending=False).groupby('city').head(10)
     sub = sub.reset_index()
-    sub = sub.drop("index",axis=1)
+    sub = sub.drop("index", axis=1)
 
-    ### Begin Visualization
+    # Begin Visualization
     styling = dict()
 
     styling['city1color'] = '#CC0000'  # red
@@ -88,22 +89,24 @@ async def bls_viz(city: str, statecode: str):
     styling["title"] = "Hover over bars for Job Industry"
 
     x = sub["occ_title"]
-    y= sub["annual_wage"]
+    y = sub["annual_wage"]
+
+    color_scale = "tealgrn"
 
     fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
                                 x=x,
                                 y=y,
-                                marker=dict(color=y, colorscale="greens")),
-                                layout=layout)
+                                marker=dict(color=y, colorscale=color_scale)),
+                    layout=layout)
 
     fig.update_layout(barmode='group', title_text=styling.get('title'),
-                    xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
-                    yaxis_title='Average Annual Salary',
-                    font=dict(family='Open Sans, extra bold', size=10),
-                    height=412,
-                    width=640)
+                      xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
+                      yaxis_title='Average Annual Salary',
+                      font=dict(family='Open Sans, extra bold', size=10),
+                      height=412,
+                      width=640)
 
-    fig.update_xaxes(showticklabels=False) # hide all the xticks
+    fig.update_xaxes(showticklabels=False)  # hide all the xticks
 
     img = fig.to_image(format="png")
 

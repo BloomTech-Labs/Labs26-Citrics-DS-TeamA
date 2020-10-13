@@ -25,28 +25,31 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    └── static.csv <- CSV of all static data.
 │    └── weather <- Collection of CSV files related to historical weather data.
 │         └── *.csv <- CSV file containing historical data for city in file name.
-├── notebooks <- Directory containing Jupyter Notebooks.
-│    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
-│    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
-│    ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
-│    ├── README.md <- README for notebooks directory.
-│    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
-│    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
-│    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
-│    ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
-│    └── static_dev.ipynb <- Jupyter notebook for fetching static data.
-├── preroutes_and_utilities <- Preroutes and utility files.
-│    ├── CONFIG.md <- Markdown file explaining usage of config.py
-│    ├── INSERT.md <- Markdown file explaining usage of insert.py
-│    ├── WEATHER.md <- Markdown file explaining usage of weather.py
-│    ├── config.py <- Utility file to change from team to personal Docker image.
-│    ├── database.py <- Utility file for PostgreSQL database.
-│    ├── db_conn_test.py <- Utility file to test database connection.
-│    ├── insert.py <- Inserts World Weather Online API data into database.
-│    ├── rental_pred.py <- Utility file for rental price predictions.
-│    ├── walk.py <- Utility file for generalizing Walk Scores and populating database.
-│    ├── weather.py <- Utility file for fetching historical weather data.
-│    └── weather_pred.py <- Utility file for weather predictions and visualizations.
+├── development <- Directory containing development materials outside of the API itself Jupyter.
+|   ├── __init__.py <- __init__.py file
+|   ├── notebooks <- Directory containing Jupyter Notebooks.
+│   │    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
+│   │    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
+│   │    ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
+│   │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
+│   │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
+│   │    ├── README.md <- README for notebooks directory.
+│   │    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
+│   │    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
+│   │    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
+│   │    ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
+│   │    └── static_dev.ipynb <- Jupyter notebook for fetching static data.
+|   └── preroutes <- Preroutes, files built outside of API 
+itself in preparation for building API routes.
+│    │   ├── __init__.py <- __init__.py file
+│    │   └── weather.py <- Preroute file for fetching historical weather data.
+|    ├── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
+│    │   ├── config.py <- Utility file to change from team to personal Docker image.
+│    │   ├── database.py <- Utility file for PostgreSQL database.
+│    │   ├── __init__.py <- __init__.py file
+│    │   ├── insert.py <- Inserts World Weather Online API data into database.
+│    │   ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py
+│    │   └── walk.py <- Utility file for generalizing Walk Scores and populating database.       
 ├── project <- Main project files.
 │    ├── app <- Folder containing all files related to app deployment.
 │    │    ├── api <- Files used in API deployment.
@@ -103,7 +106,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 **LABS DS STARTER**
 - [Labs DS Docs](https://docs.labs.lambdaschool.com/data-science/)
 - [Labs DS Notebook](https://colab.research.google.com/drive/1MbF-L6mKy_JA9L6wxBCb5_Vch3PX3RRL?usp=sharing) - Ryan Herr
-- [Labs DS Notebook - Local](notebooks/Labs_26_Data_Science.ipynb) - Ryan Herr
+- [Labs DS Notebook - Local](development/notebooks/Labs_26_Data_Science.ipynb) - Ryan Herr
 - [Schedule with Ryan Herr (Calendly)](https://calendly.com/ryan-herr)
 
 **CITRICS**
@@ -113,11 +116,11 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 
 **DATA**
 - [Apartment Rental Price Data](https://www.apartmentlist.com/research/category/data-rent-estimates) (NOTE: Does not include HI, WV or PR)
-- [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
-- [Bonus Jobs Data?](https://datausa.io/cart)
+- [Jobs Data](https://datausa.io/cart)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
+- [Climate Data](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
+- [Climate Zone API](http://climateapi.scottpinkelman.com/)
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
-- [Housing Data](https://www.huduser.gov/portal/datasets/50per.html#2020) (NOTE: Fair Market & Section 8)
 - [Population](https://public.opendatasoft.com/explore/dataset/worldcitiespop/api/?disjunctive.country)
 - [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html)
 - [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
@@ -141,4 +144,3 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 **OTHER REFERENCES AND DOCUMENTATION**
 - [How to Access BLS API](http://danstrong.tech/blog/BLS-API/)
 - [Plotly Docs](https://plotly.com/python/)
-- [Route Referencing Example](https://github.com/BW-Post-Here-2/DataScience/blob/master/web_app/reddit_app.py)

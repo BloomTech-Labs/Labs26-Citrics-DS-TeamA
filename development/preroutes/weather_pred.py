@@ -1,9 +1,13 @@
-# preroutes_and_utilities/weather.pred <- preroute
+# development/preroutes/weather.pred <- preroute
+
+import sys
+import os
+
+sys.path.append(os.path.join(os.getcwd(), "development"))
 
 from psycopg2.extensions import register_adapter, AsIs
 from dotenv import load_dotenv
-import os
-from database import PostgreSQL
+from utilities.database import PostgreSQL
 import numpy as np
 import psycopg2
 import pandas as pd

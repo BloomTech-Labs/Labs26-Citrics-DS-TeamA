@@ -24,7 +24,7 @@ async def census(city: str, statecode: str):
     """
 
     query = """
-    SELECT 
+    SELECT
         city,
         state,
         popestimate2019

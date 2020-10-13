@@ -1,4 +1,4 @@
-# preroutes_and_utilities/database.py <- utility
+# development/utilities/database.py <- utility
 
 from dotenv import load_dotenv
 import os
