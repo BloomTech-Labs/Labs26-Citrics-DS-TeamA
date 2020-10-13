@@ -1,8 +1,4 @@
-# preroutes_and_utilities/database.py <- utility
-
-import sys
-from os.path import dirname
-sys.path.append(dirname(__file__))
+# development/utilities/database.py <- utility
 
 from dotenv import load_dotenv
 import os
