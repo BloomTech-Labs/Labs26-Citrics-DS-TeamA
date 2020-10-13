@@ -1,4 +1,4 @@
-# preroutes_and_utilites/weather.py <- utility
+# development/utilities/weather.py <- utility
 
 import os
 from dotenv import load_dotenv

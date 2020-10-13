@@ -1,4 +1,4 @@
-# preroutes_and_utilities/config.py <- utility
+# development/utilities/config.py <- utility
 
 import json
 import sys
