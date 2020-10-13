@@ -49,7 +49,7 @@ itself in preparation for building API routes.
 |        ├── __init__.py <- __init__.py file
 │        ├── insert.py <- Inserts World Weather Online API data into database.
 |        ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py
-|        ├── walk.py <- Utility file for generalizing Walk Scores and populating database.       
+|        └── walk.py <- Utility file for generalizing Walk Scores and populating database.       
 ├── project <- Main project files.
 │    ├── app <- Folder containing all files related to app deployment.
 │    │    ├── api <- Files used in API deployment.
@@ -107,7 +107,7 @@ itself in preparation for building API routes.
 **LABS DS STARTER**
 - [Labs DS Docs](https://docs.labs.lambdaschool.com/data-science/)
 - [Labs DS Notebook](https://colab.research.google.com/drive/1MbF-L6mKy_JA9L6wxBCb5_Vch3PX3RRL?usp=sharing) - Ryan Herr
-- [Labs DS Notebook - Local](notebooks/Labs_26_Data_Science.ipynb) - Ryan Herr
+- [Labs DS Notebook - Local](development/notebooks/Labs_26_Data_Science.ipynb) - Ryan Herr
 - [Schedule with Ryan Herr (Calendly)](https://calendly.com/ryan-herr)
 
 **CITRICS**
@@ -117,11 +117,11 @@ itself in preparation for building API routes.
 
 **DATA**
 - [Apartment Rental Price Data](https://www.apartmentlist.com/research/category/data-rent-estimates) (NOTE: Does not include HI, WV or PR)
-- [Bonus Climate Data?](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
-- [Bonus Jobs Data?](https://datausa.io/cart)
+- [Jobs Data](https://datausa.io/cart)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
+- [Climate Data](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
+- [Climate Zone API](http://climateapi.scottpinkelman.com/)
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
-- [Housing Data](https://www.huduser.gov/portal/datasets/50per.html#2020) (NOTE: Fair Market & Section 8)
 - [Population](https://public.opendatasoft.com/explore/dataset/worldcitiespop/api/?disjunctive.country)
 - [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html)
 - [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
@@ -145,4 +145,3 @@ itself in preparation for building API routes.
 **OTHER REFERENCES AND DOCUMENTATION**
 - [How to Access BLS API](http://danstrong.tech/blog/BLS-API/)
 - [Plotly Docs](https://plotly.com/python/)
-- [Route Referencing Example](https://github.com/BW-Post-Here-2/DataScience/blob/master/web_app/reddit_app.py)
