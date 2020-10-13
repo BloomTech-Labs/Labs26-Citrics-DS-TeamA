@@ -25,30 +25,28 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    └── static.csv <- CSV of all static data.
 │    └── weather <- Collection of CSV files related to historical weather data.
 │         └── *.csv <- CSV file containing historical data for city in file name.
-├── notebooks <- Directory containing Jupyter Notebooks.
-│    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
-│    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
-│    ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
-│    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
-│    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
-│    ├── README.md <- README for notebooks directory.
-│    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
-│    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
-│    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
-│    ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
-│    └── static_dev.ipynb <- Jupyter notebook for fetching static data.
-├── preroutes_and_utilities <- Preroutes and utility files.
-│    ├── CONFIG.md <- Markdown file explaining usage of config.py
-│    ├── INSERT.md <- Markdown file explaining usage of insert.py
-│    ├── WEATHER.md <- Markdown file explaining usage of weather.py
-│    ├── config.py <- Utility file to change from team to personal Docker image.
-│    ├── database.py <- Utility file for PostgreSQL database.
-│    ├── db_conn_test.py <- Utility file to test database connection.
-│    ├── insert.py <- Inserts World Weather Online API data into database.
-│    ├── rental_pred.py <- Utility file for rental price predictions.
-│    ├── walk.py <- Utility file for generalizing Walk Scores and populating database.
-│    ├── weather.py <- Utility file for fetching historical weather data.
-│    └── weather_pred.py <- Utility file for weather predictions and visualizations.
+├── development <- Directory containing development materials outside of the API itself Jupyter.
+|   ├──notebooks <- Directory containing Jupyter Notebooks.
+│       ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
+│       ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
+│       ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
+│       ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
+│       ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
+│       ├── README.md <- README for notebooks directory.
+│       ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
+│       ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
+│       ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
+│       ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
+│       └── static_dev.ipynb <- Jupyter notebook for fetching static data.
+|   ├── preroutes <- Preroutes, files built outside of API 
+itself in preparation for building API routes.
+|        ├── weather.py <- Preroute file for fetching historical weather data.
+|   ├── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
+│       ├── config.py <- Utility file to change from team to personal Docker image.
+│       ├── database.py <- Utility file for PostgreSQL database.
+│       ├── insert.py <- Inserts World Weather Online API data into database.
+|       ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py
+|       ├── walk.py <- Utility file for generalizing Walk Scores and populating database.       
 ├── project <- Main project files.
 │    ├── app <- Folder containing all files related to app deployment.
 │    │    ├── api <- Files used in API deployment.
