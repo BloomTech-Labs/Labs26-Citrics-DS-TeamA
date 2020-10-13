@@ -15,3 +15,4 @@ project/app/smart_upper_function.py
 project/app/api/predict.py
 project/app/smart_upper.py
 project/app/api/pred.py
+kill_switch.py
