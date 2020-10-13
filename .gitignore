@@ -11,3 +11,5 @@ __pycache__
 !.elasticbeanstalk/*.global.yml
 placeholder.py
 lexicon_tracker.txt
+project/app/smart_upper_function.py
+project/app/api/predict.py

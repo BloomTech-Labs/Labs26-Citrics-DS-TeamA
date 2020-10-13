@@ -44,7 +44,7 @@ async def viz(city: str, statecode: str):
     df = pd.read_json(fetch_query(query, columns))
 
     # Input sanitization
-    city = smart_upper(city)
+    city = city.title()
     statecode = statecode.lower().upper()
 
     # Make a set of citys in the rental price data
