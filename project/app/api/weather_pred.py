@@ -11,6 +11,8 @@ import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
 import plotly.graph_objects as go
+import io
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
@@ -151,7 +153,8 @@ async def viz(
     state2=None,
     city3=None,
     state3=None,
-    metric=None
+    metric=None,
+    view=None
 ):
     """
     **Input**
@@ -200,7 +203,7 @@ async def viz(
         cities.append(second)
 
     if city3 and state3:
-        third = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
+        third = pd.read_json(await pred(city3.title(), state3.upper(), metric))["temp"]
         third.name = f"{city3.title()}, {state3.upper()}"
         cities.append(third)
 
@@ -229,4 +232,10 @@ async def viz(
         height=412,
         width=640
     )
-    return fig.to_json()
+
+    if view == "True":
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
+
+    else:
+        return fig.to_json()
