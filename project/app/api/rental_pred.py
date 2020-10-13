@@ -129,6 +129,7 @@ async def pred(city: str, state: str):
             list(result.to_records(index=True))
         )
         conn.commit()
+        conn.close()
 
     return result.to_json(indent=2)
 
