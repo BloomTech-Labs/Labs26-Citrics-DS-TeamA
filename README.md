@@ -39,10 +39,10 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │   │    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
 │   │    ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
 │   │    └── static_dev.ipynb <- Jupyter notebook for fetching static data.
-|   └── preroutes <- Preroutes, files built outside of API itself in preparation for building API routes.
-│    │   ├── __init__.py <- __init__.py file
-│    │   └── weather.py <- Preroute file for fetching historical weather data.
-|    └── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
+|   ├── preroutes <- Preroutes, files built outside of API itself in preparation for building API routes.
+│   │    ├── __init__.py <- __init__.py file
+│   │    └── weather.py <- Preroute file for fetching historical weather data.
+|   └── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
 │        ├── config.py <- Utility file to change from team to personal Docker image.
 │        ├── database.py <- Utility file for PostgreSQL database.
 │        ├── __init__.py <- __init__.py file
