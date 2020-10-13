@@ -179,7 +179,7 @@ The weather.py file is setup to take the zip codes of the given locale as system
 For example, if I wanted to pull data for New York, Los Angeles, and Chicago I would run the file with the zip codes for each respective city as additional arguments like so:
 
 ```
-python preroutes_and_utilities/weather.py 10007 90012 60602
+python development/utilities/weather.py 10007 90012 60602
 ```
 
 The script would then ask to input the names of each location IN ORDER. These inputs are then used to update the lexicon.
@@ -273,7 +273,7 @@ pipenv install psycopg2==2.8.5
 Unlike, the *weather.py* script, *insert.py* takes command-line input after running
 
 ```
-python preroutes_and_utilities/insert.py
+python developtment/utilities/insert.py
 ```
 
 as opposed to command-line arguments.
@@ -353,3 +353,5 @@ whereas, the path on Mac and Linux would read out as
 ```
 sys.path.append("/path/to/repo/dir/development")
 ```
+
+**Also Note:** All files in either the preroutes or utilities directory are built to be run from the root directory of the repository. This is due to the fact that the *os* library in Python for the whatever directory the terminal is currently operating in when running a *.py* file as opposed to the directory the *.py* file is in.
