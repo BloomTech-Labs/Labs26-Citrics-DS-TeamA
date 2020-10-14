@@ -9,8 +9,6 @@ router = APIRouter()
 @router.get('/adv_search/{popmin}_{br_size}_{max_rent}')
 async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000):
     """
-    # NOTE: Under Development!
-
     Advanced search function which locates matching cities based on specified
     criteria.
 
@@ -25,14 +23,25 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
     `max_rent`: The maximum rent amount for corresponding `br_size`; e.g. `1500` or `2500`
 
     ## Response
-    JSON string of matching cities per specified criteria
+    JSON string of all matching cities per specified criteria.
     """
 
-    query = """
+    if br_size == 0:
+        br_size = "studio"
+    elif br_size == 1:
+        br_size = "onebr"
+    elif br_size == 2:
+        br_size = "twobr"
+    elif br_size == 3:
+        br_size = "threebr"
+    elif br_size == 4:
+        br_size = "fourbr"
+
+    query = f"""
     SELECT *
     FROM "static"
-    WHERE population > 700000 
-    AND twobr < 2000
+    WHERE population >= {popmin} AND population <= {popmax}
+    AND {br_size} <= {max_rent}
     """
 
     columns = [
@@ -63,5 +72,7 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
 
     # DF to dictionary
     pairs = df.to_json(orient='records')
+
+    print("Number of Cities:", len(df))
 
     return pairs
