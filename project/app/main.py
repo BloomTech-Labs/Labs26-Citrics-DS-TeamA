@@ -17,7 +17,8 @@ from app.api import (
     census,
     weather_pred,
     static,
-    adv_search
+    adv_search,
+    census_pred
 )
 
 # Description Text
@@ -46,6 +47,7 @@ app.include_router(census.router)
 app.include_router(weather_pred.router)
 app.include_router(static.router)
 app.include_router(adv_search.router)
+app.include_router(census_pred.router)
 
 
 app.add_middleware(
