@@ -10,7 +10,6 @@ import numpy as np
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
 from datetime import datetime
-from functools import reduce
 import plotly.graph_objects as go
 
 router = APIRouter()
