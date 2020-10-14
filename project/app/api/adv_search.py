@@ -25,14 +25,14 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
     `max_rent`: The maximum rent amount for corresponding `br_size`; e.g. `1500` or `2500`
 
     ## Response
-    JSON string of matching cities per specified criteria
+    JSON string of all matching cities per specified criteria.
     """
 
-    query = """
+    query = f"""
     SELECT *
     FROM "static"
-    WHERE population > 700000 
-    AND twobr < 2000
+    WHERE population >= {popmin} AND population <= {popmax}
+    -- AND twobr < 2000
     """
 
     columns = [
@@ -63,5 +63,7 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
 
     # DF to dictionary
     pairs = df.to_json(orient='records')
+
+    print("Number of Cities:", len(df))
 
     return pairs
