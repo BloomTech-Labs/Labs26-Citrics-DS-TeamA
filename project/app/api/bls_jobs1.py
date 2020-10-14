@@ -19,8 +19,8 @@ async def bls(city: str, statecode: str):
     (case insensitive) for any of the 50 states or the District of Columbia.
 
     ## Response
-    JSON string of most prevelant job industry for more than 350
-    U.S. cities.
+    JSON string of top ten most prevelant job industries for specified
+    U.S. city. (More than 300 searchable)
     """
 
     query = """
