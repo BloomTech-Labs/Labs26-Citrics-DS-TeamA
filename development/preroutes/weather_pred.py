@@ -111,6 +111,7 @@ def weather_pred(city: str, state: str, metric=None):
             list(result.to_records(index=True))
         )
         conn.commit()
+        conn.close()
 
     return result.to_json(indent=2)
 

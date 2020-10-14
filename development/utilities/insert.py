@@ -105,6 +105,7 @@ def insert_csv(city=None, state=None, filepath=None):
 
     execute_values(cur, insert_data, list(df.to_records(index=False)))
     connection.commit()
+    connection.close()
 
 
 def reset():
@@ -123,6 +124,7 @@ def reset_city(city=None, state=None, location=None):
 
     cur.execute(delete)
     connection.commit()
+    connection.close()
 
 
 def retrieve(state=None, city=None, location=None):
@@ -153,7 +155,10 @@ def retrieve(state=None, city=None, location=None):
         "pressure"
     ]
 
-    return pd.DataFrame.from_records(cur.fetchall(), columns=columns)
+    records = cur.fetchall()
+    connection.close()
+
+    return pd.DataFrame.from_records(records, columns=columns)
 
 
 if __name__ == "__main__":
