@@ -24,9 +24,9 @@ async def bls(city: str, statecode: str):
     """
 
     query = """
-    SELECT DISTINCT ON (j.city) j.*
-    FROM bls_jobs j
-    ORDER BY j.city, j.loc_quotient DESC
+    SELECT *
+    FROM bls_jobs
+    WHERE annual_wage > 0
     """
 
     columns = [
@@ -39,10 +39,6 @@ async def bls(city: str, statecode: str):
         "annual_wage"]
 
     df = pd.read_json(fetch_query(query, columns))
-
-    # Subset to include only occupations for which we have hourly & annual wage data
-    # (Removes 17 cities)
-    df = df.loc[df.annual_wage != 0]
 
     # Input sanitization
     city = city.title()
@@ -73,7 +69,13 @@ async def bls(city: str, statecode: str):
             status_code=404,
             detail=f'{city}, {statecode} not found!')
 
+    # Subset of top jobs for matching city
+    sub = match.sort_values(['city', 'loc_quotient'],
+                            ascending=False).groupby('city').head(10)
+    sub = sub.reset_index()
+    sub = sub.drop("index", axis=1)
+
     # DF to dictionary
-    pairs = match.to_json(orient='records')
+    pairs = sub.to_json(orient='records')
 
     return pairs
