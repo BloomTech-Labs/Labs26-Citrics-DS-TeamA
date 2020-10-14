@@ -18,6 +18,16 @@ router = APIRouter()
 @router.get("/census/predict/{city}_{state}")
 async def pred(city: str, state: str):
     """
+    *Input*
+
+    `city: str`  <- city name with any capitalization
+    
+    `state: str` <- two-letter state abbreviation
+
+    *Output*
+
+    json object containing the predictions for two years from the
+    present (2020) for the population of the city, state inputted.
     """
 
     db = PostgreSQL()
@@ -29,17 +39,19 @@ async def pred(city: str, state: str):
     query = f"""
     SELECT *
     FROM census_pred
-    WHERE "city"='{city}' and "state"='{state}'
+    WHERE "city"='{city.title()}' and "state"='{state.upper()}'
     """
 
     cur.execute(query)
 
-    preds = pd.DataFrame.from_records(
+    df_preds = pd.DataFrame.from_records(
         cur.fetchall(),
         columns=["Year", "City", "State", "Population"]
         )
 
-    if len(preds.index) == 0:
+    df_preds.set_index("Year", inplace=True)
+
+    if len(df_preds.index) == 0:
         retrieve_records = f"""
         SELECT
             city,
@@ -55,7 +67,7 @@ async def pred(city: str, state: str):
             popestimate2018,
             popestimate2019
         FROM census
-        WHERE "city"='{city} city' and "state"='{state}'
+        WHERE "city"='{city.title()} city' and "state"='{state.upper()}'
         """
 
         columns = [
@@ -133,4 +145,4 @@ async def pred(city: str, state: str):
         conn.commit()
 
     conn.close()
-    return preds.to_json(indent=2)
+    return df_preds.to_json(indent=2)
