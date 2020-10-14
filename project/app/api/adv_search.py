@@ -9,8 +9,6 @@ router = APIRouter()
 @router.get('/adv_search/{popmin}_{br_size}_{max_rent}')
 async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000):
     """
-    # NOTE: Under Development!
-
     Advanced search function which locates matching cities based on specified
     criteria.
 
@@ -28,11 +26,22 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
     JSON string of all matching cities per specified criteria.
     """
 
+    if br_size == 0:
+        br_size = "studio"
+    elif br_size == 1:
+        br_size = "onebr"
+    elif br_size == 2:
+        br_size = "twobr"
+    elif br_size == 3:
+        br_size = "threebr"
+    elif br_size == 4:
+        br_size = "fourbr"
+
     query = f"""
     SELECT *
     FROM "static"
     WHERE population >= {popmin} AND population <= {popmax}
-    -- AND twobr < 2000
+    AND {br_size} <= {max_rent}
     """
 
     columns = [
