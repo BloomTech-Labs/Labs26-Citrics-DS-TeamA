@@ -17,6 +17,9 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    ├── census <- Files related to Census data.
 │    │    ├── cleaned_census_data.csv <- CSV of clean census data.
 │    │    └── sub-est2019_all.csv <- CSV of census data (unclean).
+|    ├── climate <- files related to climate and time zone data.
+|    |    ├── zip_to_latlon.csv <- raw timezone data containing city names, zipcodes, and latitutes and longitudes.
+|    |    ├── climate.csv <- processed climate data containing all data from zip_to_latlon.csv with data pulled from the climate API.
 │    ├── rental
 │    │    ├── Apartment_List_Rent_Data_-_City_2020-8.csv <- CSV of Apartment List rental data.
 │    │    ├── apt_rental_price_clean1.csv <- CSV of cleaned Apartment List rental data.
@@ -30,7 +33,8 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 |    ├── notebooks <- Directory containing Jupyter Notebooks.
 │    │    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
 │    │    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
-│    │    ├── get_stats.ipynb <- Jupyter notebook for stat fetching.
+|         ├── climate.ipynb <- Jupyter notebook for fetching climate and timezone data from climate API.
+│    │    ├── get_stats.ipynb <- Jupyter notebook, precursor to weather_pred route.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
 │    │    ├── README.md <- README for notebooks directory.
