@@ -55,8 +55,8 @@ async def pred(city: str, state: str):
         "city",
         "state",
         "Studio",
-        "oner",
-        "twor",
+        "onebr",
+        "twobr",
         "threebr",
         "fourbr",
     ]
