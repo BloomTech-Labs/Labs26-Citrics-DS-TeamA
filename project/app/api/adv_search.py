@@ -50,7 +50,7 @@ async def adv_search(
     FROM "static"
     WHERE population >= {popmin} AND population <= {popmax}
     AND {br_size} <= {max_rent}
-    AND simple_climate={climate}
+    AND simple_climate='{climate}'
     """
 
     columns = [
