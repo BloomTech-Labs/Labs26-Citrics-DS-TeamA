@@ -35,6 +35,17 @@ async def pred(city: str, state: str):
 
     as the average of the monthly prediction for `city` each year
     """
+    # Edge Cases
+    # Saint
+    if city[0:5] == "Saint":
+        city = city.replace("Saint", "St.")
+    elif city[0:3] == "St ":
+        city = city.replace("St", "St.")
+    # Fort
+    elif city[0:3] == "Ft ":
+        city = city.replace("Ft", "Fort")
+    elif city[0:3] == "Ft.":
+        city = city.replace("Ft.", "Fort")
 
     db = PostgreSQL()
     conn = db.connection
@@ -42,10 +53,18 @@ async def pred(city: str, state: str):
 
     db.adapters(np.int64)
 
-    retrieve_records = """
-    SELECT * FROM rental_pred
-    WHERE "city"='{city}' and "state"='{state}'
-    """.format(city=city.title(), state=state.upper())
+    if city[0:2] == "Mc":
+        city = city[:2] + city[2:].capitalize()
+        retrieve_records = """
+        SELECT * FROM rental_pred
+        WHERE "city"='{city}' and "state"='{state}'
+        """.format(city=city, state=state.upper())
+
+    else:
+        retrieve_records = """
+        SELECT * FROM rental_pred
+        WHERE "city"='{city}' and "state"='{state}'
+        """.format(city=city.title(), state=state.upper())
 
     cur.execute(retrieve_records)
 
@@ -67,11 +86,20 @@ async def pred(city: str, state: str):
         warnings.filterwarnings(
             "ignore", message="After 0.13 initialization must be handled at model creation"
         )
-        query = """
-        SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
-        FROM rental
-        WHERE "city"='{city}' and "state"='{state}';
-        """.format(city=city.title(), state=state.upper())
+
+        if city[0:2] == "Mc":
+            query = """
+            SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
+            FROM rental
+            WHERE "city"='{city}' and "state"='{state}';
+            """.format(city=city, state=state.upper())
+
+        else:
+            query = """
+            SELECT "month", "Studio", "onebr", "twobr", "threebr", "fourbr"
+            FROM rental
+            WHERE "city"='{city}' and "state"='{state}';
+            """.format(city=city.title(), state=state.upper())
 
         cur.execute(query)
 
