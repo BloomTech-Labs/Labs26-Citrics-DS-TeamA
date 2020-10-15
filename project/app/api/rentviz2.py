@@ -117,19 +117,6 @@ async def viz(city: str, statecode: str,
             elif city3[0:2] == 'Mc':
                 city3 = city3[:2] + city3[2:].capitalize()
                 
-            if city3 and statecode3:
-                statecode3 = statecode3.lower().upper()
-                # saint
-                if city3[0:5] == "Saint":
-                    city = city.replace("Saint", "St.")
-                elif city3[0:3] == "St ":
-                    city3 = city3.replace("St", "St.")
-                # fort
-                elif city3[0:3] == "Ft ":
-                    city3 = city3.replace("Ft", "Fort")
-                elif city3[0:3] == "Ft.":
-                    city3 = city3.replace("Ft.", "Fort")
-
         # Raise HTTPException for unknown inputs
         if city not in citynames:
             raise HTTPException(
