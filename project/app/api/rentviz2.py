@@ -79,6 +79,9 @@ async def viz(city: str, statecode: str,
             city = city.replace("Ft", "Fort")
         elif city[0:3] == "Ft.":
             city = city.replace("Ft.", "Fort")
+        # multiple caps
+        elif city[0:2] == 'Mc':
+            city = city[:2] + city[2:].capitalize()
 
         if city2 and statecode2:
             city2 = city2.title()
@@ -93,6 +96,9 @@ async def viz(city: str, statecode: str,
                 city2 = city2.replace("Ft", "Fort")
             elif city2[0:3] == "Ft.":
                 city2 = city2.replace("Ft.", "Fort")
+            # multiple caps
+            elif city2[0:2] == 'Mc':
+                city2 = city2[:2] + city2[2:].capitalize()
 
         if city3 and statecode3:
             city3 = city3.title()
@@ -107,6 +113,22 @@ async def viz(city: str, statecode: str,
                 city3 = city3.replace("Ft", "Fort")
             elif city3[0:3] == "Ft.":
                 city3 = city3.replace("Ft.", "Fort")
+            # multiple caps
+            elif city3[0:2] == 'Mc':
+                city3 = city3[:2] + city3[2:].capitalize()
+                
+            if city3 and statecode3:
+                statecode3 = statecode3.lower().upper()
+                # saint
+                if city3[0:5] == "Saint":
+                    city = city.replace("Saint", "St.")
+                elif city3[0:3] == "St ":
+                    city3 = city3.replace("St", "St.")
+                # fort
+                elif city3[0:3] == "Ft ":
+                    city3 = city3.replace("Ft", "Fort")
+                elif city3[0:3] == "Ft.":
+                    city3 = city3.replace("Ft.", "Fort")
 
         # Raise HTTPException for unknown inputs
         if city not in citynames:
