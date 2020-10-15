@@ -39,7 +39,9 @@ async def static(city: str, statecode: str):
         "population",
         "occ_title",
         "hourly_wage",
-        "annual_wage"]
+        "annual_wage",
+        "climate_zone",
+        "simple_climate"]
 
     df = pd.read_json(fetch_query(query, columns))
 
