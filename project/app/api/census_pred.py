@@ -36,11 +36,39 @@ async def pred(city: str, state: str):
 
     db.adapters(np.int64)
 
-    query = f"""
-    SELECT *
-    FROM census_pred
-    WHERE "city"='{city.title()}' and "state"='{state.upper()}'
-    """
+    # Edge Cases
+    # Saint
+    if city[0:3] == "Saint":
+        city = city.replace("Saint", "St.")
+    elif city[0:3] == "saint":
+        city = city.replace("saint", "St.")
+    elif city[0:5] == "St":
+        city = city.replace("St", "St.")
+    elif city[0:5] == "St":
+        city = city.replace("St", "St.")
+    # Fort
+    elif city[0:3] == "Ft ":
+        city = city.replace("Ft", "Fort")
+    elif city[0:3] == "ft ":
+        city = city.replace("ft", "Fort")
+    elif city[0:3] == "Ft.":
+        city = city.replace("Ft.", "Fort")
+    elif city[0:3] == "ft.":
+        city = city.replace("ft.", "Fort")
+
+    if city[0:2] == "Mc":
+        query = f"""
+        SELECT *
+        FROM census_pred
+        WHERE "city"='{city}' and "state"='{state.upper()}'
+        """
+
+    else:       
+        query = f"""
+        SELECT *
+        FROM census_pred
+        WHERE "city"='{city.title()}' and "state"='{state.upper()}'
+        """
 
     cur.execute(query)
 
@@ -52,23 +80,43 @@ async def pred(city: str, state: str):
     df_preds.set_index("Year", inplace=True)
 
     if len(df_preds.index) == 0:
-        retrieve_records = f"""
-        SELECT
-            city,
-            state,
-            popestimate2010,
-            popestimate2011,
-            popestimate2012,
-            popestimate2013,
-            popestimate2014,
-            popestimate2015,
-            popestimate2016,
-            popestimate2017,
-            popestimate2018,
-            popestimate2019
-        FROM census
-        WHERE "city"='{city.title()} city' and "state"='{state.upper()}'
-        """
+        if city[0:2] == "Mc":
+            retrieve_records = f"""
+            SELECT
+                city,
+                state,
+                popestimate2010,
+                popestimate2011,
+                popestimate2012,
+                popestimate2013,
+                popestimate2014,
+                popestimate2015,
+                popestimate2016,
+                popestimate2017,
+                popestimate2018,
+                popestimate2019
+            FROM census
+            WHERE "city"='{city} city' and "state"='{state.upper()}'
+            """
+
+        else:
+            retrieve_records = f"""
+            SELECT
+                city,
+                state,
+                popestimate2010,
+                popestimate2011,
+                popestimate2012,
+                popestimate2013,
+                popestimate2014,
+                popestimate2015,
+                popestimate2016,
+                popestimate2017,
+                popestimate2018,
+                popestimate2019
+            FROM census
+            WHERE "city"='{city.title()} city' and "state"='{state.upper()}'
+            """
 
         columns = [
             "city",
