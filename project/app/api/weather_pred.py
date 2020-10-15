@@ -51,6 +51,8 @@ async def pred(city: str, state: str, metric=False):
     cur = conn.cursor()
     db.adapters(np.int64, np.float64, np.datetime64)
 
+    # Edge Cases
+    # Saint
     if city[0:3] == "St.":
         city = city.replace("St.", "St")
     elif city[0:3] == "st.":
@@ -62,10 +64,12 @@ async def pred(city: str, state: str, metric=False):
     # Fort
     elif city[0:3] == "Ft ":
         city = city.replace("Ft", "Fort")
+    elif city[0:3] == "ft ":
+        city = city.replace("ft", "Fort")
     elif city[0:3] == "Ft.":
         city = city.replace("Ft.", "Fort")
-
-    print(city)
+    elif city[0:3] == "ft.":
+        city = city.replace("ft.", "Fort")
 
     # If prediciton found in database
     # If metric values are desired:
@@ -104,7 +108,7 @@ async def pred(city: str, state: str, metric=False):
         retrieve_data = f"""
         SELECT date_time, FeelsLikeC
         FROM historic_weather
-        Where "city"='{city}' and "state"='{state}'
+        Where "city"='{city.title()}' and "state"='{state.upper()}'
         """
 
         cur.execute(retrieve_data)
