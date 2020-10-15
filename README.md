@@ -133,6 +133,10 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 - [Yelp API](https://www.yelp.com/developers)
 - [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
 
+**Predictive Modeling**
+[Python for Time Series Data Analysis  - Udemy Course](https://www.udemy.com/course/python-for-time-series-data-analysis/)
+[statsmodels](https://www.statsmodels.org/stable/index.html)
+
 **AWS / DOCS**
 - [AWS - Postgres Deployment Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html)
 - [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)
