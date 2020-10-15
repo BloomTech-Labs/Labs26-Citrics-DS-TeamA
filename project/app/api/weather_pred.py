@@ -51,6 +51,22 @@ async def pred(city: str, state: str, metric=False):
     cur = conn.cursor()
     db.adapters(np.int64, np.float64, np.datetime64)
 
+    if city[0:3] == "St.":
+        city = city.replace("St.", "St")
+    elif city[0:3] == "st.":
+        city = city.replace("st.", "st")
+    elif city[0:5] == "Saint":
+        city = city.replace("Saint", "St")
+    elif city[0:5] == "saint":
+        city = city.replace("saint", "St")
+    # Fort
+    elif city[0:3] == "Ft ":
+        city = city.replace("Ft", "Fort")
+    elif city[0:3] == "Ft.":
+        city = city.replace("Ft.", "Fort")
+
+    print(city)
+
     # If prediciton found in database
     # If metric values are desired:
     if metric == True:
