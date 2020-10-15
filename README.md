@@ -134,8 +134,11 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 - [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
 
 **Predictive Modeling**
+[Explanatory Notebook](development/notebooks/tsa.ipynb)
 [Python for Time Series Data Analysis  - Udemy Course](https://www.udemy.com/course/python-for-time-series-data-analysis/)
-[statsmodels](https://www.statsmodels.org/stable/index.html)
+[Python Datetime Module Docs](https://docs.python.org/3/library/datetime.html#module-datetime)
+[Pandas Time Series Docs](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
+[Statsmodels](https://www.statsmodels.org/stable/index.html)
 
 **AWS / DOCS**
 - [AWS - Postgres Deployment Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html)
