@@ -31,8 +31,8 @@ async def bls_viz(city: str, statecode: str):
     WHERE annual_wage > 0
     """
 
-    columns = ["city", "state", "occ_title", "jobs_1000", "loc_quotient",
-               "hourly_wage", "annual_wage"]
+    columns = ["city", "state", "occ_title", "jobs_1000", "loc_quotient", 
+            "hourly_wage", "annual_wage"]
 
     df = pd.read_json(fetch_query(query, columns))
 
@@ -55,6 +55,10 @@ async def bls_viz(city: str, statecode: str):
     elif city[0:3] == "Ft.":
         city = city.replace("Ft.", "Fort")
 
+    # multiple caps
+    elif city[0:2] == 'Mc':
+        city = city[:2] + city[2:].capitalize()
+
     # Find matching metro-area in database
     match = df.loc[(df.city.str.contains(city)) &
                    (df.state.str.contains(statecode))]
@@ -66,12 +70,11 @@ async def bls_viz(city: str, statecode: str):
             detail=f'{city}, {statecode} not found!')
 
     # Subset of top jobs for matching city
-    sub = match.sort_values(['city', 'loc_quotient'],
-                            ascending=False).groupby('city').head(10)
+    sub = match.sort_values(['city','loc_quotient'],ascending=False).groupby('city').head(10)
     sub = sub.reset_index()
-    sub = sub.drop("index", axis=1)
+    sub = sub.drop("index",axis=1)
 
-    # Begin Visualization
+    ### Begin Visualization
     styling = dict()
 
     styling['city1color'] = '#CC0000'  # red
@@ -86,23 +89,21 @@ async def bls_viz(city: str, statecode: str):
     styling["title"] = "Hover over bars for Job Industry"
 
     x = sub["occ_title"]
-    y = sub["annual_wage"]
-
-    color_scale = "tealgrn"
+    y= sub["annual_wage"]
 
     fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
                                 x=x,
                                 y=y,
-                                marker=dict(color=y, colorscale=color_scale)),
-                    layout=layout)
+                                marker=dict(color=y, colorscale="greens")),
+                                layout=layout)
 
     fig.update_layout(barmode='group', title_text=styling.get('title'),
-                      xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
-                      yaxis_title='Average Annual Salary',
-                      font=dict(family='Open Sans, extra bold', size=10),
-                      height=412,
-                      width=640)
+                    xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
+                    yaxis_title='Average Annual Salary',
+                    font=dict(family='Open Sans, extra bold', size=10),
+                    height=412,
+                    width=640)
 
-    fig.update_xaxes(showticklabels=False)  # hide all the xticks
+    fig.update_xaxes(showticklabels=False) # hide all the xticks
 
     return fig.to_json()
