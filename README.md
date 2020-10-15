@@ -37,6 +37,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    ├── get_stats.ipynb <- Jupyter notebook, precursor to weather_pred route.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
+|    |    ├── population.ipynb <- Preroute for project/app/api/census_pred.py
 │    │    ├── README.md <- README for notebooks directory.
 │    │    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
 │    │    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
@@ -61,6 +62,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    │    ├── bls_viz.py <- Returns JSON output of BLS data visualizations.
 │    │    │    ├── bls_viz_view.py <- Returns PNG of BLS data visualizations.
 │    │    │    ├── census.py <- Returns Census data.
+|    |    |    ├── census_pred.py <- Returns rental predictions for two years from the present (2020)
 │    │    │    ├── current.py <- Returns current weather data calculated in both imperial and metric.
 │    │    │    ├── predict.py <- Starter predict file. (DEPRECATED)
 │    │    │    ├── rent_city_states.py <- Returns cities and states, dealing with duplicate values (requested by front-end).
