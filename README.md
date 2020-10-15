@@ -52,6 +52,7 @@ static data.
 |    └── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
 │         ├── config.py <- Utility file to change from team to personal Docker image.
 │         ├── database.py <- Utility file for PostgreSQL database.
+|         ├── db_sentry.py - Utility for managing run-away database connections.
 │         ├── __init__.py <- __init__.py file
 │         ├── insert.py <- Inserts World Weather Online API data into database.
 │         ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py

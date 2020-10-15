@@ -1,3 +1,5 @@
+# development/utilities/db_sentry.py
+
 from database import PostgreSQL
 from termcolor import colored
 from datetime import datetime
@@ -113,6 +115,6 @@ while True:
 
         run_kill_switch()
 
-        conn.close
+        conn.close()
 
     time.sleep(300)
