@@ -6,8 +6,14 @@ import pandas as pd
 router = APIRouter()
 
 
-@router.get('/adv_search/{popmin}_{br_size}_{max_rent}')
-async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000):
+@router.get('/adv_search/{popmin}_{br_size}_{max_rent}_{climate}')
+async def adv_search(
+    popmin: int, 
+    br_size: int, 
+    max_rent: int, 
+    climate: str, 
+    popmax=50_000_000
+    ):
     """
     Advanced search function which locates matching cities based on specified
     criteria.
@@ -21,6 +27,8 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
     `4` for four bedrooms
 
     `max_rent`: The maximum rent amount for corresponding `br_size`; e.g. `1500` or `2500`
+
+    `climate`: The preferred climate; e.g. `cold`, `mild`, or `hot`
 
     ## Response
     JSON string of all matching cities per specified criteria.
@@ -42,6 +50,7 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
     FROM "static"
     WHERE population >= {popmin} AND population <= {popmax}
     AND {br_size} <= {max_rent}
+    AND simple_climate={climate}
     """
 
     columns = [
@@ -56,7 +65,9 @@ async def adv_search(popmin: int, br_size: int, max_rent: int, popmax=50_000_000
         "population",
         "occ_title",
         "hourly_wage",
-        "annual_wage"]
+        "annual_wage",
+        "climate_zone",
+        "simple_climate"]
 
     df = pd.read_json(fetch_query(query, columns))
 
