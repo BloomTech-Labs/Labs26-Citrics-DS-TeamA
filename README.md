@@ -43,7 +43,9 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
 │    │    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
 │    │    ├── rent_price_viz_dev.ipynb <- Jupyter notebook for rental visualization from database. (DEPRECATED)
-│    │    └── static_dev.ipynb <- Jupyter notebook for fetching static data.
+│    │    ├── static_dev.ipynb <- Jupyter notebook for fetching 
+static data.
+|    |    └── tsa.ipynb <- Jupyter notebook with demostrations of basic Time Series Analysis and modeling techniques.  
 |    ├── preroutes <- Preroutes, files built outside of API itself in preparation for building API routes.
 │    │    ├── __init__.py <- __init__.py file
 │    │    └── weather.py <- Preroute file for fetching historical weather data.
