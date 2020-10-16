@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get('/static/{city}_{statecode}')
-async def static(city: str, statecode: str):
+async def fetch_static_data(city: str, statecode: str):
     """
     Static city-level data for 135 US cities. Dataset compiled of rental price estimates,
     walkscores, population, and most prevelant job industry for each city. 📈
@@ -39,7 +39,9 @@ async def static(city: str, statecode: str):
         "population",
         "occ_title",
         "hourly_wage",
-        "annual_wage"]
+        "annual_wage",
+        "climate_zone",
+        "simple_climate"]
 
     df = pd.read_json(fetch_query(query, columns))
 

@@ -2,6 +2,8 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from typing import Optional
+
+import io
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -12,29 +14,30 @@ router = APIRouter()
 five_yrs = datetime.now().year - 5
 
 statecodes = {
-        'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
-        'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut',
-        'DE': 'Delaware', 'DC': 'District of Columbia', 'FL': 'Florida',
-        'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois',
-        'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky',
-        'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
-        'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota',
-        'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana',
-        'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire',
-        'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
-        'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
-        'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania',
-        'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
-        'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
-        'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
-        'WI': 'Wisconsin', 'WY': 'Wyoming'
-    }
+    'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas',
+    'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut',
+    'DE': 'Delaware', 'DC': 'District of Columbia', 'FL': 'Florida',
+    'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois',
+    'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky',
+    'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+    'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota',
+    'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana',
+    'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire',
+    'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York',
+    'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+    'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania',
+    'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota',
+    'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+    'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia',
+    'WI': 'Wisconsin', 'WY': 'Wyoming'
+}
 
 
 @router.get('/viz/{statecode}')
-async def viz(statecode: str,
-              statecode2: Optional[str]=None,
-              statecode3: Optional[str]=None):
+async def unemployment_visualization(statecode: str,
+              statecode2: Optional[str] = None,
+              statecode3: Optional[str] = None,
+              view: Optional[str] = None):
     """
     Visualize state unemployment rate from [Federal Reserve Economic Data](https://fred.stlouisfed.org/) 📈
 
@@ -44,7 +47,12 @@ async def viz(statecode: str,
 
     ### Query Parameters (Optional)
     `statecode2`: The state code for a state to compare to.
+
     `statecode3`: The state code for a third state to compare to.
+
+    `view`: If 'True' (string), returns a PNG instead of JSON.
+
+
     ### Response
     JSON string to render with [react-plotly.js](https://plotly.com/javascript/react/)
     """
@@ -85,14 +93,23 @@ async def viz(statecode: str,
             statecode2 = None
 
     if statecode and not statecode2 and not statecode3:
-        return single(statecode)
+        if view and view.title() == 'True':
+            return single(statecode, 'True')
+        else:
+            return single(statecode)
     if statecode and statecode2 and not statecode3:
-        return two(statecode, statecode2)
+        if view and view.title() == 'True':
+            return two(statecode, statecode2, 'True')
+        else:
+            return two(statecode, statecode2)
     if statecode and statecode2 and statecode3:
-        return three(statecode, statecode2, statecode3)
+        if view and view.title() == 'True':
+            return three(statecode, statecode2, statecode3, 'True')
+        else:
+            return three(statecode, statecode2, statecode3)
 
 
-def single(statecode):
+def single(statecode, view=None):
     """Single state visualization"""
 
     statename = statecodes.get(statecode)
@@ -159,10 +176,14 @@ def single(statecode):
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
-    return fig.to_json()
+    if view:
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
+    else:
+        return fig.to_json()
 
 
-def two(statecode, statecode2):
+def two(statecode, statecode2, view=None):
     """Creates and styles a visualization to compare 2 states' unemployment"""
     statename = statecodes.get(statecode)
     state2 = statecodes.get(statecode2)
@@ -245,10 +266,14 @@ def two(statecode, statecode2):
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
-    return fig.to_json()
+    if view:
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
+    else:
+        return fig.to_json()
 
 
-def three(statecode, statecode2, statecode3):
+def three(statecode, statecode2, statecode3, view=None):
     """Creates and styles a visualization to compare 3 states' unemployment"""
     statename = statecodes.get(statecode)
     state2 = statecodes.get(statecode2)
@@ -368,4 +393,8 @@ def three(statecode, statecode2, statecode3):
     fig.update_xaxes(title='Date')
     fig.update_yaxes(title='Percent Unemployed')
 
-    return fig.to_json()
+    if view:
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
+    else:
+        return fig.to_json()

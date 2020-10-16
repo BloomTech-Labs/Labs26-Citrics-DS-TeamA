@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/rent_city_state/")
-async def rental():
+async def cities_and_states_for_frontend():
     """
     City-level historic rental prices for 1 bedroom apartments from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈

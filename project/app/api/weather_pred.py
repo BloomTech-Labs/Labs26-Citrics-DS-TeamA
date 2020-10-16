@@ -11,16 +11,59 @@ import warnings
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
 from psycopg2.extras import execute_values
 import plotly.graph_objects as go
+import io
+from fastapi.responses import StreamingResponse
 
 router = APIRouter()
 
 
-@router.get("/weather/predict/{city}_{state}_{metric}")
-async def pred(city: str, state: str, metric: Optional[bool] = False):
+@router.get("/weather/predict/{city}_{state}")
+async def pred(city: str, state: str, metric=False):
+    """
+    **Input**
+
+    `city: str`    <- city name with any capitalization
+
+    `state: str`   <- two-letter state abbreviation with any capitalization
+
+    `metric: bool` <- *(Optional)* default, False, will output predictions and make
+    database queries for adjusted temperature in degrees Fahrenheit;
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
+    True will do so for adjusted temperature in degrees Celsius.
+
+    **Output**
+
+    json object with predictions for
+    
+    **monthly temperature** of `city` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
+    
+    from the present (September 2020)
+    """
     db = PostgreSQL()
     conn = db.connection
     cur = conn.cursor()
     db.adapters(np.int64, np.float64, np.datetime64)
+
+    # Edge Cases
+    # Saint
+    if city[0:3] == "St." or city[0:3] == "st.":
+        city = city.replace(city[0:3], "St")
+    elif city[0:5] == "Saint" or city[0:5] == "saint":
+        city = city.replace(city[0:5], "St")
+    # Fort
+    elif city[0:3] == "Ft " or city[0:3] == "ft ":
+        city = city.replace(city[0:3], "Fort ")
+    elif city[0:3] == "Ft." or city[0:3] == "ft.":
+        city = city.replace(city[0:3], "Fort")
+
+    print(city)
 
     # If prediciton found in database
     # If metric values are desired:
@@ -33,7 +76,7 @@ async def pred(city: str, state: str, metric: Optional[bool] = False):
     retrieve_pred = f"""
     SELECT month, mean
     FROM {table}
-    WHERE "city"='{city}' and "state"='{state}'
+    WHERE "city"='{city.title()}' and "state"='{state.upper()}'
     """
 
     cur.execute(retrieve_pred)
@@ -59,7 +102,7 @@ async def pred(city: str, state: str, metric: Optional[bool] = False):
         retrieve_data = f"""
         SELECT date_time, FeelsLikeC
         FROM historic_weather
-        Where "city"='{city}' and "state"='{state}'
+        Where "city"='{city.title()}' and "state"='{state.upper()}'
         """
 
         cur.execute(retrieve_data)
@@ -80,9 +123,9 @@ async def pred(city: str, state: str, metric: Optional[bool] = False):
             seasonal_periods=12
         ).fit().forecast(24)
 
-        c = pd.Series([city] * len(result.index))
+        c = pd.Series([city.title()] * len(result.index))
         c.index = result.index
-        s = pd.Series([state] * len(result.index))
+        s = pd.Series([state.upper()] * len(result.index))
         s.index = result.index
 
         result = pd.concat([c, s, result], axis=1)
@@ -112,6 +155,7 @@ async def pred(city: str, state: str, metric: Optional[bool] = False):
             list(result.to_records(index=True))
         )
         conn.commit()
+        conn.close()
 
     return result.to_json(indent=2)
 
@@ -124,8 +168,68 @@ async def viz(
     state2=None,
     city3=None,
     state3=None,
-    metric=None
+    metric=None,
+    view=None
 ):
+    """
+    **Input**
+
+    `city1: str`   <- city name with any capitalization
+
+    `state1: str`  <- two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `city2: str`   <- *(Optional)* city name with any capitalization
+
+    `state2: str`  <- *(Optional)* two-letter state abbreviation with any capitalization
+
+    `metric: bool` <- *(Optional)* default, False, will output visualization for predictions
+    and make database queries for adjusted temperature in degrees Fahrenheit;
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;
+    True will do so for adjusted temperature in degrees Celsius.
+
+    `view` : str   <- *(Optional)* default None will render output as a json object,
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    "True" will return .png file of visualization
+
+    **Output**
+
+    json object *-see `view` under input-* of visualization of predictions for
+    
+    **monthly temperature** of `city1` and up to a total of three cities
+    adjusted for dew point and wind chill for 24 months
+    
+    from the present (September 2020)
+    """
     cities = []
 
     first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
@@ -138,7 +242,7 @@ async def viz(
         cities.append(second)
 
     if city3 and state3:
-        third = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
+        third = pd.read_json(await pred(city3.title(), state3.upper(), metric))["temp"]
         third.name = f"{city3.title()}, {state3.upper()}"
         cities.append(third)
 
@@ -167,4 +271,10 @@ async def viz(
         height=412,
         width=640
     )
-    return fig.to_json()
+
+    if view == "True":
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
+
+    else:
+        return fig.to_json()

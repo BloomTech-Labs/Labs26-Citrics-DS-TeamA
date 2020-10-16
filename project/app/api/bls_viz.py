@@ -1,4 +1,7 @@
+import io
+
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from app.sql_query_function import fetch_query
 
 import pandas as pd
@@ -8,7 +11,7 @@ router = APIRouter()
 
 
 @router.get('/bls_viz/{city}_{statecode}')
-async def bls_viz(city: str, statecode: str):
+async def bls_viz(city: str, statecode: str, view=False):
     """
     Most prevelant job industry (city-level) per "Location Quotient" from
     [Burea of Labor Statistics](https://www.bls.gov/oes/tables.htm) 📈
@@ -18,6 +21,8 @@ async def bls_viz(city: str, statecode: str):
 
     `statecode`: The [USPS 2 letter abbreviation](https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#Table)
     (case insensitive) for any of the 50 states or the District of Columbia.
+
+    `view`: If 'True' (string), returns a PNG instead of JSON
 
     ## Response
     Visualization of most prevelant job industries for more than 350
@@ -55,6 +60,10 @@ async def bls_viz(city: str, statecode: str):
     elif city[0:3] == "Ft.":
         city = city.replace("Ft.", "Fort")
 
+    # multiple caps
+    elif city[0:2] == 'Mc':
+        city = city[:2] + city[2:].capitalize()
+
     # Find matching metro-area in database
     match = df.loc[(df.city.str.contains(city)) &
                    (df.state.str.contains(statecode))]
@@ -82,20 +91,32 @@ async def bls_viz(city: str, statecode: str):
     )
 
     # Set Title
-    styling['title'] = f'The mot prevelant job in {city}, {statecode} is {sub["occ_title"][0]} with an average annual salary of {sub["annual_wage"][0]}'
+    styling["title"] = "Hover over bars for Job Industry"
+
+    x = sub["occ_title"]
+    y= sub["annual_wage"]
+
+    color_scale = "tealgrn"
 
     fig = go.Figure(data=go.Bar(name=f'{city}, {statecode}',
-                            x=sub['occ_title'],
-                            y=sub['annual_wage'],
-                            marker_color=styling.get('city1color')),
-                            layout=layout)
+                                x=x,
+                                y=y,
+                                marker=dict(color=y, colorscale=color_scale)),
+                                layout=layout)
 
     fig.update_layout(barmode='group', title_text=styling.get('title'),
-                        xaxis_title='Occupational Title',
-                        yaxis_title='Average Annual Salary',
-                        font=dict(family='Open Sans, extra bold', size=10),
-                        height=412,
-                        width=640)
-                        # legend_title='Cities')
+                    xaxis_title='10 Most Prevelant Jobs (left to right, descending)',
+                    yaxis_title='Average Annual Salary',
+                    font=dict(family='Open Sans, extra bold', size=10),
+                    height=412,
+                    width=640)
+
+    fig.update_xaxes(showticklabels=True) # hide all the xticks
+
+    if view and view.title() == "True":
+        img = fig.to_image(format="png")
+        return StreamingResponse(io.BytesIO(img), media_type="image/png")
 
     return fig.to_json()
+
+    

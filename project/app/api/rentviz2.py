@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from app.sql_query_function import fetch_query
-from app.smart_upper_function import smart_upper
 from typing import Optional
 
+import io
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -12,9 +12,9 @@ router = APIRouter()
 
 
 @router.get('/rent_viz/{city}_{statecode}')
-async def viz(city: str, statecode: str,
+async def rental_price_visualization(city: str, statecode: str,
               city2: Optional[str]=None, statecode2: Optional[str]=None,
-              city3: Optional[str]=None, statecode3: Optional[str]=None):
+              city3: Optional[str]=None, statecode3: Optional[str]=None, view: Optional[str]=None):
         """
         Visualize city-level rental price estimates from
         [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈
@@ -33,6 +33,8 @@ async def viz(city: str, statecode: str,
         `city3`: The name of a third US city to make rental comparison.
 
         `statecode3`: The statecode for third US city to make rental comparison.
+
+        `view`: If 'True' (string), returns a PNG instead of JSON.
 
         ## Response
         - Plotly bar chart of `city`'s rental price estimates
@@ -80,6 +82,9 @@ async def viz(city: str, statecode: str,
             city = city.replace("Ft", "Fort")
         elif city[0:3] == "Ft.":
             city = city.replace("Ft.", "Fort")
+        # multiple caps
+        elif city[0:2] == 'Mc':
+            city = city[:2] + city[2:].capitalize()
 
         if city2 and statecode2:
             city2 = city2.title()
@@ -94,6 +99,9 @@ async def viz(city: str, statecode: str,
                 city2 = city2.replace("Ft", "Fort")
             elif city2[0:3] == "Ft.":
                 city2 = city2.replace("Ft.", "Fort")
+            # multiple caps
+            elif city2[0:2] == 'Mc':
+                city2 = city2[:2] + city2[2:].capitalize()
 
         if city3 and statecode3:
             city3 = city3.title()
@@ -108,7 +116,10 @@ async def viz(city: str, statecode: str,
                 city3 = city3.replace("Ft", "Fort")
             elif city3[0:3] == "Ft.":
                 city3 = city3.replace("Ft.", "Fort")
-
+            # multiple caps
+            elif city3[0:2] == 'Mc':
+                city3 = city3[:2] + city3[2:].capitalize()
+                
         # Raise HTTPException for unknown inputs
         if city not in citynames:
             raise HTTPException(
@@ -167,20 +178,31 @@ async def viz(city: str, statecode: str,
                 city2, statecode2 = None, None
 
         if city and not city2 and not city3:
-            return single(city1_df, city, statecode)
+            if view and view.title() == 'True':
+                return single(city1_df, city, statecode, 'True')
+            else:
+                return single(city1_df, city, statecode)
 
         if city and city2 and not city3:
             city2_df = df[df.city == city2]
-            return two(city1_df, city2_df, city, statecode, city2, statecode2)
+            if view and view.title() == 'True':
+                return two(city1_df, city2_df, city, statecode, city2, statecode2, 'True')
+            else:
+                return two(city1_df, city2_df, city, statecode, city2, statecode2)
 
         if city and city2 and city3:
             city2_df = df[df.city == city2]
             city3_df = df[df.city == city3]
-            return three(city1_df, city2_df, city3_df,
-                         city, statecode, city2, statecode2, city3, statecode3)
+            if view and view.title() == 'True':
+                return three(city1_df, city2_df, city3_df,
+                            city, statecode, city2, statecode2,
+                            city3, statecode3, 'True')
+            else:
+                return three(city1_df, city2_df, city3_df,
+                             city, statecode, city2, statecode2, city3, statecode3)
 
 
-def single(city1_df, city, statecode):
+def single(city1_df, city, statecode, view=None):
         """Used to create and style a visualization with only one city."""
 
         styling = dict()
@@ -207,10 +229,15 @@ def single(city1_df, city, statecode):
                                       size=10),
                           legend_title='Cities')
 
-        return fig.to_json()
+        if view:
+            img = fig.to_image(format="png")
+            return StreamingResponse(io.BytesIO(img), media_type="image/png")
+        else:
+            return fig.to_json()
 
 
-def two(city1_df, city2_df, city, statecode, city2, statecode2):
+
+def two(city1_df, city2_df, city, statecode, city2, statecode2, view=None):
         """Used to create and style a visualization with two cities."""
 
         styling = dict()
@@ -255,12 +282,16 @@ def two(city1_df, city2_df, city, statecode, city2, statecode2):
                                     size=10),
                           legend_title='Cities')
 
-        return fig.to_json()
+        if view:
+            img = fig.to_image(format="png")
+            return StreamingResponse(io.BytesIO(img), media_type="image/png")
+        else:
+            return fig.to_json()
 
 
 
 def three(city1_df, city2_df, city3_df,
-          city, statecode, city2, statecode2, city3, statecode3):
+          city, statecode, city2, statecode2, city3, statecode3, view=None):
         """Used to create and style a visualization with three cities."""
 
         styling = dict()
@@ -359,5 +390,8 @@ def three(city1_df, city2_df, city3_df,
                           legend_title='Cities',
                           height=412,
                           width=640)
-
-        return fig.to_json()
+        if view:
+            img = fig.to_image(format="png")
+            return StreamingResponse(io.BytesIO(img), media_type="image/png")
+        else:
+            return fig.to_json()
