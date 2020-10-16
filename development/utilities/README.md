@@ -342,7 +342,7 @@ DO NOT USE
 from development.utilities.database import PostgreSQL
 ```
 
-**Note:** When appending a new path to the system, be sure to use *os.path.join()* and *os.getcwd()*. These commands insure that the paths are system agnostic. This is important given that the hardcoded commands on Windows would read out as
+**Note:** When appending a new path to the system, be sure to use *os.path.join()* and *os.getcwd()*. These commands insure that the paths are system agnostic. This is important given that the hardcoded command on Windows would read out as
 
 ```
 sys.path.append("\path\to\repo\dir\development")
