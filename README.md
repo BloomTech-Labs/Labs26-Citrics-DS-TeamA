@@ -73,11 +73,11 @@ static data.
 │    │    │    ├── rental_pred.py <- Makes rental price predictions.
 │    │    │    ├── rentviz1.py <- Returns JSON output of rental price visualizations, unstyled. (DEPRECATED)
 │    │    │    ├── rentviz2.py <- Returns JSON output of rental price visualizations, styled.
-│    │    │    ├── rentviz2_view.py <- Returns PNG of rental price predictions, styled.
+│    │    │    ├── rentviz2_view.py <- Returns PNG of rental price predictions, styled. (DEPRECATED)
 │    │    │    ├── rentviz_view.py <- Returns PNG of rental price predictions, unstyled. (DEPRECATED)
 │    │    │    ├── static.py <- Returns all static data.
 │    │    │    ├── viz.py <- Returns JSON output of unemployment data, styled.
-│    │    │    ├── viz_view.py <- Returns PNG of unemployment data, styled.
+│    │    │    ├── viz_view.py <- Returns PNG of unemployment data, styled. (DEPRECATED)
 │    │    │    ├── walkability.py <- Returns Walk Score calculations stored in database.
 │    │    │    └── weather_pred.py <- Makes weather predictions.
 │    │    ├── tests <- FastAPI TestClient test files.
