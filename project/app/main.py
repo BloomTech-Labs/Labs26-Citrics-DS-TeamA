@@ -5,7 +5,6 @@ from app.api import (
     adv_search,
     bls_jobs1,
     bls_viz,
-    bls_viz_view,
     census,
     census_pred,
     current,
@@ -25,14 +24,13 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='2.9',
+    version='3.0',
     docs_url='/',
 )
 
 app.include_router(adv_search.router)
 app.include_router(bls_jobs1.router)
 app.include_router(bls_viz.router)
-app.include_router(bls_viz_view.router)
 app.include_router(census.router)
 app.include_router(census_pred.router)
 app.include_router(current.router)
