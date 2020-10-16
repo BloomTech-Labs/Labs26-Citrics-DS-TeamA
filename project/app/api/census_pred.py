@@ -48,9 +48,6 @@ async def pred(city: str, state: str):
     elif city[0:3] == "Ft." or city[0:3] == "ft.":
         city = city.replace(city[0:3], "Fort")
 
-    print(city)
-    print(city[0:3])
-
     if city[0:2] == "Mc":
         query = f"""
         SELECT *
