@@ -38,23 +38,18 @@ async def pred(city: str, state: str):
 
     # Edge Cases
     # Saint
-    if city[0:3] == "Saint":
-        city = city.replace("Saint", "St.")
-    elif city[0:3] == "saint":
-        city = city.replace("saint", "St.")
-    elif city[0:5] == "St":
-        city = city.replace("St", "St.")
-    elif city[0:5] == "St":
-        city = city.replace("St", "St.")
+    if city[0:5] == "Saint" or city[0:5] == "saint":
+        city = city.replace(city[0:5], "St.")
+    elif city[0:2] == "St" or city[0:2] == "st":
+        city = city.replace(city[0:2], "St.")
     # Fort
-    elif city[0:3] == "Ft ":
-        city = city.replace("Ft", "Fort")
-    elif city[0:3] == "ft ":
-        city = city.replace("ft", "Fort")
-    elif city[0:3] == "Ft.":
-        city = city.replace("Ft.", "Fort")
-    elif city[0:3] == "ft.":
-        city = city.replace("ft.", "Fort")
+    elif city[0:3] == "Ft " or city[0:3] == "ft ":
+        city = city.replace(city[0:3], "Fort ")
+    elif city[0:3] == "Ft." or city[0:3] == "ft.":
+        city = city.replace(city[0:3], "Fort")
+
+    print(city)
+    print(city[0:3])
 
     if city[0:2] == "Mc":
         query = f"""
