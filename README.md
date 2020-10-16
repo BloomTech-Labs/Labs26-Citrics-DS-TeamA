@@ -28,7 +28,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    └── static.csv <- CSV of all static data.
 │    └── weather <- Collection of CSV files related to historical weather data.
 │         └── *.csv <- CSV file containing historical data for city in file name.
-├── development <- Directory containing development materials outside of the API itself Jupyter.
+├── development <- Directory containing development materials outside of the API itself Jupyter.   
 |    ├── __init__.py <- __init__.py file
 |    ├── notebooks <- Directory containing Jupyter Notebooks.
 │    │    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
@@ -38,7 +38,6 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
 |    |    ├── population.ipynb <- Preroute for project/app/api/census_pred.py
-│    │    ├── README.md <- README for notebooks directory.
 │    │    ├── rental.ipynb <- Jupyter notebook for rental data preprocessing.
 │    │    ├── rental_pred.ipynb <- Jupyter notebook for rental predictions.
 │    │    ├── rental_viz1.ipynb <- Jupyter notebook for visualization. (DEPRECATED)
@@ -49,7 +48,8 @@ static data.
 |    ├── preroutes <- Preroutes, files built outside of API itself in preparation for building API routes.
 │    │    ├── __init__.py <- __init__.py file
 │    │    └── weather.py <- Preroute file for fetching historical weather data.
-|    └── utilities <- Utilities for use in managing deployment, retrieving data from third-party APIs, and using the database. 
+|    ├── utilities <- Utilities for use in managing deployment,retrieving data from third-party APIs, and using the database.
+|    └── README.md <- README file for development directory.
 │         ├── config.py <- Utility file to change from team to personal Docker image.
 │         ├── database.py <- Utility file for PostgreSQL database.
 |         ├── db_sentry.py - Utility for managing run-away database connections.
