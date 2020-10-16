@@ -72,43 +72,6 @@ async def pred(city: str, state: str):
     df_preds.set_index("Year", inplace=True)
 
     if len(df_preds.index) == 0:
-        if city[0:2] == "Mc":
-            retrieve_records = f"""
-            SELECT
-                city,
-                state,
-                popestimate2010,
-                popestimate2011,
-                popestimate2012,
-                popestimate2013,
-                popestimate2014,
-                popestimate2015,
-                popestimate2016,
-                popestimate2017,
-                popestimate2018,
-                popestimate2019
-            FROM census
-            WHERE "city"='{city} city' and "state"='{state.upper()}'
-            """
-
-        else:
-            retrieve_records = f"""
-            SELECT
-                city,
-                state,
-                popestimate2010,
-                popestimate2011,
-                popestimate2012,
-                popestimate2013,
-                popestimate2014,
-                popestimate2015,
-                popestimate2016,
-                popestimate2017,
-                popestimate2018,
-                popestimate2019
-            FROM census
-            WHERE "city"='{city.title()} city' and "state"='{state.upper()}'
-            """
 
         columns = [
             "city",
@@ -124,6 +87,32 @@ async def pred(city: str, state: str):
             "popestimate2018",
             "popestimate2019"
         ]
+
+        if city[0:2] == "Mc":
+            retrieve_records = f"""
+                SELECT
+                """
+            for i in range(len(columns) - 1):
+                retrieve_records += f"    {columns[i]},\n"
+
+            retrieve_records += f"    {columns[-1]}"
+            retrieve_records += f"""
+            FROM census
+            WHERE "city"='{city} city' and "state"='{state.upper()}'
+            """
+
+        else:
+            retrieve_records = f"""
+                SELECT
+                """
+            for i in range(len(columns) - 1):
+                retrieve_records += f"    {columns[i]},\n"
+
+            retrieve_records += f"    {columns[-1]}"
+            retrieve_records += f"""
+            FROM census
+            WHERE "city"='{city.title()} city' and "state"='{state.upper()}'
+            """
 
         cur.execute(retrieve_records)
 
