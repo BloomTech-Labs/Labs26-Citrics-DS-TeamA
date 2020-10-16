@@ -124,11 +124,11 @@ static data.
 
 **DATA**
 - [Apartment Rental Price Data](https://www.apartmentlist.com/research/category/data-rent-estimates) (NOTE: Does not include HI, WV or PR)
-- [Jobs Data](https://datausa.io/cart)
 - [Bureau of Labor Staticstics](https://www.bls.gov/oes/tables.htm)
 - [Climate Data](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00821/html)
 - [Climate Zone API](http://climateapi.scottpinkelman.com/)
 - [Historical Weather API](https://www.worldweatheronline.com/developer/api/historical-weather-api.aspx) (NOTE: 60 day free trial √)
+- [Jobs Data](https://datausa.io/cart)
 - [Population](https://public.opendatasoft.com/explore/dataset/worldcitiespop/api/?disjunctive.country)
 - [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html)
 - [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
@@ -139,8 +139,8 @@ static data.
 **Predictive Modeling**
 - [Explanatory Notebook](development/notebooks/tsa.ipynb)
 - [Python for Time Series Data Analysis  - Udemy Course](https://www.udemy.com/course/python-for-time-series-data-analysis/)
-- [Python Datetime Module Docs](https://docs.python.org/3/library/datetime.html#module-datetime)
 - [Pandas Time Series Docs](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
+- [Python Datetime Module Docs](https://docs.python.org/3/library/datetime.html#module-datetime)
 - [Statsmodels](https://www.statsmodels.org/stable/index.html)
 
 **AWS / DOCS**
