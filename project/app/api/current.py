@@ -14,7 +14,7 @@ OW_API_KEY = os.environ.get('OW_API_KEY')
 
 
 @router.get("/current/{city}_{statecode}")
-async def current(city: str, statecode: str):
+async def fetch_current_weather_data(city: str, statecode: str):
     """Fetches current weather from:
     [OpenWeatherMap API](https://openweathermap.org/current),
     using any combination of city and state in the United States.

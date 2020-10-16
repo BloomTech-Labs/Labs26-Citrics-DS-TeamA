@@ -12,7 +12,7 @@ router = APIRouter()
 
 
 @router.get('/rent_viz/{city}_{statecode}')
-async def viz(city: str, statecode: str,
+async def rental_price_visualization(city: str, statecode: str,
               city2: Optional[str]=None, statecode2: Optional[str]=None,
               city3: Optional[str]=None, statecode3: Optional[str]=None, view: Optional[str]=None):
         """

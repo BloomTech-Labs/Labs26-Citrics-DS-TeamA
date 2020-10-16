@@ -34,7 +34,7 @@ statecodes = {
 
 
 @router.get('/viz/{statecode}')
-async def viz(statecode: str,
+async def unemployment_visualization(statecode: str,
               statecode2: Optional[str] = None,
               statecode3: Optional[str] = None,
               view: Optional[str] = None):
