@@ -317,7 +317,7 @@ In order to leave the program, type, *'exit'*, *'quit'*, or  *'q'*, but be advis
 
 **Important!**
 
-**Please read** before building any new pre-routes in the development directory which use the database utility.
+**Please read** before building any new pre-routes in the development directory which use any of the objects or functions in the utilities directory.
 
 **Note:** at the begining of the **weather_pred.py* file in the preroutes directory before all of the other imports, the development directory route has been appended to the system path.
 
@@ -342,7 +342,7 @@ DO NOT USE
 from development.utilities.database import PostgreSQL
 ```
 
-**Note:** When appending a new path to the system, be sure to use *os.path.join()* and *os.getcwd()*. These commands insure that the paths are system agnostic. This is important given that the hardcoded commands on Windows would read out as
+**Note:** When appending a new path to the system, be sure to use *os.path.join()* and *os.getcwd()*. These commands insure that the paths are system agnostic. This is important given that the hardcoded command on Windows would read out as
 
 ```
 sys.path.append("\path\to\repo\dir\development")
