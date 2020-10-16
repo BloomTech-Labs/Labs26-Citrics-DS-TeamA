@@ -133,8 +133,8 @@ static data.
 - [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html)
 - [WalkScore API](https://www.walkscore.com/professional/api.php) (NOTE: Developer-friendly documentation)
 - [Weather Data](https://openweathermap.org/api) (NOTE: Potentially pricy ...)
-- [Yelp API](https://www.yelp.com/developers)
-- [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign up / application)
+- [Yelp API](https://www.yelp.com/developers) (NOTE: Requires sign-up.)
+- [Zillow API](https://www.zillow.com/howto/api/APIOverview.htm) (NOTE: Requires sign-up / application.)
 
 **Predictive Modeling**
 - [Explanatory Notebook](development/notebooks/tsa.ipynb)
