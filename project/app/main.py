@@ -2,23 +2,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.api import (
-    viz,
-    viz_view,
-    rental1,
-    walkability,
-    current,
-    rentviz2,
-    rentviz2_view,
-    rent_city_states,
-    rental_pred,
+    adv_search,
     bls_jobs1,
-    bls_viz_view,
     bls_viz,
     census,
-    weather_pred,
+    census_pred,
+    current,
+    rent_city_states,
+    rental1,
+    rental_pred,
+    rentviz2,
     static,
-    adv_search,
-    census_pred
+    viz,
+    walkability,
+    weather_pred
 )
 
 # Description Text
@@ -27,27 +24,24 @@ DESC_TEXT = "Finding a place to live is hard! Nomads struggle with finding the r
 app = FastAPI(
     title='Citrics API',
     description=DESC_TEXT,
-    version='2.8',
+    version='3.0',
     docs_url='/',
 )
 
-app.include_router(rent_city_states.router)
-app.include_router(rental1.router)
-app.include_router(walkability.router)
-app.include_router(current.router)
-app.include_router(rental_pred.router)
-app.include_router(rentviz2.router)
-app.include_router(rentviz2_view.router)
-app.include_router(viz.router)
-app.include_router(viz_view.router)
+app.include_router(adv_search.router)
 app.include_router(bls_jobs1.router)
 app.include_router(bls_viz.router)
-app.include_router(bls_viz_view.router)
 app.include_router(census.router)
-app.include_router(weather_pred.router)
-app.include_router(static.router)
-app.include_router(adv_search.router)
 app.include_router(census_pred.router)
+app.include_router(current.router)
+app.include_router(rent_city_states.router)
+app.include_router(rental1.router)
+app.include_router(rental_pred.router)
+app.include_router(rentviz2.router)
+app.include_router(static.router)
+app.include_router(viz.router)
+app.include_router(walkability.router)
+app.include_router(weather_pred.router)
 
 
 app.add_middleware(

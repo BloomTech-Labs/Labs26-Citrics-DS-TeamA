@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/walkability/{city}_{statecode}")
-async def walkability(city: str, statecode: str):
+async def determine_city_walkability(city: str, statecode: str):
     """Determine how walkable an area is based upon the popular metric,
     [Walkscore](https://www.walkscore.com/professional/api.php),
     using the [Yelp Fusion API](https://www.yelp.com/developers/documentation/v3) to fetch addresses
@@ -49,6 +49,20 @@ async def walkability(city: str, statecode: str):
     if statecode not in codes:
         raise HTTPException(status_code=404,
                             detail=f"State '{statecode}' not found.")
+    # Handle Edge Cases:
+    # saint
+    if city[0:5] == "Saint":
+        city = city.replace("Saint", "St.")
+    elif city[0:3] == "St ":
+        city = city.replace("St", "St.")
+    # fort
+    elif city[0:3] == "Ft ":
+        city = city.replace("Ft", "Fort")
+    elif city[0:3] == "Ft.":
+        city = city.replace("Ft.", "Fort")
+    # multiple caps
+    elif city[0:2] == 'Mc':
+        city = city[:2] + city[2:].capitalize()
 
     # Make query to database
     citystate = f'{city}, {statecode}'
