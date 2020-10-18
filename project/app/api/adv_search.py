@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get('/adv_search/{popmin}_{br_size}_{max_rent}_{climate}')
-async def adv_search(
+async def advanced_search(
     popmin: int, 
     br_size: int, 
     max_rent: int, 

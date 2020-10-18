@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.get("/rental/predict/{city}_{state}")
-async def pred(city: str, state: str):
+async def rental_price_predictions(city: str, state: str):
     """
     **Input**
 

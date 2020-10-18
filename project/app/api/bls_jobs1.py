@@ -7,9 +7,9 @@ router = APIRouter()
 
 
 @router.get('/bls_jobs/{city}_{statecode}')
-async def bls(city: str, statecode: str):
+async def most_prevalent_job_industry(city: str, statecode: str):
     """
-    Most prevelant job industry (city-level) per "Location Quotient" from
+    Most prevalent job industry (city-level) per "Location Quotient" from
     [Burea of Labor Statistics](https://www.bls.gov/oes/tables.htm) 📈
 
     ## Path Parameters
@@ -19,7 +19,7 @@ async def bls(city: str, statecode: str):
     (case insensitive) for any of the 50 states or the District of Columbia.
 
     ## Response
-    JSON string of top ten most prevelant job industries for specified
+    JSON string of top ten most prevalent job industries for specified
     U.S. city. (More than 300 searchable)
     """
 

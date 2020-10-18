@@ -16,7 +16,7 @@ router = APIRouter()
 
 
 @router.get("/census/predict/{city}_{state}")
-async def pred(city: str, state: str):
+async def predict_population(city: str, state: str):
     """
     *Input*
 
