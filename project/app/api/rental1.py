@@ -5,7 +5,7 @@ router = APIRouter()
 
 
 @router.get("/rental/")
-async def rental_prices():
+async def fetch_rental_prices():
     """
     City-level historic rental prices for 1 bedroom apartments from
     [Apartment List](https://www.apartmentlist.com/research/category/data-rent-estimates) 📈

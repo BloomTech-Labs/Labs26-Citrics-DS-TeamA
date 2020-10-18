@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get('/census/{city}_{statecode}')
-async def census(city: str, statecode: str):
+async def fetch_census_population_data(city: str, statecode: str):
     """
     Population data (city-level) from
     [US Census Bureau](https://www.census.gov/data/tables/time-series/demo/popest/2010s-total-cities-and-towns.html) 📈
