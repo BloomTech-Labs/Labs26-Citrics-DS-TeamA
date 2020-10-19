@@ -11,9 +11,9 @@ router = APIRouter()
 
 
 @router.get('/bls_viz/{city}_{statecode}')
-async def bls_viz(city: str, statecode: str, view=False):
+async def most_prevalent_industry_visualization(city: str, statecode: str, view=False):
     """
-    Most prevelant job industry (city-level) per "Location Quotient" from
+    Most prevalent job industry (city-level) per "Location Quotient" from
     [Burea of Labor Statistics](https://www.bls.gov/oes/tables.htm) 📈
 
     ## Path Parameters

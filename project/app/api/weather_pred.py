@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.get("/weather/predict/{city}_{state}")
-async def pred(city: str, state: str, metric=False):
+async def predict_temperatures(city: str, state: str, metric=False):
     """
     **Input**
 
@@ -161,7 +161,7 @@ async def pred(city: str, state: str, metric=False):
 
 
 @router.get("/weather/predict/viz/{city1}_{state1}")
-async def viz(
+async def temperature_prediction_visualization(
     city1: str,
     state1: str,
     city2=None,
@@ -232,17 +232,17 @@ async def viz(
     """
     cities = []
 
-    first = pd.read_json(await pred(city1.title(), state1.upper(), metric))["temp"]
+    first = pd.read_json(await predict_temperatures(city1.title(), state1.upper(), metric))["temp"]
     first.name = f"{city1.title()}, {state1.upper()}"
     cities.append(first)
 
     if city2 and state2:
-        second = pd.read_json(await pred(city2.title(), state2.upper(), metric))["temp"]
+        second = pd.read_json(await predict_temperatures(city2.title(), state2.upper(), metric))["temp"]
         second.name = f"{city2.title()}, {state2.upper()}"
         cities.append(second)
 
     if city3 and state3:
-        third = pd.read_json(await pred(city3.title(), state3.upper(), metric))["temp"]
+        third = pd.read_json(await predict_temperatures(city3.title(), state3.upper(), metric))["temp"]
         third.name = f"{city3.title()}, {state3.upper()}"
         cities.append(third)
 
