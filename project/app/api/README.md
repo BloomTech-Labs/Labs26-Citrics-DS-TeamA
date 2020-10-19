@@ -81,8 +81,6 @@ for col in df.columns:
             seasonal="add",
             seasonal_periods=12
         ).fit().forecast(30)
-        s.name = col
-        series.append(s)
 ```
 
 Due to the fact that each data source used contained several hundered to several thousand cities each, pickling each model individually would prove to be a daunting task. Due to the potential for memory issues to occure, the **Labs 28 DS Team** taking over this project will likely need to find a scalable way to pickle and store these [**time series**](https://github.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/blob/master/development/notebooks/tsa.ipynb) models. A slight modification to the API's predictive route schema would be in order, with a *pickle route*. These *pickle routes* would most likely involve using a third-party file-hosting service given their size.
