@@ -70,6 +70,7 @@ async def pred(city: str, state: str):
         )
 
     df_preds.set_index("Year", inplace=True)
+    df_preds.index.freq("Y")
 
     if len(df_preds.index) == 0:
 
@@ -164,6 +165,7 @@ async def pred(city: str, state: str):
         ]
 
         df_preds = pd.concat(s, axis=1)
+        df_preds.index.freq("Y")
 
         execute_values(
             cur,
