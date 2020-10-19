@@ -1,6 +1,8 @@
 # API Directory
 
-## Route Referencing Explained:
+## Route Referencing
+
+### Route Referencing Explained
 
 Each route in the API is essentially a function. Since well written code often uses functions which reference other functions, enhancing readability, and often improving performance, the [weather_pred.py script](weather_pred.py) has implemented *route referencing* as explained in the schema below.
 
@@ -64,3 +66,25 @@ if __name__ == '__main__':
 ```
 
 **It's two for the price of one!**
+
+## Pickling Predictive Models
+
+Up to this point in the project, the Data Science Team had decided not to Pickle any of the predictive routes due to the fact that each model was for a completely different subset of data and corrosponding to a different city found in the found in the database. 
+
+This is illustrated in the section of the [rental_pred.py] script where the model, *Exponential Smoothing*, is declared five times, once for each category of housing.
+
+```python
+for col in df.columns:
+    s = ExponentialSmoothing(
+        df[col].astype(np.int64),
+            trend="add",
+            seasonal="add",
+            seasonal_periods=12
+        ).fit().forecast(30)
+        s.name = col
+        series.append(s)
+```
+
+Due to the fact that each data source used contained several hundered to several thousand cities each, pickling each model individually would prove to be a daunting task. Due to the potential for memory issues to occure, the **Labs 28 DS Team** taking over this project will likely need to find a scalable way to pickle and store these [**time series**](https://github.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/blob/master/development/notebooks/tsa.ipynb) models. A slight modification to the API's predictive route schema would be in order, with a *pickle* route for each model which would interface with a third-party file hosting service shown below.
+
+![Pickle]()
