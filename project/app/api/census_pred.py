@@ -70,7 +70,6 @@ async def pred(city: str, state: str):
         )
 
     df_preds.set_index("Year", inplace=True)
-    df_preds.index.freq("Y")
 
     if len(df_preds.index) == 0:
 
@@ -123,6 +122,7 @@ async def pred(city: str, state: str):
         series.name = f"{series.city}, {series.state}"
         series = series.take([n for n in range(4, len(series))])
         series = series.rename(lambda x: datetime(int(x[-4:]), 12, 31))
+        series.index.freq = "Y"
 
         warnings.filterwarnings(
             "ignore",
@@ -165,7 +165,6 @@ async def pred(city: str, state: str):
         ]
 
         df_preds = pd.concat(s, axis=1)
-        df_preds.index.freq("Y")
 
         execute_values(
             cur,
