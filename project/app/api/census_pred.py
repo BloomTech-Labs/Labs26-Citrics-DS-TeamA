@@ -1,3 +1,10 @@
+# Note:
+#   Please DO NOT incorporate this route into the API without
+#   first implementing a pickling system like the one described
+#   in this directory's README.
+
+#   Doing so may cause memory overload.
+
 # from fastapi import APIRouter
 # from dotenv import load_dotenv
 # import psycopg2
