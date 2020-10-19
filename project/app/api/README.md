@@ -81,10 +81,24 @@ for col in df.columns:
             seasonal="add",
             seasonal_periods=12
         ).fit().forecast(30)
-        s.name = col
-        series.append(s)
 ```
 
-Due to the fact that each data source used contained several hundered to several thousand cities each, pickling each model individually would prove to be a daunting task. Due to the potential for memory issues to occure, the **Labs 28 DS Team** taking over this project will likely need to find a scalable way to pickle and store these [**time series**](https://github.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/blob/master/development/notebooks/tsa.ipynb) models. A slight modification to the API's predictive route schema would be in order, with a *pickle* route for each model which would interface with a third-party file hosting service shown below.
+Due to the fact that each data source used contained several hundered to several thousand cities each, pickling each model individually would prove to be a daunting task. Due to the potential for memory issues to occure, the **Labs 28 DS Team** taking over this project will likely need to find a scalable way to pickle and store these [**time series**](https://github.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/blob/master/development/notebooks/tsa.ipynb) models. A slight modification to the API's predictive route schema would be in order, with a *pickle route*. These *pickle routes* would most likely involve using a third-party file-hosting service given their size.
 
-![Pickle]()
+![Pickle](https://raw.githubusercontent.com/Lambda-School-Labs/Labs26-Citrics-DS-TeamA/master/data/whimsical/Pickling.png)
+
+### Potential Problems
+
+Theoretically, the *pkl* files could be stored in a directory listed in the *.ebignore* in order to avoid memory issues, but this may make them inaccessable to the API itself.
+
+Using *GitHub* and [*GitHub Large File Storage*](https://git-lfs.github.com/) as the third-party hosting service is an option, but Amazon Web Service may not recognize *LFS* - *Heroku doesn't.*
+
+At this point, we are not certain whether the ElasticBeanstalk service is even capable of dealing with interfacing with third-party file-storage services (other than GitHub and Amazon RDS).
+
+## Data Sourcing
+
+### Limitations of Current Deployment
+
+It should be noted that the bulk of the data actually used in the project has been taken from datasets in the form of static *.csv* files. The API is, therefore, outdated. In order to update this, the **Labs 28 DS Team** will need to discover a way using APIs to periodically update these data. In some cases, as with the [**Bureau of Labor Statistics**](https://www.bls.gov/developers/) and [**Census**](https://www.census.gov/data/developers.html) data, these datasets are periodically updated and accessible via their respective APIs.
+
+With dynamic data, however, we introduce greater complexity, especially with regard to **time series** modeling. One approach would be to treat the **PostgreSQL** database as a something of a *queue* or *ring-buffer*; wherein old information is periodically discarded and new information is periodically inserted into the appropriate tables, ensuring *up-to-date predictions*, rather than stale ones based on old data.
