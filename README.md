@@ -26,8 +26,12 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 │    │    └── rental.csv <- CSV of rental price predictions.
 │    ├── static <- Contains static data CSV.
 │    │    └── static.csv <- CSV of all static data.
-│    └── weather <- Collection of CSV files related to historical weather data.
-│         └── *.csv <- CSV file containing historical data for city in file name.
+│    ├── weather <- Collection of CSV files related to historical weather data.
+│    |    └── *.csv <- CSV file containing historical data for city in file name.
+|    ├── whimsical <- Collection of whimsical boards for use in planning an ideation.
+|    |    ├── APISchema.png <- API schema for predictive routes.
+|    |    └── Pickling.png <- Single-route schema for pickling time-series models.
+|    └── README.md <- README file for data directory.    
 ├── development <- Directory containing development materials outside of the API itself Jupyter.   
 |    ├── __init__.py <- __init__.py file
 |    ├── notebooks <- Directory containing Jupyter Notebooks.
@@ -49,14 +53,14 @@ static data.
 │    │    ├── __init__.py <- __init__.py file
 │    │    └── weather.py <- Preroute file for fetching historical weather data.
 |    ├── utilities <- Utilities for use in managing deployment,retrieving data from third-party APIs, and using the database.
-|    └── README.md <- README file for development directory.
-│         ├── config.py <- Utility file to change from team to personal Docker image.
-│         ├── database.py <- Utility file for PostgreSQL database.
-|         ├── db_sentry.py - Utility for managing run-away database connections.
-│         ├── __init__.py <- __init__.py file
-│         ├── insert.py <- Inserts World Weather Online API data into database.
-│         ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py
-│         └── walk.py <- Utility file for generalizing Walk Scores and populating database.       
+│    |    ├── config.py <- Utility file to change from team to personal Docker image.
+│    |    ├── database.py <- Utility file for PostgreSQL database.
+|    |    ├── db_sentry.py - Utility for managing run-away database connections.
+│    |    ├── __init__.py <- __init__.py file
+│    |    ├── insert.py <- Inserts World Weather Online API data into database.
+│    |    ├── README.md <- Markdown file explaining usage of config.py, weather.py, and insert.py
+│    |    └── walk.py <- Utility file for generalizing Walk Scores and populating database.
+|    └── README.md <- README file for development directory.       
 ├── project <- Main project files.
 │    ├── app <- Folder containing all files related to app deployment.
 │    │    ├── api <- Files used in API deployment.
