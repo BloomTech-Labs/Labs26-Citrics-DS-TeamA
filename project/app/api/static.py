@@ -64,6 +64,10 @@ async def fetch_static_data(city: str, statecode: str):
     elif city[0:3] == "Ft.":
         city = city.replace("Ft.", "Fort")
 
+    # multiple caps
+    elif city[0:2] == 'Mc':
+        city = city[:2] + city[2:].capitalize()
+    
     # Find matching metro-area in database
     match = df.loc[(df.city.str.contains(city)) &
                    (df.state.str.contains(statecode))]
