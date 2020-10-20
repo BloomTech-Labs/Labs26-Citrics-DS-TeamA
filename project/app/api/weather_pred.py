@@ -62,6 +62,9 @@ async def predict_temperatures(city: str, state: str, metric=False):
         city = city.replace(city[0:3], "Fort ")
     elif city[0:3] == "Ft." or city[0:3] == "ft.":
         city = city.replace(city[0:3], "Fort")
+    # multiple caps
+    elif city[0:2] == 'Mc':
+        city = city.replace(city, city[:2] + city[2:].capitalize())
 
     print(city)
 
