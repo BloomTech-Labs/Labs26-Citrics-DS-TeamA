@@ -20,18 +20,18 @@ async def rental_price_predictions(city: str, state: str):
     """
     **Input**
 
-    city: str  <- city name, any capitalization, spaces between multi-word city names are required
+    `city: str`  <- city name, any capitalization, spaces between multi-word city names are required
 
-    state: str <- two-letter state abbreviation, any capitalization
+    `state: str` <- two-letter state abbreviation, any capitalization
 
     **Output**
 
-    json string containing rental price predictions:
-    - Studio
-    - One Bedroom
-    - Two Bedroom
-    - Three Bedroom
-    - Four Bedroom
+    `json string` containing rental price predictions:
+    - `Studio`
+    - `One Bedroom`
+    - `Two Bedroom`
+    - `Three Bedroom`
+    - `Four Bedroom`
 
     as the average of the monthly prediction for `city` each year
     """

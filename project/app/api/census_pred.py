@@ -1,9 +1,7 @@
 # Note:
-#   Please DO NOT incorporate this route into the API without
-#   first implementing a pickling system like the one described
-#   in this directory's README.
-
-#   Doing so may cause memory overload.
+#  This route may have been a cause of a memory overload issue
+#  which forced the Labs 26 DS team to need to redeploy the API,
+#  so uncomment with caution.
 
 # from fastapi import APIRouter
 # from dotenv import load_dotenv
