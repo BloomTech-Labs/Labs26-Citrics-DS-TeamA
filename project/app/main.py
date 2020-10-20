@@ -6,7 +6,6 @@ from app.api import (
     bls_jobs1,
     bls_viz,
     census,
-    census_pred,
     current,
     rent_city_states,
     rental1,
@@ -32,7 +31,6 @@ app.include_router(adv_search.router)
 app.include_router(bls_jobs1.router)
 app.include_router(bls_viz.router)
 app.include_router(census.router)
-app.include_router(census_pred.router)
 app.include_router(current.router)
 app.include_router(rent_city_states.router)
 app.include_router(rental1.router)

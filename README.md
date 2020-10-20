@@ -143,6 +143,9 @@ static data.
 - [Python Datetime Module Docs](https://docs.python.org/3/library/datetime.html#module-datetime)
 - [Statsmodels](https://www.statsmodels.org/stable/index.html)
 
+**FastAPI**
+- [Route Referencing](project/app/api/README.md)
+
 **AWS / DOCS**
 - [AWS - Postgres Deployment Docs](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_GettingStarted.CreatingConnecting.PostgreSQL.html)
 - [AWS Dashboard](https://console.aws.amazon.com/route53/v2/home#Dashboard)

@@ -66,8 +66,6 @@ async def predict_temperatures(city: str, state: str, metric=False):
     elif city[0:2] == 'Mc':
         city = city.replace(city, city[:2] + city[2:].capitalize())
 
-    print(city)
-
     # If prediciton found in database
     # If metric values are desired:
     if metric == True:
@@ -91,6 +89,8 @@ async def predict_temperatures(city: str, state: str, metric=False):
     result.set_index("month", inplace=True)
     result.index = pd.to_datetime(result.index)
 
+    result_json = result.to_json(index=2)
+
     if len(result.index) > 0:
         c = pd.Series([city] * len(result.index))
         c.index = result.index
@@ -111,56 +111,61 @@ async def predict_temperatures(city: str, state: str, metric=False):
         cur.execute(retrieve_data)
 
         df = pd.DataFrame.from_records(cur.fetchall())
-        df.set_index(0, inplace=True)
-        series = df.resample("MS").mean()
 
-        warnings.filterwarnings(
-            "ignore",
-            message="After 0.13 initialization must be handled at model creation"
-        )
+        if len(df.index) == 0:
+            result_json = f"{city}, {state} not found in Historic Weather Database."
 
-        result = ExponentialSmoothing(
-            series.astype(np.int64),
-            trend="add",
-            seasonal="add",
-            seasonal_periods=12
-        ).fit().forecast(24)
+        else:
+            df.set_index(0, inplace=True)
+            series = df.resample("MS").mean()
+            warnings.filterwarnings(
+                "ignore",
+                message="After 0.13 initialization must be handled at model creation"
+            )
 
-        c = pd.Series([city.title()] * len(result.index))
-        c.index = result.index
-        s = pd.Series([state.upper()] * len(result.index))
-        s.index = result.index
+            result = ExponentialSmoothing(
+                series.astype(np.int64),
+                trend="add",
+                seasonal="add",
+                seasonal_periods=12
+            ).fit().forecast(24)
 
-        result = pd.concat([c, s, result], axis=1)
-        result.columns = ["city", "state", "temp"]
-        result.index = result.index.astype(str)
+            c = pd.Series([city.title()] * len(result.index))
+            c.index = result.index
+            s = pd.Series([state.upper()] * len(result.index))
+            s.index = result.index
 
-        # Converting for temperature in Fahrenheit if needed
-        # Conversion Helper Function
-        def to_fahr(temp: float) -> float:
-            return ((temp * 9) / 5) + 32
+            result = pd.concat([c, s, result], axis=1)
+            result.columns = ["city", "state", "temp"]
+            result.index = result.index.astype(str)
 
-        if metric != True:
-            result["temp"] = result["temp"].apply(to_fahr)
+            # Converting for temperature in Fahrenheit if needed
+            # Conversion Helper Function
+            def to_fahr(temp: float) -> float:
+                return ((temp * 9) / 5) + 32
 
-        insert_pred = """
-        INSERT INTO {table}(
-            month,
-            city,
-            state,
-            mean
-        ) VALUES%s
-        """.format(table=table)
+            if metric != True:
+                result["temp"] = result["temp"].apply(to_fahr)
 
-        execute_values(
-            cur,
-            insert_pred,
-            list(result.to_records(index=True))
-        )
-        conn.commit()
+            insert_pred = """
+            INSERT INTO {table}(
+                month,
+                city,
+                state,
+                mean
+            ) VALUES%s
+            """.format(table=table)
+
+            execute_values(
+                cur,
+                insert_pred,
+                list(result.to_records(index=True))
+            )
+            conn.commit()
+            result_json = result.to_json(indent=2)
+
         conn.close()
-
-    return result.to_json(indent=2)
+    return result_json
 
 
 @router.get("/weather/predict/viz/{city1}_{state1}")
@@ -235,49 +240,56 @@ async def temperature_prediction_visualization(
     """
     cities = []
 
-    first = pd.read_json(await predict_temperatures(city1.title(), state1.upper(), metric))["temp"]
-    first.name = f"{city1.title()}, {state1.upper()}"
-    cities.append(first)
+    if (await predict_temperatures(city1.title(), state1.upper(), metric))[0] == "{":
+        first = pd.read_json(await predict_temperatures(city1.title(), state1.upper(), metric))["mean"]
+        first.name = f"{city1.title()}, {state1.upper()}"
+        cities.append(first)
 
     if city2 and state2:
-        second = pd.read_json(await predict_temperatures(city2.title(), state2.upper(), metric))["temp"]
-        second.name = f"{city2.title()}, {state2.upper()}"
-        cities.append(second)
+        if (await predict_temperatures(city2.title(), state2.upper(), metric))[0] == "{":
+            second = pd.read_json(await predict_temperatures(city2.title(), state2.upper(), metric))["mean"]
+            second.name = f"{city2.title()}, {state2.upper()}"
+            cities.append(second)
 
     if city3 and state3:
-        third = pd.read_json(await predict_temperatures(city3.title(), state3.upper(), metric))["temp"]
-        third.name = f"{city3.title()}, {state3.upper()}"
-        cities.append(third)
+        if (await predict_temperatures(city3.title(), state3.upper(), metric))[0] == "{":
+            third = pd.read_json(await predict_temperatures(city3.title(), state3.upper(), metric))["mean"]
+            third.name = f"{city3.title()}, {state3.upper()}"
+            cities.append(third)
 
-    layout = go.Layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-    )
+    if len(cities) > 0:
+        layout = go.Layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+        )
 
-    if metric == True:
-        letter = "C"
+        if metric == True:
+            letter = "C"
 
+        else:
+            letter = "F"
+
+        fig = go.Figure(
+            data=go.Scatter(name=f"Adjusted Temperature {letter}"),
+            layout=layout
+        )
+
+        for city in cities:
+            fig.add_trace(go.Scatter(name=city.name, x=city.index, y=city.values))
+
+        fig.update_layout(
+            title=f"Adjusted Temperature {letter}",
+            font=dict(family='Open Sans, extra bold', size=10),
+            height=412,
+            width=640
+        )
+
+        if view == "True":
+            img = fig.to_image(format="png")
+            return StreamingResponse(io.BytesIO(img), media_type="image/png")
+
+        else:
+            return fig.to_json()
+    
     else:
-        letter = "F"
-
-    fig = go.Figure(
-        data=go.Scatter(name=f"Adjusted Temperature {letter}"),
-        layout=layout
-    )
-
-    for city in cities:
-        fig.add_trace(go.Scatter(name=city.name, x=city.index, y=city.values))
-
-    fig.update_layout(
-        title=f"Adjusted Temperature {letter}",
-        font=dict(family='Open Sans, extra bold', size=10),
-        height=412,
-        width=640
-    )
-
-    if view == "True":
-        img = fig.to_image(format="png")
-        return StreamingResponse(io.BytesIO(img), media_type="image/png")
-
-    else:
-        return fig.to_json()
+        return "No Historic Weather Data found for any of the three cities."
