@@ -39,7 +39,7 @@ async def predict_temperatures(city: str, state: str, metric=False):
 
     **Output**
 
-    json object with predictions for
+    `json object` with predictions for
     
     **monthly temperature** of `city` and up to a total of three cities
     adjusted for dew point and wind chill for 24 months
@@ -228,7 +228,7 @@ async def temperature_prediction_visualization(
 
     **Output**
 
-    json object *-see `view` under input-* of visualization of predictions for
+    `json object` *-see `view` under input-* of visualization of predictions for
     
     **monthly temperature** of `city1` and up to a total of three cities
     adjusted for dew point and wind chill for 24 months
