@@ -85,7 +85,7 @@ while True:
 				FROM
 					pg_database
 				WHERE
-					datname='postgres' AND client_addr='172.31.95.129');
+					datname='postgres' AND client_addr='172.31.43.136');
 		"""
 
         db = PostgreSQL()
