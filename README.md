@@ -37,7 +37,7 @@ Using visualizations for a variety of metrics, such as how walkable a city is, p
 |    ├── notebooks <- Directory containing Jupyter Notebooks.
 │    │    ├── basic_rental_cleanup.ipynb <- Jupyter notebook for price data cleaning.
 │    │    ├── bls_eda_1.ipynb <- Jupyter notebook for BLS data cleaning.
-|         ├── climate.ipynb <- Jupyter notebook for fetching climate and timezone data from climate API.
+|    |    ├── climate.ipynb <- Jupyter notebook for fetching climate and timezone data from climate API.
 │    │    ├── get_stats.ipynb <- Jupyter notebook, precursor to weather_pred route.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook.
 │    │    ├── Labs_26_Data_Science.ipynb <- Labs starter notebook (Zone Identifier).
